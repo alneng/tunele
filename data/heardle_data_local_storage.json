@@ -1,0 +1,6473 @@
+[
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 12,
+		"score": 3,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 13,
+		"score": 2,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 14,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 15,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 16,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 17,
+		"score": 2,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 18,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 19,
+		"score": 1,
+		"guessList": [
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 20,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 21,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 22,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 23,
+		"score": 3,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 24,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 26,
+		"score": 1,
+		"guessList": [
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 27,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 28,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 31,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 32,
+		"score": 0,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 34,
+		"score": 5,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 38,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 40,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": false,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 45,
+		"score": 1,
+		"guessList": [
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 47,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 54,
+		"score": 4,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 58,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 65,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": true,
+		"id": 124,
+		"score": 1,
+		"guessList": [
+			{
+				"isCorrect": true,
+				"isSkipped": false,
+				"playCount": 1
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 126,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"gotCorrect": false,
+		"id": 135,
+		"score": 6,
+		"guessList": [
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			},
+			{
+				"isCorrect": false,
+				"isSkipped": true,
+				"playCount": 1
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 141,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 142,
+		"img": "",
+		"score": 2,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Sia - Cheap Thrills",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 144,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Weezer - Island In The Sun",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 148,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "Metallica - The Unforgiven (Remastered)",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Metallica - Nothing Else Matters (Remastered)",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Metallica - Enter Sandman (Remastered)",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Led Zeppelin - Immigrant Song - Remaster",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Jimi Hendrix - All Along the Watchtower",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Jimi Hendrix - Voodoo Child (Slight Return)",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 156,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 165,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Vance Joy - Riptide",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 167,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Green Day - Basket Case",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 168,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 170,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Red Hot Chili Peppers - Otherside",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 175,
+		"img": "",
+		"score": 3,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Katy Perry - Hot N Cold",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 193,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 195,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 196,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "Queen - Bohemian Rhapsody - Remastered 2011",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Morgan Wallen - You Proof",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 197,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Daniel Powter - Bad Day",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 198,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 199,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 200,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 201,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Billie Eilish - bad guy",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 203,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Hailee Steinfeld, Anderson .Paak - Coast (feat. Anderson .Paak)",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 205,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Tones And I - Fly Away",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 208,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 209,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Bazzi - Mine",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": true,
+		"id": 212,
+		"img": "",
+		"guessList": []
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 213,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 214,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 215,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 216,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 218,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "1-800-273-8255 - Logic, Alessia Cara, Khalid",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 219,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 220,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Make You Say - Zedd, Maren Morris, BEAUZ",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 221,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Holiday / Boulevard of Broken Dreams - Green Day",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 222,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 223,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 224,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Midnight City - M83",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 225,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 226,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 229,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 230,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Can't Stop - Red Hot Chili Peppers",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 231,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Love On The Brain - Rihanna",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Out Of Love - Alessia Cara",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 235,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 236,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Blinding Lights - The Weeknd",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 237,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 239,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 240,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 241,
+		"img": "",
+		"score": 2,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Cheerleader - Felix Jaehn Remix Radio Edit - OMI, Felix Jaehn",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 246,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Am I Wrong - Nico & Vinz",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 249,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Freaks - Surf Curse",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 250,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 251,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 252,
+		"img": "",
+		"score": 4,
+		"guessList": [
+			{
+				"answer": "I'll Be Missing You (feat. Faith Evans & 112) - 2014 Remaster - Diddy, 112, Faith Evans",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Attention - Charlie Puth",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 253,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 255,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 256,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 257,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 262,
+		"img": "",
+		"score": 2,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Because of You - Kelly Clarkson",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 264,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Left and Right (Feat. Jung Kook of BTS) - Charlie Puth, Jung Kook, BTS",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 266,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 269,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 270,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Chasing Cars - Snow Patrol",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 271,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Thunder - Imagine Dragons",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 272,
+		"img": "",
+		"score": 5,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Oops!...I Did It Again - Britney Spears",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 273,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 274,
+		"img": "",
+		"score": 6,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Yellow - Coldplay",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 276,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 278,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 279,
+		"img": "",
+		"score": 4,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Sunflower - Spider-Man: Into the Spider-Verse - Post Malone, Swae Lee",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Anti-Hero - Taylor Swift",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 281,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 283,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 289,
+		"img": "",
+		"score": 6,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Swimming Pools (Drank) - Kendrick Lamar",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "Backseat Freestyle - Kendrick Lamar",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "Alright - Kendrick Lamar",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "LOYALTY. FEAT. RIHANNA. - Kendrick Lamar, Rihanna",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "m.A.A.d city - Kendrick Lamar, MC Eiht",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 290,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Just Dance - Lady Gaga, Colby O'Donis",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 293,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Little Talks - Of Monsters and Men",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 296,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Intentions (feat. Quavo) - Justin Bieber, Quavo",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 302,
+		"img": "",
+		"score": 2,
+		"guessList": [
+			{
+				"answer": "Can't Stop - Red Hot Chili Peppers",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "Snow (Hey Oh) - Red Hot Chili Peppers",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 304,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Last Christmas - Wham!",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 305,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Unholy (feat. Kim Petras) - Sam Smith, Kim Petras",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 307,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 308,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 321,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 331,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 333,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 334,
+		"img": "",
+		"score": 6,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Fix You - Coldplay",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 335,
+		"img": "",
+		"score": 3,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "bad guy - Billie Eilish",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "bury a friend - Billie Eilish",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": false,
+		"id": 337,
+		"img": "",
+		"guessList": []
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 339,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 341,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 342,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": true,
+		"id": 343,
+		"img": "",
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 346,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Broccoli (feat. Lil Yachty) - DRAM, Lil Yachty",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 347,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 348,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 351,
+		"img": "",
+		"score": 3,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "All The Stars (with SZA) - Kendrick Lamar, SZA",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			},
+			{
+				"answer": "Good Days - SZA",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 352,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 355,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 359,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 361,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 362,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Demons - Imagine Dragons",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 363,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 364,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 366,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Ghost - Justin Bieber",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 368,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 369,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 370,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 371,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 373,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 375,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 378,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Mask Off - Future",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 380,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Cooped Up (with Roddy Ricch) - Post Malone, Roddy Ricch",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "1400 / 999 Freestyle - Trippie Redd, Juice WRLD",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 382,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 384,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 385,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 389,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 391,
+		"img": "",
+		"score": 6,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Bad and Boujee (feat. Lil Uzi Vert) - Migos, Lil Uzi Vert",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 392,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Enemy (with JID) - from the series Arcane League of Legends - Imagine Dragons, JID, Arcane, League of Legends",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 396,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Pompeii - Bastille",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 398,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Don't Let Me Down - The Chainsmokers, Daya",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 399,
+		"img": "",
+		"score": 4,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Diamonds - Rihanna",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Chandelier - Sia",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": true,
+		"id": 401,
+		"img": "",
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 403,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "All Of The Girls You Loved Before - Taylor Swift",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 404,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 405,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Say Something - A Great Big World, Christina Aguilera",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "5 Leaf Clover - Luke Combs",
+				"isCorrect": false,
+				"isSkipped": false,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 407,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 408,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 410,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 413,
+		"img": "",
+		"score": 6,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Unstoppable - Sia",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 420,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 421,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "Ride - Twenty One Pilots",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 422,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 424,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 425,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 426,
+		"img": "",
+		"score": 1,
+		"guessList": [
+			{
+				"answer": "All Girls Are The Same - Juice WRLD",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 428,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 429,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 432,
+		"img": "",
+		"score": 5,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "Memories - Maroon 5",
+				"isCorrect": true,
+				"isSkipped": false,
+				"isArtist": true,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": true,
+		"hasStarted": true,
+		"id": 433,
+		"img": "",
+		"score": 0,
+		"guessList": [
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			},
+			{
+				"answer": "",
+				"isCorrect": false,
+				"isSkipped": true,
+				"isArtist": false,
+				"playCount": 0
+			}
+		]
+	},
+	{
+		"hasFinished": false,
+		"hasStarted": true,
+		"id": 434,
+		"img": "",
+		"guessList": []
+	}
+]
