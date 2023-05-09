@@ -43,7 +43,7 @@ router.get("/dailySong", async (req, res) => {
 			externalUrl: dailyGameTrack.externalUrl,
 		});
 	} else {
-		const mostRecentTracksSnapshot = await db.getAllDocuments("allTracks");
+		const mostRecentTracksSnapshot = await db.getLastDocument("allTracks");
 		const mostRecentTracksTracklist =
 			mostRecentTracksSnapshot.data.tracklist;
 
