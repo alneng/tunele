@@ -90,10 +90,27 @@ class FirestoreDB {
 					});
 				}
 				if (includeDocument) {
-					documents.push(data);
+					documents.push({ id: doc.id, data: data });
 				}
 			});
 			resolve(documents);
+		});
+	}
+
+	async getLastDocument(collection) {
+		return new Promise(async (resolve, reject) => {
+			const querySnapshot = await this.db
+				.collection(collection)
+				.orderBy("createdAt", "desc")
+				.limit(1)
+				.get();
+
+			if (querySnapshot.empty) {
+				resolve(null);
+			} else {
+				const lastDocument = querySnapshot.docs[0];
+				resolve({ id: lastDocument.id, data: lastDocument.data() });
+			}
 		});
 	}
 }

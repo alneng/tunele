@@ -1,65 +1,65 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
+const { DateTime } = require("luxon");
 
 const FirestoreSDK = require("./firebase");
 const db = new FirestoreSDK();
 
 router.use(bodyParser.json());
 
+/**
+ * @api {get} /dailySong Get Daily Song
+ * @apiName GetDailySong
+ * @apiParam {String} timeZone The user's time zone.
+ * @apiSuccess {String} song The name of the song.
+ * @apiSuccess {String[]} artists The list of artists who performed the song.
+ * @apiSuccess {Number} id The unique identifier of the song.
+ * @apiSuccess {String} trackPreview The URL of the song preview (audio).
+ * @apiSuccess {String} albumCover The URL of the album cover (image).
+ * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
+ */
 router.get("/dailySong", async (req, res) => {
 	let timeZone = req.body.timeZone;
 
-	const now = new Date();
+	const now = DateTime.local();
 	let userDate;
 	try {
-		userDate = new Date(
-			now.toLocaleString("en-US", { timeZone: timeZone })
-		);
+		userDate = now.setZone(timeZone);
 	} catch (err) {
-		userDate = new Date(
-			now.toLocaleString("en-US", { timeZone: "America/New_York" })
-		);
+		userDate = now.setZone("America/New_York");
 	}
-	const localDate = userDate.toISOString().slice(0, 10); // YYYY-MM-DD
+	const localDate = userDate.toFormat("yyyy-MM-dd");
 
-	const gameTracks = await db.getAllDocuments("gameTracks");
-	const mostRecentGameTrack = gameTracks[gameTracks.length - 1];
-	const secondMostRecentGameTrack = gameTracks[gameTracks.length - 2];
+	const dailyGameTrack = await db.getDocument("gameTracks", localDate);
 
-	if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
+	if (dailyGameTrack) {
 		res.json({
-			song: mostRecentGameTrack.song,
-			artists: mostRecentGameTrack.artists,
-			id: mostRecentGameTrack.id,
-			trackPreview: mostRecentGameTrack.trackPreview,
-			albumCover: mostRecentGameTrack.albumCover,
-			externalUrl: mostRecentGameTrack.externalUrl,
-		});
-	} else if (
-		secondMostRecentGameTrack &&
-		secondMostRecentGameTrack.date === localDate
-	) {
-		res.json({
-			song: secondMostRecentGameTrack.song,
-			artists: secondMostRecentGameTrack.artists,
-			id: secondMostRecentGameTrack.id,
-			trackPreview: secondMostRecentGameTrack.trackPreview,
-			albumCover: secondMostRecentGameTrack.albumCover,
-			externalUrl: secondMostRecentGameTrack.externalUrl,
+			song: dailyGameTrack.song,
+			artists: dailyGameTrack.artists,
+			id: dailyGameTrack.id,
+			trackPreview: dailyGameTrack.trackPreview,
+			albumCover: dailyGameTrack.albumCover,
+			externalUrl: dailyGameTrack.externalUrl,
 		});
 	} else {
-		const newTracks = await db.getAllDocuments("allTracks", {
-			playedBefore: false,
-		});
-		const chooseRandomTrack = (arr) =>
-			arr[Math.floor(Math.random() * arr.length)];
-		const chosenTrack = chooseRandomTrack(newTracks);
+		const mostRecentTracksSnapshot = await db.getAllDocuments("allTracks");
+		const mostRecentTracksTracklist =
+			mostRecentTracksSnapshot.data.tracklist;
 
-		const gameId = gameTracks.length + 1;
+		const randomTrackIndex = Math.floor(
+			Math.random() * mostRecentTracksTracklist.length
+		);
+		const chosenTrack = mostRecentTracksTracklist[randomTrackIndex];
+
+		const mostRecentGameTrack = await db.getLastDocument("gameTracks");
+		let gameId;
+		if (mostRecentGameTrack) gameId = mostRecentGameTrack.data.id + 1;
+		else gameId = 1;
+
 		await db.createDocument("gameTracks", localDate, {
 			song: chosenTrack.song,
-			artist: chosenTrack.artists,
+			artists: chosenTrack.artists,
 			date: localDate,
 			id: gameId,
 			totalPlays: 0,
@@ -77,12 +77,18 @@ router.get("/dailySong", async (req, res) => {
 			},
 		});
 
-		// update playedBefore to true
-		const songSummary = `${chosenTrack.song} - ${chosenTrack.artists.join(
-			", "
-		)}`;
-		chosenTrack.playedBefore = true;
-		await db.updateDocument("allTracks", songSummary, chosenTrack);
+		// update playedBefore property of the chosen song to true
+		mostRecentTracksTracklist[randomTrackIndex].playedBefore = true;
+		const updatedDoc = {
+			createdAt: mostRecentTracksSnapshot.id,
+			snapshotId: mostRecentTracksSnapshot.data.snapshotId,
+			tracklist: mostRecentTracksTracklist,
+		};
+		await db.updateDocument(
+			"allTracks",
+			mostRecentTracksSnapshot.id,
+			updatedDoc
+		);
 
 		// return track info to user
 		res.json({
@@ -97,9 +103,9 @@ router.get("/dailySong", async (req, res) => {
 });
 
 router.get("/allSongs", async (req, res) => {
-	const allTracks = await db.getAllDocuments("allTracks");
+	const allTracks = await db.getLastDocument("allTracks");
 	res.json({
-		trackList: allTracks,
+		tracklist: allTracks.data.tracklist,
 	});
 });
 
