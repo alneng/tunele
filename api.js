@@ -14,7 +14,7 @@ router.use(bodyParser.json());
  * @apiParam {String} timeZone The user's time zone.
  * @apiSuccess {String} song The name of the song.
  * @apiSuccess {String[]} artists The list of artists who performed the song.
- * @apiSuccess {Number} id The unique identifier of the song.
+ * @apiSuccess {Number} id The unique game id.
  * @apiSuccess {String} trackPreview The URL of the song preview (audio).
  * @apiSuccess {String} albumCover The URL of the album cover (image).
  * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
@@ -57,6 +57,9 @@ router.get("/dailySong", async (req, res) => {
 		if (mostRecentGameTrack) gameId = mostRecentGameTrack.data.id + 1;
 		else gameId = 1;
 
+		const date = DateTime.now()
+			.setZone("America/New_York")
+			.toFormat("yyyy-MM-dd HH:mm:ss");
 		await db.createDocument("gameTracks", localDate, {
 			song: chosenTrack.song,
 			artists: chosenTrack.artists,
@@ -75,6 +78,7 @@ router.get("/dailySong", async (req, res) => {
 				5: 0,
 				6: 0,
 			},
+			createdAt: date,
 		});
 
 		// update playedBefore property of the chosen song to true
@@ -102,10 +106,20 @@ router.get("/dailySong", async (req, res) => {
 	}
 });
 
+/**
+ * @api {get} /allSongs Get All Songs for song search
+ * @apiName GetAllSongs
+ * @apiDescription Retrieves a list of all songs in Firestore/allTracks.
+ * @apiSuccess {Array} tracklist List of song objects {song: String, artists: String[]}.
+ */
 router.get("/allSongs", async (req, res) => {
 	const allTracks = await db.getLastDocument("allTracks");
+	const tracklist = allTracks.data.tracklist.map(({ song, artists }) => ({
+		song,
+		artists,
+	}));
 	res.json({
-		tracklist: allTracks.data.tracklist,
+		tracklist: tracklist,
 	});
 });
 
