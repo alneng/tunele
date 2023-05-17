@@ -43,7 +43,7 @@ const BaseGame: React.FC = () => {
 	};
 
 	return (
-		<div>
+		<div className="">
 			<NavBar />
 			<div className="">
 				<Game
@@ -56,7 +56,7 @@ const BaseGame: React.FC = () => {
 				/>
 			</div>
 			{/* show after game is over */}
-			<div className="">
+			<div className="hidden">
 				<GameConclusion
 					song={song}
 					artists={artists}

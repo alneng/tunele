@@ -60,7 +60,7 @@ const CustomGame: React.FC = () => {
 			<div className="">
 				<PlaylistSearch></PlaylistSearch>
 			</div>
-			<div className="">
+			<div className="hidden">
 				<Game
 					song={song}
 					artists={artists}
@@ -71,7 +71,7 @@ const CustomGame: React.FC = () => {
 				/>
 			</div>
 			{/* show after game is over */}
-			<div className="">
+			<div className="hidden">
 				<GameConclusion
 					song={song}
 					artists={artists}
