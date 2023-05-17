@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
 const { DateTime } = require("luxon");
 const cors = require("cors");
 
 const FirestoreSDK = require("./firebase");
 const db = new FirestoreSDK();
 
-router.use(bodyParser.json());
 router.use(cors());
 
 /**
@@ -22,7 +20,7 @@ router.use(cors());
  * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
  */
 router.get("/dailySong", async (req, res) => {
-	let timeZone = req.body.timeZone;
+	let timeZone = req.query.timeZone;
 
 	const now = DateTime.local();
 	let userDate;

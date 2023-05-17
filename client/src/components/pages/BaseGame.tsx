@@ -16,7 +16,10 @@ const BaseGame: React.FC = () => {
 	const [userGuesses, setUserGuesses] = useState<trackGuessFormat[]>([]);
 
 	useEffect(() => {
-		fetch("http://localhost:7600/api/dailySong", { method: "GET" })
+		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		fetch(`http://localhost:7600/api/dailySong?timeZone=${timezone}`, {
+			method: "GET",
+		})
 			.then((response) => response.json())
 			.then((data) => {
 				setSong(data.song);
