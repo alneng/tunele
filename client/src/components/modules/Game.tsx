@@ -1,11 +1,39 @@
+import React from "react";
 
-function Game() {
+import ListGroup from "./ListGroup";
+import AudioPlayer from "./AudioPlayer";
+import SearchBar from "./SearchBar";
 
-    return (
-      <>
-        
-      </>
-    )
-  }
-  
-  export default Game
+import trackGuessFormat from "../interfaces/TrackGuessFormat";
+
+interface GameProps {
+	song: string;
+	artists: string[];
+	trackPreview: string;
+	albumCover: string;
+	userGuesses: trackGuessFormat[];
+	setUserGuesses: (newGuesses: trackGuessFormat[]) => void;
+}
+
+const Game: React.FC<GameProps> = ({
+	song,
+	artists,
+	trackPreview,
+	userGuesses,
+	setUserGuesses,
+}) => {
+	return (
+		<div className="">
+			<ListGroup userGuesses={userGuesses} />
+			<AudioPlayer audioSrc={trackPreview} userGuesses={userGuesses} />
+			<SearchBar
+				userGuesses={userGuesses}
+				onUpdateGuesses={setUserGuesses}
+				song={song}
+				artists={artists}
+			/>
+		</div>
+	);
+};
+
+export default Game;

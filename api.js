@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const { DateTime } = require("luxon");
+const cors = require("cors");
 
 const FirestoreSDK = require("./firebase");
 const db = new FirestoreSDK();
 
 router.use(bodyParser.json());
+router.use(cors());
 
 /**
  * @api {get} /dailySong Get Daily Song
