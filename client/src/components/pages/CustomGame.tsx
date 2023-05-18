@@ -8,6 +8,7 @@ import GameConclusion from "../modules/GameConclusion";
 import PlaylistSearch from "../modules/PlaylistSearch";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
+import trackFormat from "../interfaces/TrackFormat";
 
 const CustomGame: React.FC = () => {
 	const [song, setSong] = useState<string>("");
@@ -16,6 +17,7 @@ const CustomGame: React.FC = () => {
 	const [trackPreview, setTrackPreview] = useState<string>("");
 	const [albumCover, setAlbumCover] = useState<string>("");
 	const [externalUrl, setExternalUrl] = useState<string>("");
+	const [songsInDb, setSongsInDb] = useState<trackFormat[]>([]);
 	const [userGuesses, setUserGuesses] = useState<trackGuessFormat[]>([]);
 
 	const location = useLocation();
@@ -44,6 +46,14 @@ const CustomGame: React.FC = () => {
 					setExternalUrl(data.externalUrl);
 				})
 				.catch((err) => console.error(err));
+			fetch(`http://localhost:7600/api/allSongs`, {
+				method: "GET",
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					setSongsInDb(data.tracklist);
+				})
+				.catch((err) => console.error(err));
 		}
 	}, [location.search]);
 
@@ -68,9 +78,9 @@ const CustomGame: React.FC = () => {
 					song={song}
 					artists={artists}
 					trackPreview={trackPreview}
-					albumCover={albumCover}
 					userGuesses={userGuesses}
 					setUserGuesses={handleUserGuessesUpdate}
+					allSongs={songsInDb}
 				/>
 			</div>
 			{/* show after game is over */}

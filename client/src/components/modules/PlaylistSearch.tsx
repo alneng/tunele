@@ -31,7 +31,7 @@ const PlaylistSearch: React.FC = () => {
 				/>
 				<button
 					onClick={handlePlaylistSearch}
-					className="mt-5 px-6 py-3 rounded bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none"
+					className="mt-5 px-6 py-3 rounded-full bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none"
 				>
 					Start Custom Game
 				</button>

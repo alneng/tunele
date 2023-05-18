@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
+import trackFormat from "../interfaces/TrackFormat";
 
 interface SearchBarProps {
 	userGuesses: trackGuessFormat[];
 	onUpdateGuesses: (newGuesses: trackGuessFormat[]) => void;
 	song: string;
 	artists: string[];
+	allSongs: trackFormat[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -14,6 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 	onUpdateGuesses,
 	song,
 	artists,
+	allSongs,
 }) => {
 	const [inputValue, setInputValue] = useState<string>("");
 
@@ -50,11 +53,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
 	return (
 		<div>
-			<input
-				type="text"
-				value={inputValue}
-				onChange={handleInputChange}
-			/>
+			<div className="text-black">
+				<input
+					type="text"
+					value={inputValue}
+					onChange={handleInputChange}
+				/>
+			</div>
 			<button onClick={handleSkip}>Skip</button>
 			<button onClick={handleAddGuess}>Submit</button>
 		</div>

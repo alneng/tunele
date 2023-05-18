@@ -5,14 +5,15 @@ import AudioPlayer from "./AudioPlayer";
 import SearchBar from "./SearchBar";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
+import trackFormat from "../interfaces/TrackFormat";
 
 interface GameProps {
 	song: string;
 	artists: string[];
 	trackPreview: string;
-	albumCover: string;
 	userGuesses: trackGuessFormat[];
 	setUserGuesses: (newGuesses: trackGuessFormat[]) => void;
+	allSongs: trackFormat[];
 }
 
 const Game: React.FC<GameProps> = ({
@@ -21,6 +22,7 @@ const Game: React.FC<GameProps> = ({
 	trackPreview,
 	userGuesses,
 	setUserGuesses,
+	allSongs,
 }) => {
 	return (
 		<div className="bg-[#131213] flex flex-col justify-center h-screen text-white">
@@ -31,6 +33,7 @@ const Game: React.FC<GameProps> = ({
 				onUpdateGuesses={setUserGuesses}
 				song={song}
 				artists={artists}
+				allSongs={allSongs}
 			/>
 		</div>
 	);
