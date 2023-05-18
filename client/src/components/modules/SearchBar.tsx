@@ -52,7 +52,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 	};
 
 	return (
-		<div>
+		<div className="my-4">
 			<div className="text-black">
 				<input
 					type="text"

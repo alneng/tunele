@@ -25,7 +25,7 @@ const Game: React.FC<GameProps> = ({
 	allSongs,
 }) => {
 	return (
-		<div className="bg-[#131213] flex flex-col justify-center h-screen text-white">
+		<div className="bg-[#131213] flex flex-col justify-center items-center h-screen text-white">
 			<ListGroup userGuesses={userGuesses} />
 			<AudioPlayer audioSrc={trackPreview} userGuesses={userGuesses} />
 			<SearchBar
