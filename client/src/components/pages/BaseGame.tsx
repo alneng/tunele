@@ -39,13 +39,15 @@ const BaseGame: React.FC = () => {
 			newGuesses.length >= 6
 		) {
 			// hide Game module and show GameConclusion module
+			document.getElementById("game")?.classList.add("hidden");
+			document.getElementById("conclusion")?.classList.remove("hidden");
 		}
 	};
 
 	return (
 		<div className="font-sf-pro">
 			<NavBar />
-			<div className="">
+			<div className="" id="game">
 				<Game
 					song={song}
 					artists={artists}
@@ -56,7 +58,7 @@ const BaseGame: React.FC = () => {
 				/>
 			</div>
 			{/* show after game is over */}
-			<div className="hidden">
+			<div className="hidden" id="conclusion">
 				<GameConclusion
 					song={song}
 					artists={artists}

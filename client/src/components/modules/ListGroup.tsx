@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 
@@ -7,15 +7,35 @@ interface ListGroupProps {
 }
 
 const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
-	return (
-		<ul className="text-center w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-black">
-    <li className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Answer 1</li>
-    <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">Answer 2</li>
-    <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">Answer 3</li>
-    <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">Answer 4</li>
-    <li className="w-full px-4 py-2 rounded-b-lg">Answer 5</li>
-    </ul>
+	const [emptyGuesses, setEmptyGuesses] = useState<string[]>([
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+	]);
 
+	useEffect(() => {
+		const newArray: string[] = [...emptyGuesses];
+		newArray.shift();
+		setEmptyGuesses(newArray);
+	}, [userGuesses]);
+
+	return (
+		<div className="flex flex-col items-center mt-24">
+			<div className="w-1/2 text-black">
+				{userGuesses.map((item, index) => (
+					<div className="w-full margin-5 px-4 py-2 m-2 bg-white rounded-lg border-b border-gray-200 dark:border-gray-600">
+						{item.answer}
+					</div>
+				))}
+				{emptyGuesses.map((item, index) => (
+					<div className="w-full margin-5 px-4 py-2 m-2 bg-white rounded-lg border-b border-gray-200 dark:border-gray-600"></div>
+				))}
+			</div>
+		</div>
 	);
 };
 
