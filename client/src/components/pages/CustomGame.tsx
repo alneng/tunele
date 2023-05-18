@@ -31,6 +31,11 @@ const CustomGame: React.FC = () => {
 			)
 				.then((response) => response.json())
 				.then((data) => {
+					document
+						.getElementById("playlist-search")
+						?.classList.add("hidden");
+					document.getElementById("game")?.classList.remove("hidden");
+
 					setSong(data.song);
 					setArtists(data.artists);
 					setId(data.id);
@@ -39,10 +44,8 @@ const CustomGame: React.FC = () => {
 					setExternalUrl(data.externalUrl);
 				})
 				.catch((err) => console.error(err));
-		} else {
-			// render playlist search component
 		}
-	}, []);
+	}, [location.search]);
 
 	const handleUserGuessesUpdate = (newGuesses: trackGuessFormat[]) => {
 		setUserGuesses(newGuesses);
@@ -57,10 +60,10 @@ const CustomGame: React.FC = () => {
 	return (
 		<div>
 			<NavBar />
-			<div className="">
+			<div className="" id="playlist-search">
 				<PlaylistSearch></PlaylistSearch>
 			</div>
-			<div className="hidden">
+			<div className="hidden" id="game">
 				<Game
 					song={song}
 					artists={artists}
