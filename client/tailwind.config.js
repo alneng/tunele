@@ -2,7 +2,11 @@
 export default {
 	content: ["./src/components/**/*.tsx"],
 	theme: {
-		extend: {},
+		extend: {
+			fontFamily: {
+				"sf-pro": ["SF Pro", "sans-serif"],
+			},
+		},
 	},
 	plugins: [],
 };

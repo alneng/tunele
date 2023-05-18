@@ -2,6 +2,12 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@font-face {
+	font-family: "SF Pro";
+	src: url("../fonts/sf-pro-text_regular.woff2") format("woff2");
+	/* Add additional font-weight and font-style declarations for different variations if needed */
+}
+
 html,
 body,
 #root {

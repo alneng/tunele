@@ -58,7 +58,7 @@ const CustomGame: React.FC = () => {
 	};
 
 	return (
-		<div>
+		<div className="font-sf-pro">
 			<NavBar />
 			<div className="" id="playlist-search">
 				<PlaylistSearch></PlaylistSearch>

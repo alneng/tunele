@@ -43,7 +43,7 @@ const BaseGame: React.FC = () => {
 	};
 
 	return (
-		<div className="">
+		<div className="font-sf-pro">
 			<NavBar />
 			<div className="">
 				<Game
