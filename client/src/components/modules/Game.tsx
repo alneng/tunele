@@ -23,7 +23,7 @@ const Game: React.FC<GameProps> = ({
 	setUserGuesses,
 }) => {
 	return (
-		<div className="bg-[#131213] flex flex-col h-screen text-white">
+		<div className="bg-[#131213] grid items-center justify-center h-screen text-white">
 			<ListGroup userGuesses={userGuesses} />
 			<AudioPlayer audioSrc={trackPreview} userGuesses={userGuesses} />
 			<SearchBar
