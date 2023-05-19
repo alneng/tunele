@@ -16,19 +16,28 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
 	}, [userGuesses]);
 
 	return (
-		<div className="w-full flex flex-col items-center mt-24">
+		<div className="w-full flex flex-col items-center">
 			{userGuesses.map((item, index) => (
 				<div
 					key={index}
-					className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg"
+					className={`w-1/2 h-10 px-4 py-2 m-1 bg-gray-800 ${
+						item.isCorrect
+							? "text-green border-2 border-green"
+							: item.isSkipped
+							? "text-white border-2 border-white"
+							: item.isArtist
+							? "text-yellow border-2 border-yellow"
+							: "text-red border-2 border-red"
+					}`}
 				>
-					{item.answer}
+					{item.isSkipped && <p>Skipped</p>}
+					{!item.isSkipped && <p>{item.answer}</p>}
 				</div>
 			))}
 			{emptyGuesses.map((_, index) => (
 				<div
 					key={index}
-					className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg"
+					className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-gray-800"
 				/>
 			))}
 		</div>

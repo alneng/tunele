@@ -42,7 +42,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 	};
 
 	return (
-		<div className="w-full flex flex-col items-center mt-24">
+		<div className="w-full flex flex-col items-center mt-16">
 			<audio
 				src={audioSrc}
 				ref={audioRef}

@@ -9,7 +9,11 @@ export default {
 			colors: {
 				gray: {
 					300: "#8E8EA0",
+					800: "#232323",
 				},
+				yellow: "#fcd53f",
+				red: "#f8312f",
+				green: "#00d26a",
 			},
 		},
 	},
