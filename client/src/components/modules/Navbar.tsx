@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 	};
 
 	return (
-		<div className="bg-[#131213] h-16 flex items-center justify-between border-b-2 border-white">
+		<div className="absolute top-0 left-0 right-0 bg-[#131213] h-16 flex items-center justify-between border-b-2 border-white">
 			<div className="ml-4">
 				<button
 					className="text-white p-2 focus:outline-none"

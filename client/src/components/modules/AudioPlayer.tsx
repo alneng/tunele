@@ -42,27 +42,38 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 	};
 
 	return (
-		<div className="w-full flex flex-col items-center mt-16">
+		<div className="w-full flex flex-col items-center mt-24">
 			<audio
 				src={audioSrc}
 				ref={audioRef}
 				onTimeUpdate={handleProgress}
 				onLoadedData={handleProgress}
 			></audio>
-			<div className="md:w-1/2 w-4/5 h-6 bg-gray-200 my-4">
+			<div className="lg:w-1/3 md:w-1/2 w-4/5 h-6 bg-gray-800">
 				<div
-					className="h-full bg-blue-500"
+					className="h-full bg-[#1fd660]"
 					style={{
 						width: `${progress}%`,
 						transition: "width 0.3s ease-in-out",
 					}}
 				></div>
 			</div>
-			<button
-				onClick={handlePlayback}
-				className="my-2 bg-blue-500 text-white px-4 py-2 rounded"
-			>
-				Play
+			<button onClick={handlePlayback} className="text-white my-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="56"
+					height="56"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="1"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					className="feather feather-play-circle"
+				>
+					<circle cx="12" cy="12" r="10"></circle>
+					<polygon points="10 8 16 12 10 16 10 8"></polygon>
+				</svg>
 			</button>
 		</div>
 	);

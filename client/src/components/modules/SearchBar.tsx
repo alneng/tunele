@@ -89,14 +89,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
 	};
 
 	return (
-		<div className="my-4 w-full flex flex-col items-center justify-center">
+		<div className="w-full flex flex-col items-center justify-center">
 			<input
-				className="md:w-1/3 w-4/5 p-2 bg-[#131213] border-2 border-gray-800 text-white rounded-none focus:outline-none"
+				className="lg:w-1/3 md:w-1/2 w-4/5 p-2 bg-[#131213] border-2 border-gray-800 text-white rounded-none focus:outline-none"
 				type="text"
 				value={inputValue}
 				onChange={handleInputChange}
 			/>
-			<div className="md:w-1/3 w-4/5 pt-4 flex justify-between">
+			<div className="lg:w-1/3 md:w-1/2 w-4/5 pt-4 flex justify-between">
 				<button
 					className="w-1/3 md:w-28 p-4 rounded-full text-center text-white py-2 bg-gray-800 hover:bg-gray-500 focus:outline-none"
 					onClick={handleSkip}
