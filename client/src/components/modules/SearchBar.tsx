@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 		const guess = {
 			answer: "",
 			isCorrect: false,
-			isSkipped: true,
+			isSkipped: false,
 			isArtist: false,
 		};
 		const newGuesses = [...userGuesses, guess];

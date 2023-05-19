@@ -6,6 +6,11 @@ export default {
 			fontFamily: {
 				"sf-pro": ["SF Pro", "sans-serif"],
 			},
+			colors: {
+				gray: {
+					300: "#8E8EA0",
+				},
+			},
 		},
 	},
 	plugins: [],

@@ -21,14 +21,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 
 	const handlePlayback = () => {
 		if (audioRef.current && audioRef.current.paused) {
-			audioRef.current.currentTime = 0; // Start audio from the beginning
-			audioRef.current.play(); // Start playing the audio
+			audioRef.current.currentTime = 0;
+			audioRef.current.play();
 			const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 
 			const timeoutDuration = songLimits[currentLevel];
 
 			setTimeout(() => {
-				audioRef.current?.pause(); // Pause audio after the specified timeout duration
+				audioRef.current?.pause();
 			}, timeoutDuration);
 		}
 	};

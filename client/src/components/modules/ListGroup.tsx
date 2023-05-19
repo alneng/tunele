@@ -7,31 +7,29 @@ interface ListGroupProps {
 }
 
 const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
-	const [emptyGuesses, setEmptyGuesses] = useState<string[]>([
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-	]);
+	const [emptyGuesses, setEmptyGuesses] = useState<string[]>(
+		Array(8).fill("")
+	);
 
 	useEffect(() => {
-		const newArray: string[] = [...emptyGuesses];
-		newArray.shift();
-		setEmptyGuesses(newArray);
+		setEmptyGuesses((prevGuesses) => prevGuesses.slice(1));
 	}, [userGuesses]);
 
 	return (
 		<div className="w-full flex flex-col items-center mt-24">
 			{userGuesses.map((item, index) => (
-				<div className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg">
+				<div
+					key={index}
+					className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg"
+				>
 					{item.answer}
 				</div>
 			))}
-			{emptyGuesses.map((item, index) => (
-				<div className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg"></div>
+			{emptyGuesses.map((_, index) => (
+				<div
+					key={index}
+					className="w-1/2 h-10 px-4 py-2 m-1 text-black bg-white rounded-lg"
+				/>
 			))}
 		</div>
 	);

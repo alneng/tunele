@@ -14,3 +14,25 @@ body,
 	height: 100%;
 	overflow: hidden;
 }
+
+.modal {
+	background-color: #fff;
+	border-radius: 4px;
+	border: none;
+	padding: 20px;
+	margin: 0 auto;
+	max-width: 300px;
+	text-align: center;
+}
+
+.overlay {
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
