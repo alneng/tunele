@@ -110,10 +110,23 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		const isGameFinished =
 			newGuesses[newGuesses.length - 1].isCorrect ||
 			newGuesses.length >= 6;
+		const score = isGameFinished ? newGuesses.length : 0;
+
 		if (isGameFinished) {
 			setGameFinished(true);
+			const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+			const playlistId = queryString.parse(location.search).playlist;
+			fetch(`${apiOrigin}/api/playlist/${playlistId}/stats`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					score: score,
+					timeZone: timezone,
+				}),
+			});
 		}
-		const score = isGameFinished ? newGuesses.length : 0;
 
 		const todaysDataObject = {
 			hasFinished: isGameFinished,

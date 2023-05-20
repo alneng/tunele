@@ -6,11 +6,13 @@ const axios = require("axios");
 const querystring = require("querystring");
 require("dotenv").config();
 const crypto = require("crypto");
+const bodyParser = require("body-parser");
 
 const FirestoreSDK = require("./firebase");
 const db = new FirestoreSDK();
 
 router.use(cors());
+router.use(bodyParser.json());
 
 /**
  * @api {get} /dailySong Get Daily Song
@@ -118,6 +120,34 @@ router.get("/allSongs", async (req, res) => {
 	res.json({
 		tracklist: tracklist,
 	});
+});
+
+/**
+ * @api {post} /stats Add Game Stats
+ * @apiName AddGameStats
+ * @apiParam {Number} score The score to be added.
+ * @apiParam {String} [falls back to timeZone="America/New_York"] The time zone to use for the date.
+ * @apiSuccess {Boolean} success Indicates if the game stats were successfully added.
+ */
+router.post("/stats", async (req, res) => {
+	const score = req.body.score;
+
+	let timeZone = req.query.timeZone || "America/New_York";
+	const now = DateTime.local().setZone(timeZone);
+	const localDate = now.toFormat("yyyy-MM-dd");
+
+	try {
+		const todaysGameTrack = await db.getDocument("gameTracks", localDate);
+		if (todaysGameTrack) {
+			if (!(score >= 0 && score <= 6)) throw Error;
+			todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
+			todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
+			await db.updateDocument("gameTracks", localDate, todaysGameTrack);
+			res.json({ success: true });
+		} else throw Error;
+	} catch (err) {
+		res.json({ success: false });
+	}
 });
 
 /**
@@ -291,6 +321,47 @@ router.get("/playlist/:playlistId/allSongs", async (req, res) => {
 	res.json({
 		tracklist: tracklist,
 	});
+});
+
+/**
+ * @api {post} /playlist/:playlistId/stats Add Game Stats
+ * @apiName AddGameStats
+ * @apiParam {Number} score The score to be added.
+ * @apiParam {String} [falls back to timeZone="America/New_York"] The time zone to use for the date.
+ * @apiSuccess {Boolean} success Indicates if the game stats were successfully added.
+ */
+router.post("/playlist/:playlistId/stats", async (req, res) => {
+	const score = req.body.score;
+	const playlistId = req.params.playlistId;
+
+	let timeZone = req.query.timeZone || "America/New_York";
+	const now = DateTime.local().setZone(timeZone);
+	const localDate = now.toFormat("yyyy-MM-dd");
+
+	try {
+		const playlistObject = await db.getDocument(
+			"customPlaylists",
+			playlistId
+		);
+		let foundTrack = false;
+		for (const track of playlistObject.gameTracks) {
+			if (track.date === localDate) {
+				track.totalPlays = track.totalPlays + 1;
+				track.stats[score] = track.stats[score] + 1;
+
+				foundTrack = true;
+				await db.updateDocument(
+					"customPlaylists",
+					playlistId,
+					playlistObject
+				);
+				res.json({ success: true });
+			}
+		}
+		if (!foundTrack) throw Error;
+	} catch (err) {
+		res.json({ success: false });
+	}
 });
 
 async function fetchAccessToken() {
