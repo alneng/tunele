@@ -145,9 +145,13 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 		// Create or update playlist, tracklist, createdAt
 		const accessToken = await fetchAccessToken();
 		const response = await fetchSongsFromPlaylist(playlistId, accessToken);
-		const sortedSongs = req.query.r
-			? await sortPlaylistResponse(response, playlistObject.gameTracks)
-			: await sortPlaylistResponse(response);
+		const sortedSongs =
+			req.query.r && playlistObject
+				? await sortPlaylistResponse(
+						response,
+						playlistObject.gameTracks
+				  )
+				: await sortPlaylistResponse(response);
 
 		const songsToAdd = {
 			tracklist: sortedSongs,
@@ -159,7 +163,7 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 			updatedAt: "",
 		};
 
-		if (req.query.r) {
+		if (req.query.r && playlistObject) {
 			songsToAdd.gameTracks = playlistObject
 				? playlistObject.gameTracks
 				: [];
