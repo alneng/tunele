@@ -8,7 +8,7 @@ import GameConclusion from "../modules/GameConclusion";
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
 
-const BaseGame: React.FC = () => {
+const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	const [song, setSong] = useState<string>("");
 	const [artists, setArtists] = useState<string[]>([]);
 	const [id, setId] = useState<number>(0);
@@ -32,7 +32,7 @@ const BaseGame: React.FC = () => {
 
 	useEffect(() => {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		fetch(`https://tunele.alaneng.com/api/dailySong?timeZone=${timezone}`, {
+		fetch(`${apiOrigin}/api/dailySong?timeZone=${timezone}`, {
 			method: "GET",
 		})
 			.then((response) => response.json())
@@ -45,7 +45,7 @@ const BaseGame: React.FC = () => {
 				setExternalUrl(data.externalUrl);
 			})
 			.catch((err) => console.error(err));
-		fetch(`https://tunele.alaneng.com/api/allSongs`, {
+		fetch(`${apiOrigin}/api/allSongs`, {
 			method: "GET",
 		})
 			.then((response) => response.json())

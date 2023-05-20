@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import FormattedPossibleAnswer from "../interfaces/FormattedPossibleAnswer";
+
 interface AudioPlayerProps {
 	audioSrc: string;
 	userGuesses: {
-		answer: string;
+		answer: FormattedPossibleAnswer;
 		isCorrect: boolean;
 		isSkipped: boolean;
 		isArtist: boolean;

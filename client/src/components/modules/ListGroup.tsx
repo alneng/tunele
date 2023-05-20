@@ -31,7 +31,7 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
 					}`}
 				>
 					{item.isSkipped && <p>Skipped</p>}
-					{!item.isSkipped && <p>{item.answer}</p>}
+					{!item.isSkipped && <p>{item.answer.formattedString}</p>}
 				</div>
 			))}
 			{emptyGuesses.map((_, index) => (

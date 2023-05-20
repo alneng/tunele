@@ -1,5 +1,7 @@
+import FormattedPossibleAnswer from "./FormattedPossibleAnswer";
+
 interface trackGuessFormat {
-	answer: string;
+	answer: FormattedPossibleAnswer;
 	isCorrect: boolean;
 	isSkipped: boolean;
 	isArtist: boolean;

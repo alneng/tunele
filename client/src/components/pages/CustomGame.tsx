@@ -11,7 +11,7 @@ import PlaylistSearch from "../modules/PlaylistSearch";
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
 
-const CustomGame: React.FC = () => {
+const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	const [song, setSong] = useState<string>("");
 	const [artists, setArtists] = useState<string[]>([]);
 	const [id, setId] = useState<number>(0);
@@ -41,9 +41,10 @@ const CustomGame: React.FC = () => {
 		const playlistId = queryParams.playlist;
 
 		if (playlistId) {
+			const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			fetch(
-				`https://tunele.alaneng.com/api/playlist/${playlistId}/dailySong${
-					queryParams.r ? "?r=1" : ""
+				`${apiOrigin}/api/playlist/${playlistId}/dailySong?timeZone=${timezone}${
+					queryParams.r ? "&r=1" : ""
 				}`,
 				{ method: "GET" }
 			)
@@ -58,10 +59,9 @@ const CustomGame: React.FC = () => {
 					setExternalUrl(data.externalUrl);
 				})
 				.catch((err) => console.error(err));
-			fetch(
-				`https://tunele.alaneng.com/api/playlist/${playlistId}/dailySong`,
-				{ method: "GET" }
-			)
+			fetch(`${apiOrigin}/api/playlist/${playlistId}/allSongs`, {
+				method: "GET",
+			})
 				.then((response) => response.json())
 				.then((data) => {
 					setSongsInDb(data.tracklist);

@@ -64,7 +64,9 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 					</svg>
 				</button>
 			</div>
-			<div className="text-white">Tunele</div>
+			<div className="text-white">
+				<a href="/">Tunele</a>
+			</div>
 			<div className="mr-4">
 				<button
 					className="text-white p-2 focus:outline-none"
