@@ -56,9 +56,10 @@ const CustomGame: React.FC = () => {
 					setExternalUrl(data.externalUrl);
 				})
 				.catch((err) => console.error(err));
-			fetch(`http://localhost:7600/api/allSongs`, {
-				method: "GET",
-			})
+			fetch(
+				`http://localhost:7600/api/playlist/${playlistId}/dailySong`,
+				{ method: "GET" }
+			)
 				.then((response) => response.json())
 				.then((data) => {
 					setSongsInDb(data.tracklist);

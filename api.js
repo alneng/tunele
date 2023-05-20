@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { DateTime } = require("luxon");
 const cors = require("cors");
+const axios = require("axios");
+const querystring = require("querystring");
+require("dotenv").config();
+const crypto = require("crypto");
 
 const FirestoreSDK = require("./firebase");
 const db = new FirestoreSDK();
@@ -20,16 +24,9 @@ router.use(cors());
  * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
  */
 router.get("/dailySong", async (req, res) => {
-	let timeZone = req.query.timeZone;
-
-	const now = DateTime.local();
-	let userDate;
-	try {
-		userDate = now.setZone(timeZone);
-	} catch (err) {
-		userDate = now.setZone("America/New_York");
-	}
-	const localDate = userDate.toFormat("yyyy-MM-dd");
+	let timeZone = req.query.timeZone || "America/New_York";
+	const now = DateTime.local().setZone(timeZone);
+	const localDate = now.toFormat("yyyy-MM-dd");
 
 	const dailyGameTrack = await db.getDocument("gameTracks", localDate);
 
@@ -122,5 +119,235 @@ router.get("/allSongs", async (req, res) => {
 		tracklist: tracklist,
 	});
 });
+
+/**
+ * @api {get} /playlist/:playlistId/dailySong Get Daily Song
+ * @apiName GetDailySong
+ * @apiParam {String} timeZone The user's time zone.
+ * @apiSuccess {String} song The name of the song.
+ * @apiSuccess {String[]} artists The list of artists who performed the song.
+ * @apiSuccess {Number} id The unique game id.
+ * @apiSuccess {String} trackPreview The URL of the song preview (audio).
+ * @apiSuccess {String} albumCover The URL of the album cover (image).
+ * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
+ * @apiDescription This endpoint retrieves the daily song from a specified playlist.
+ */
+router.get("/playlist/:playlistId/dailySong", async (req, res) => {
+	const playlistId = req.params.playlistId;
+	const playlistObject = await db.getDocument("customPlaylists", playlistId);
+
+	let timeZone = req.query.timeZone || "America/New_York";
+	const now = DateTime.local().setZone(timeZone);
+	const localDate = now.toFormat("yyyy-MM-dd");
+
+	if (!playlistObject || req.query.r === "1") {
+		// If no playlist object or refresh songs flag passed
+		// Create or update playlist, tracklist, createdAt
+		const accessToken = await fetchAccessToken();
+		const response = await fetchSongsFromPlaylist(playlistId, accessToken);
+
+		const sortedSongs = await sortPlaylistResponse(response);
+		const songsToAdd = {
+			tracklist: sortedSongs,
+			snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
+			createdAt: DateTime.now()
+				.setZone("America/New_York")
+				.toFormat("yyyy-MM-dd HH:mm:ss"),
+			gameTracks: [],
+		};
+
+		if (req.query.r) {
+			songsToAdd.gameTracks = playlistObject
+				? playlistObject.gameTracks
+				: [];
+			await db.updateDocument("customPlaylists", playlistId, songsToAdd);
+		} else {
+			await db.createDocument("customPlaylists", playlistId, songsToAdd);
+		}
+	} else {
+		// Check if most recent game track = today
+		const mostRecentGameTrack =
+			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+
+		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
+			return res.json({
+				song: mostRecentGameTrack.song,
+				artists: mostRecentGameTrack.artists,
+				id: mostRecentGameTrack.id,
+				trackPreview: mostRecentGameTrack.trackPreview,
+				albumCover: mostRecentGameTrack.albumCover,
+				externalUrl: mostRecentGameTrack.externalUrl,
+			});
+		}
+	}
+
+	// Check if refresh flag is true but the daily song was already chosen
+	if (req.query.r && playlistObject) {
+		const mostRecentGameTrack =
+			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+
+		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
+			return res.json({
+				song: mostRecentGameTrack.song,
+				artists: mostRecentGameTrack.artists,
+				id: mostRecentGameTrack.id,
+				trackPreview: mostRecentGameTrack.trackPreview,
+				albumCover: mostRecentGameTrack.albumCover,
+				externalUrl: mostRecentGameTrack.externalUrl,
+			});
+		}
+	}
+
+	// Choose new game track
+	const updatedPlaylistObject = await db.getDocument(
+		"customPlaylists",
+		playlistId
+	);
+	const allTracksList = updatedPlaylistObject.tracklist;
+
+	// Use while loop to make sure chosenTrack.playedBefore === false
+	let randomTrackIndex;
+	let chosenTrack;
+	do {
+		randomTrackIndex = Math.floor(Math.random() * allTracksList.length);
+		chosenTrack = allTracksList[randomTrackIndex];
+	} while (chosenTrack.playedBefore);
+
+	const gameTracksList = updatedPlaylistObject.gameTracks;
+	const gameId =
+		gameTracksList.length > 0
+			? gameTracksList[gameTracksList.length - 1].id + 1
+			: 1;
+
+	// Make modifications to `updatedPlaylistObject`
+	const newGameTrack = {
+		song: chosenTrack.song,
+		artists: chosenTrack.artists,
+		date: localDate,
+		id: gameId,
+		totalPlays: 0,
+		trackPreview: chosenTrack.trackPreview,
+		albumCover: chosenTrack.albumCover,
+		externalUrl: chosenTrack.externalUrl,
+		stats: {
+			0: 0,
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+			5: 0,
+			6: 0,
+		},
+	};
+
+	updatedPlaylistObject.createdAt = DateTime.now()
+		.setZone("America/New_York")
+		.toFormat("yyyy-MM-dd HH:mm:ss");
+	updatedPlaylistObject.gameTracks.push(newGameTrack);
+	updatedPlaylistObject.tracklist[randomTrackIndex].playedBefore = true;
+	await db.updateDocument(
+		"customPlaylists",
+		playlistId,
+		updatedPlaylistObject
+	);
+
+	res.json({
+		song: chosenTrack.song,
+		artists: chosenTrack.artists,
+		id: chosenTrack.id,
+		trackPreview: chosenTrack.trackPreview,
+		albumCover: chosenTrack.albumCover,
+		externalUrl: chosenTrack.externalUrl,
+	});
+});
+
+/**
+ * @api {get} /playlist/:playlistId/allSongs Get All Songs for song search
+ * @apiName GetAllSongs
+ * @apiDescription Retrieves a list of all songs for the playlist.
+ * @apiSuccess {Array} tracklist List of song objects {song: String, artists: String[]}.
+ */
+router.get("/playlist/:playlistId/allSongs", async (req, res) => {
+	const playlistId = req.params.playlistId;
+
+	const allTracks = await db.getDocument("customPlaylists", playlistId);
+	const tracklist = allTracks.tracklist.map(({ song, artists }) => ({
+		song,
+		artists,
+	}));
+	res.json({
+		tracklist: tracklist,
+	});
+});
+
+async function fetchAccessToken() {
+	return new Promise(async (resolve, reject) => {
+		const data = {
+			grant_type: "client_credentials",
+		};
+		const options = {
+			method: "POST",
+			headers: {
+				Authorization: `Basic ${process.env.SPOTIFY_CLIENT_KEY}`,
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			data: querystring.stringify(data),
+			url: "https://accounts.spotify.com/api/token",
+		};
+		const response = (await axios(options)).data;
+		const accessToken = response.access_token;
+		resolve(accessToken);
+	});
+}
+
+async function fetchSongsFromPlaylist(playlistId, token) {
+	return new Promise((resolve, reject) => {
+		axios({
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			url: `https://api.spotify.com/v1/playlists/${playlistId}`,
+		})
+			.then((response) => {
+				const data = response.data;
+				resolve(data);
+			})
+			.catch((err) => reject(err));
+	});
+}
+
+async function sortPlaylistResponse(response) {
+	return new Promise((resolve, reject) => {
+		const trackItems = response.tracks.items;
+		const sortedSongs = [];
+
+		[...trackItems].forEach(async (trackItem) => {
+			const track = trackItem.track;
+			const title = track.name;
+			const artists = [];
+			track.artists.forEach((artist) => {
+				artists.push(artist.name);
+			});
+			const externalUrl = track.external_urls.spotify;
+			const trackPreview = track.preview_url;
+			const albumCover = track.album.images[0].url;
+			const spotifyUri = track.id;
+			const document = {
+				song: title,
+				artists: artists,
+				spotifyUri: spotifyUri,
+				trackPreview: trackPreview,
+				albumCover: albumCover,
+				externalUrl: externalUrl,
+				playedBefore: false,
+			};
+			sortedSongs.push(document);
+		});
+
+		resolve(sortedSongs);
+	});
+}
 
 module.exports = router;
