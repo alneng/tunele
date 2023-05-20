@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
@@ -40,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 		setPossibleAnswers([]);
 		setIsButtonDisabled(true);
 
-		if (event.target.value.length >= 3) {
+		if (event.target.value.length >= 2) {
 			const matchingAnswers: FormattedPossibleAnswer[] = [];
 			const inputValueLowercase = event.target.value.toLowerCase();
 			const addedToAnswersMap: { [key: string]: boolean } = {};

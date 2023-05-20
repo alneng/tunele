@@ -50,6 +50,24 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 			)
 				.then((response) => response.json())
 				.then((data) => {
+					const userData = JSON.parse(
+						localStorage.getItem("userData") || "null"
+					) || { main: [], custom: {} };
+					if (!localStorage.getItem("userData")) {
+						localStorage.setItem(
+							"userData",
+							JSON.stringify({ main: [], custom: {} })
+						);
+					}
+
+					const customPlaylistObject =
+						userData.custom[playlistId as string];
+					const isLastDataObjectMatchingId =
+						customPlaylistObject &&
+						customPlaylistObject[customPlaylistObject.length - 1] &&
+						customPlaylistObject[customPlaylistObject.length - 1]
+							.id === data.id;
+
 					setvalidPlaylist(true);
 					setSong(data.song);
 					setArtists(data.artists);
@@ -57,14 +75,30 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 					setTrackPreview(data.trackPreview);
 					setAlbumCover(data.albumCover);
 					setExternalUrl(data.externalUrl);
-				})
-				.catch((err) => console.error(err));
-			fetch(`${apiOrigin}/api/playlist/${playlistId}/allSongs`, {
-				method: "GET",
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					setSongsInDb(data.tracklist);
+
+					if (isLastDataObjectMatchingId) {
+						setUserGuesses(
+							customPlaylistObject[
+								customPlaylistObject.length - 1
+							].guessList
+						);
+						if (
+							customPlaylistObject[
+								customPlaylistObject.length - 1
+							].hasFinished
+						) {
+							setGameFinished(true);
+						}
+					}
+
+					fetch(`${apiOrigin}/api/playlist/${playlistId}/allSongs`, {
+						method: "GET",
+					})
+						.then((response) => response.json())
+						.then((data) => {
+							setSongsInDb(data.tracklist);
+						})
+						.catch((err) => console.error(err));
 				})
 				.catch((err) => console.error(err));
 		}
@@ -72,12 +106,48 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 
 	const handleUserGuessesUpdate = (newGuesses: trackGuessFormat[]) => {
 		setUserGuesses(newGuesses);
-		if (
+
+		const isGameFinished =
 			newGuesses[newGuesses.length - 1].isCorrect ||
-			newGuesses.length >= 6
-		) {
+			newGuesses.length >= 6;
+		if (isGameFinished) {
 			setGameFinished(true);
 		}
+		const score = isGameFinished ? newGuesses.length : 0;
+
+		const todaysDataObject = {
+			hasFinished: isGameFinished,
+			hasStarted: true,
+			id: id,
+			score: score,
+			guessList: newGuesses,
+		};
+
+		let data = JSON.parse(localStorage.getItem("userData") || "null") || {
+			main: [],
+			custom: [],
+		};
+
+		const playlistId = queryString.parse(location.search).playlist;
+		const playlistData = data.custom[playlistId as string];
+
+		if (playlistData) {
+			const isLastDataObjectMatchingId =
+				Array.isArray(playlistData) &&
+				playlistData.length > 0 &&
+				playlistData[playlistData.length - 1].id === id;
+
+			if (isLastDataObjectMatchingId) {
+				playlistData[playlistData.length - 1] = todaysDataObject;
+			} else {
+				playlistData.push(todaysDataObject);
+			}
+			data.custom[playlistId as string] = playlistData;
+		} else {
+			data.custom[playlistId as string] = [todaysDataObject];
+		}
+
+		localStorage.setItem("userData", JSON.stringify(data));
 	};
 
 	return (

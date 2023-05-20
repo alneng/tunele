@@ -31,38 +31,94 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	};
 
 	useEffect(() => {
+		fetchData();
+		fetchAllSongs();
+	}, []);
+
+	const fetchData = () => {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		fetch(`${apiOrigin}/api/dailySong?timeZone=${timezone}`, {
-			method: "GET",
-		})
+		fetch(`${apiOrigin}/api/dailySong?timeZone=${timezone}`)
 			.then((response) => response.json())
 			.then((data) => {
+				const userData = JSON.parse(
+					localStorage.getItem("userData") || "null"
+				) || { main: [], custom: {} };
+				if (!localStorage.getItem("userData")) {
+					localStorage.setItem(
+						"userData",
+						JSON.stringify({ main: [], custom: {} })
+					);
+				}
+
+				const isLastDataObjectMatchingId =
+					Array.isArray(userData.main) &&
+					userData.main.length > 0 &&
+					userData.main[userData.main.length - 1].id === data.id;
+
 				setSong(data.song);
 				setArtists(data.artists);
 				setId(data.id);
 				setTrackPreview(data.trackPreview);
 				setAlbumCover(data.albumCover);
 				setExternalUrl(data.externalUrl);
+
+				if (isLastDataObjectMatchingId) {
+					setUserGuesses(
+						userData.main[userData.main.length - 1].guessList
+					);
+					if (userData.main[userData.main.length - 1].hasFinished) {
+						setGameFinished(true);
+					}
+				}
 			})
 			.catch((err) => console.error(err));
-		fetch(`${apiOrigin}/api/allSongs`, {
-			method: "GET",
-		})
+	};
+
+	const fetchAllSongs = () => {
+		fetch(`${apiOrigin}/api/allSongs`)
 			.then((response) => response.json())
 			.then((data) => {
 				setSongsInDb(data.tracklist);
 			})
 			.catch((err) => console.error(err));
-	}, []);
+	};
 
 	const handleUserGuessesUpdate = (newGuesses: trackGuessFormat[]) => {
 		setUserGuesses(newGuesses);
-		if (
+
+		const isGameFinished =
 			newGuesses[newGuesses.length - 1].isCorrect ||
-			newGuesses.length >= 6
-		) {
+			newGuesses.length >= 6;
+		if (isGameFinished) {
 			setGameFinished(true);
 		}
+		const score = isGameFinished ? newGuesses.length : 0;
+
+		const todaysDataObject = {
+			hasFinished: isGameFinished,
+			hasStarted: true,
+			id: id,
+			score: score,
+			guessList: newGuesses,
+		};
+
+		let data = JSON.parse(localStorage.getItem("userData") || "null") || {
+			main: [],
+			custom: {},
+		};
+
+		const isLastDataObjectMatchingId =
+			Array.isArray(data.main) &&
+			data.main.length > 0 &&
+			data.main[data.main.length - 1].id === id;
+
+		if (isLastDataObjectMatchingId) {
+			data.main[data.main.length - 1] = todaysDataObject;
+		} else {
+			data.main.push(todaysDataObject);
+		}
+
+		localStorage.setItem("userData", JSON.stringify(data));
 	};
 
 	return (
