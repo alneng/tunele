@@ -145,21 +145,30 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 		// Create or update playlist, tracklist, createdAt
 		const accessToken = await fetchAccessToken();
 		const response = await fetchSongsFromPlaylist(playlistId, accessToken);
+		const sortedSongs = req.query.r
+			? await sortPlaylistResponse(response, playlistObject.gameTracks)
+			: await sortPlaylistResponse(response);
 
-		const sortedSongs = await sortPlaylistResponse(response);
 		const songsToAdd = {
 			tracklist: sortedSongs,
 			snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
+			gameTracks: [],
 			createdAt: DateTime.now()
 				.setZone("America/New_York")
 				.toFormat("yyyy-MM-dd HH:mm:ss"),
-			gameTracks: [],
+			updatedAt: "",
 		};
 
 		if (req.query.r) {
 			songsToAdd.gameTracks = playlistObject
 				? playlistObject.gameTracks
 				: [];
+			songsToAdd.createdAt = playlistObject
+				? playlistObject.createdAt
+				: songsToAdd.createdAt;
+			songsToAdd.updatedAt = DateTime.now()
+				.setZone("America/New_York")
+				.toFormat("yyyy-MM-dd HH:mm:ss");
 			await db.updateDocument("customPlaylists", playlistId, songsToAdd);
 		} else {
 			await db.createDocument("customPlaylists", playlistId, songsToAdd);
@@ -318,7 +327,7 @@ async function fetchSongsFromPlaylist(playlistId, token) {
 	});
 }
 
-async function sortPlaylistResponse(response) {
+async function sortPlaylistResponse(response, pastGameTracks) {
 	return new Promise((resolve, reject) => {
 		const trackItems = response.tracks.items;
 		const sortedSongs = [];
@@ -334,6 +343,9 @@ async function sortPlaylistResponse(response) {
 			const trackPreview = track.preview_url;
 			const albumCover = track.album.images[0].url;
 			const spotifyUri = track.id;
+			const playedBefore = pastGameTracks
+				? checkIfInGameTracks(externalUrl, pastGameTracks)
+				: false;
 			const document = {
 				song: title,
 				artists: artists,
@@ -341,13 +353,20 @@ async function sortPlaylistResponse(response) {
 				trackPreview: trackPreview,
 				albumCover: albumCover,
 				externalUrl: externalUrl,
-				playedBefore: false,
+				playedBefore: playedBefore,
 			};
-			sortedSongs.push(document);
+			if (trackPreview) sortedSongs.push(document);
 		});
 
 		resolve(sortedSongs);
 	});
+}
+
+function checkIfInGameTracks(externalUrl, gameTracks) {
+	for (const track of gameTracks) {
+		if (track.externalUrl === externalUrl) return true;
+	}
+	return false;
 }
 
 module.exports = router;

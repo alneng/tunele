@@ -10,7 +10,7 @@ const PlaylistSearch: React.FC = () => {
 	const handlePlaylistSearch = () => {
 		const playlistId = inputValue.split("/")[4].split("?")[0];
 		if (inputValue.length !== 0)
-			window.location.href = `/custom?playlist=${playlistId}`;
+			window.location.href = `/custom?playlist=${playlistId}&r=1`;
 	};
 
 	return (

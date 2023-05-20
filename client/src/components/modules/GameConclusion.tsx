@@ -55,19 +55,21 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
 			guessListSummary.push("⬛");
 		}
 
-		const shareString: string = `Tunele #${id}\n${guessListSummary.join(
-			""
-		)}\n${self.location.origin}`;
+		let shareString = `Tunele #${id}\n${guessListSummary.join("")}\n${
+			self.location.href.split("&")[0]
+		}`;
+		if (self.location.search.includes("playlist"))
+			shareString = `Custom ${shareString}`;
 		navigator.clipboard.writeText(shareString);
 	};
 
 	return (
-		<div className="bg-[#131213] flex flex-col h-screen items-center text-white">
+		<div className="bg-[#131213] flex flex-col h-screen justify-center items-center text-white">
 			<a href={externalUrl} target="_blank">
 				<img
 					src={albumCover}
 					alt="Album Cover"
-					className="max-w-[300px] mt-24"
+					className="max-w-[300px]"
 				/>
 			</a>
 

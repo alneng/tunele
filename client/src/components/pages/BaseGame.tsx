@@ -32,7 +32,7 @@ const BaseGame: React.FC = () => {
 
 	useEffect(() => {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		fetch(`http://localhost:7600/api/dailySong?timeZone=${timezone}`, {
+		fetch(`https://tunele.alaneng.com/api/dailySong?timeZone=${timezone}`, {
 			method: "GET",
 		})
 			.then((response) => response.json())
@@ -45,7 +45,7 @@ const BaseGame: React.FC = () => {
 				setExternalUrl(data.externalUrl);
 			})
 			.catch((err) => console.error(err));
-		fetch(`http://localhost:7600/api/allSongs`, {
+		fetch(`https://tunele.alaneng.com/api/allSongs`, {
 			method: "GET",
 		})
 			.then((response) => response.json())

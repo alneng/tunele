@@ -104,7 +104,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					Skip
 				</button>
 				<button
-					className="w-1/3 md:w-28 p-4 rounded-full text-center text-black py-2 bg-[#1fd660] hover:bg-[#18b853] focus:outline-none"
+					className={`w-1/3 md:w-28 p-4 rounded-full text-center text-black py-2 focus:outline-none ${
+						isButtonDisabled
+							? "bg-[#18b853]"
+							: "bg-[#1fd660] hover:bg-[#18b853]"
+					}`}
 					disabled={isButtonDisabled}
 					onClick={handleAddGuess}
 				>

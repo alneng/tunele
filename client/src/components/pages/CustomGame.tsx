@@ -42,7 +42,9 @@ const CustomGame: React.FC = () => {
 
 		if (playlistId) {
 			fetch(
-				`http://localhost:7600/api/playlist/${playlistId}/dailySong`,
+				`https://tunele.alaneng.com/api/playlist/${playlistId}/dailySong${
+					queryParams.r ? "?r=1" : ""
+				}`,
 				{ method: "GET" }
 			)
 				.then((response) => response.json())
@@ -57,7 +59,7 @@ const CustomGame: React.FC = () => {
 				})
 				.catch((err) => console.error(err));
 			fetch(
-				`http://localhost:7600/api/playlist/${playlistId}/dailySong`,
+				`https://tunele.alaneng.com/api/playlist/${playlistId}/dailySong`,
 				{ method: "GET" }
 			)
 				.then((response) => response.json())
