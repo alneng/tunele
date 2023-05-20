@@ -1,10 +1,12 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./FirebaseServiceAccountKey.json");
+require("dotenv").config();
 
 class FirestoreDB {
 	constructor() {
 		admin.initializeApp({
-			credential: admin.credential.cert(serviceAccount),
+			credential: admin.credential.cert(
+				JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
+			),
 		});
 
 		this.db = admin.firestore();
