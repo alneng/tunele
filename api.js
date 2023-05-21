@@ -295,12 +295,12 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 	);
 
 	res.json({
-		song: chosenTrack.song,
-		artists: chosenTrack.artists,
-		id: chosenTrack.id,
-		trackPreview: chosenTrack.trackPreview,
-		albumCover: chosenTrack.albumCover,
-		externalUrl: chosenTrack.externalUrl,
+		song: newGameTrack.song,
+		artists: newGameTrack.artists,
+		id: newGameTrack.id,
+		trackPreview: newGameTrack.trackPreview,
+		albumCover: newGameTrack.albumCover,
+		externalUrl: newGameTrack.externalUrl,
 	});
 });
 
