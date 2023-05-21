@@ -7,9 +7,15 @@ import NavBar from "../modules/Navbar";
 import Game from "../modules/Game";
 import GameConclusion from "../modules/GameConclusion";
 import PlaylistSearch from "../modules/PlaylistSearch";
+import HelpModal from "../modules/HelpModal";
+import StatsModal from "../modules/StatsModal";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
+
+interface StatsBarHeightsState {
+	[key: number]: number;
+}
 
 const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	const [song, setSong] = useState<string>("");
@@ -24,10 +30,15 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	const [gameFinished, setGameFinished] = useState<boolean>(false);
 	const [validPlaylist, setvalidPlaylist] = useState<boolean>(false);
 
-	const [isHelpModalOpen, setHelpModalState] = useState(false);
-	const [isStatsModalOpen, setStatsModalState] = useState(false);
+	const [isHelpModalOpen, setHelpModalState] = useState<boolean>(false);
+	const [isStatsModalOpen, setStatsModalState] = useState<boolean>(false);
+	const [statsBarHeights, setStatsBarHeights] =
+		useState<StatsBarHeightsState>({});
+	const [statsCorrectString, setStatsCorrectString] = useState<string>("0/0");
+	const [statsCorrectPercentageString, setStatsCorrectPercentageString] =
+		useState<string>("0.0");
 
-	const closeHelpModal = () => {
+	const onRequestCloseHelpModal = () => {
 		setHelpModalState(false);
 	};
 	const closeStatsModal = () => {
@@ -38,7 +49,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 
 	useEffect(() => {
 		const queryParams = queryString.parse(location.search);
-		const playlistId = queryParams.playlist;
+		const playlistId = queryString.parse(location.search).playlist;
 
 		if (playlistId) {
 			const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -110,7 +121,10 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		const isGameFinished =
 			newGuesses[newGuesses.length - 1].isCorrect ||
 			newGuesses.length >= 6;
-		const score = isGameFinished ? newGuesses.length : 0;
+		const score =
+			isGameFinished && newGuesses[newGuesses.length - 1].isCorrect
+				? newGuesses.length
+				: 0;
 
 		if (isGameFinished) {
 			setGameFinished(true);
@@ -163,6 +177,86 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		localStorage.setItem("userData", JSON.stringify(data));
 	};
 
+	useEffect(() => {
+		function countScores(array: any[]): { [key: number]: number } {
+			const scoreCounts: { [key: number]: number } = {};
+			for (let i = 1; i <= 6; i++) scoreCounts[i] = 0;
+			scoreCounts[0] = 0;
+
+			for (const item of array) {
+				const score = item.score;
+				scoreCounts[score] += 1;
+			}
+
+			return scoreCounts;
+		}
+
+		function mapObject(
+			obj: { [key: string]: any },
+			callback: (value: any, key: string) => any
+		): { [key: string]: any } {
+			return Object.keys(obj).reduce(
+				(result: { [key: string]: any }, key: string) => {
+					result[key] = callback(obj[key], key);
+					return result;
+				},
+				{}
+			);
+		}
+
+		function maxProp(obj: { [key: string]: number }): number {
+			let maxValue = -Infinity;
+			for (const key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					const value = obj[key];
+					if (value > maxValue) {
+						maxValue = value;
+					}
+				}
+			}
+			return maxValue;
+		}
+
+		const calculateBarHeights = (localData: any, playlistId: any) => {
+			const scores: {} = countScores(
+				localData.custom[playlistId as string]
+			);
+			const max: number = maxProp(scores);
+			if (max === 0) return Array(7).fill(0);
+			return mapObject(scores, (value, _) => (value / max) * 100);
+		};
+
+		function calculateStatsBottom(localData: any, playlistId: any) {
+			localData = localData.custom[playlistId as string];
+			const totalLength = localData.length;
+			let numCorrect = 0;
+			for (const game of localData) {
+				if (game.score > 0) numCorrect++;
+			}
+			const formattedString = `${numCorrect}/${totalLength}`;
+			const formattedPercentageString = `${(
+				(numCorrect / totalLength) *
+				100
+			).toFixed(1)}`;
+			setStatsCorrectString(formattedString);
+			setStatsCorrectPercentageString(formattedPercentageString);
+		}
+
+		const queryParams = queryString.parse(location.search);
+		const playlistId = queryParams.playlist;
+		const localData = JSON.parse(
+			localStorage.getItem("userData") || "null"
+		);
+
+		if (playlistId && localData.custom[playlistId as string]) {
+			const barHeights = calculateBarHeights(localData, playlistId);
+			setStatsBarHeights(barHeights);
+			calculateStatsBottom(localData, playlistId);
+		} else {
+			setStatsBarHeights(Array(7).fill(0));
+		}
+	}, [isStatsModalOpen]);
+
 	return (
 		<div className="font-sf-pro">
 			<NavBar
@@ -202,45 +296,27 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 			{/* modals */}
 			<Modal
 				isOpen={isHelpModalOpen}
-				onRequestClose={closeHelpModal}
-				className="modal"
+				onRequestClose={onRequestCloseHelpModal}
+				className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
 				overlayClassName="overlay"
 				ariaHideApp={false}
 			>
-				<div className="flex flex-col items-center">
-					<p className="text-2xl font-semibold">How to Play</p>
-					<div className="mt-6 mb-6">
-						<p>Instructions</p>
-					</div>
-					<button
-						onClick={closeHelpModal}
-						className="mt-4 px-4 py-2 bg-gray-300 rounded-full"
-					>
-						Close
-					</button>
-				</div>
+				<HelpModal
+					onRequestCloseHelpModal={onRequestCloseHelpModal}
+				></HelpModal>
 			</Modal>
 			<Modal
 				isOpen={isStatsModalOpen}
 				onRequestClose={closeStatsModal}
-				className="modal"
+				className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
 				overlayClassName="overlay"
 				ariaHideApp={false}
 			>
-				<div className="flex flex-col items-center">
-					<p className="text-2xl font-semibold">
-						Your Stats (Custom)
-					</p>
-					<div className="mt-6 mb-6">
-						<p>Stats</p>
-					</div>
-					<button
-						onClick={closeStatsModal}
-						className="mt-4 px-4 py-2 bg-gray-300 rounded-full"
-					>
-						Close
-					</button>
-				</div>
+				<StatsModal
+					statsBarHeights={statsBarHeights}
+					statsCorrectString={statsCorrectString}
+					statsCorrectPercentageString={statsCorrectPercentageString}
+				></StatsModal>
 			</Modal>
 		</div>
 	);

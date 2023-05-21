@@ -5,7 +5,6 @@
 @font-face {
 	font-family: "SF Pro";
 	src: url("../fonts/sf-pro-text_regular.woff2") format("woff2");
-	/* Add additional font-weight and font-style declarations for different variations if needed */
 }
 
 html,
@@ -13,16 +12,6 @@ body,
 #root {
 	height: 100%;
 	overflow: hidden;
-}
-
-.modal {
-	background-color: #fff;
-	border-radius: 4px;
-	border: none;
-	padding: 20px;
-	margin: 0 auto;
-	max-width: 300px;
-	text-align: center;
 }
 
 .overlay {
