@@ -5,7 +5,7 @@ import BaseGame from "./pages/BaseGame";
 import CustomGame from "./pages/CustomGame";
 import NotFound from "./pages/NotFound";
 
-const API_ORIGIN: string = "https://tunele-api.alaneng.com";
+const API_ORIGIN: string = "https://api.tunele.app";
 
 const App: React.FC = () => {
 	return (
