@@ -246,7 +246,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		const playlistId = queryParams.playlist;
 		const localData = JSON.parse(
 			localStorage.getItem("userData") || "null"
-		);
+		) || { main: [], custom: {} };
 
 		if (playlistId && localData.custom[playlistId as string]) {
 			const barHeights = calculateBarHeights(localData, playlistId);
