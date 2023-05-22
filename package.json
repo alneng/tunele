@@ -1,6 +1,6 @@
 {
 	"name": "tunele",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "An open-source clone of the music game Heardle",
 	"main": "app.js",
 	"scripts": {
