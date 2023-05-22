@@ -153,7 +153,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					className="w-1/3 md:w-28 p-4 rounded-full text-center text-white py-2 bg-gray-800 hover:bg-gray-500 focus:outline-none"
 					onClick={handleSkip}
 				>
-					Skip
+					{userGuesses.length < 5 && (
+						<p>Skip (+{userGuesses.length + 1}s)</p>
+					)}
+					{userGuesses.length == 5 && <p>Reveal</p>}
 				</button>
 				<button
 					className={`w-1/3 md:w-28 p-4 rounded-full text-center text-black py-2 focus:outline-none ${
