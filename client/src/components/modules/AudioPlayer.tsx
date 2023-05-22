@@ -17,6 +17,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 	const [progress, setProgress] = useState<number>(0);
 	const [currentLevel, setCurrentLevel] = useState<number>(0);
 
+	const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
+
 	useEffect(() => {
 		setCurrentLevel(userGuesses.length);
 	}, [userGuesses]);
@@ -24,14 +26,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 	const handlePlayback = () => {
 		if (audioRef.current && audioRef.current.paused) {
 			audioRef.current.currentTime = 0;
-			audioRef.current.play();
-			const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 
 			const timeoutDuration = songLimits[currentLevel];
 
 			setTimeout(() => {
 				audioRef.current?.pause();
-			}, timeoutDuration);
+			}, timeoutDuration + 100);
+
+			audioRef.current.play();
 		}
 	};
 
@@ -51,7 +53,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 				onTimeUpdate={handleProgress}
 				onLoadedData={handleProgress}
 			></audio>
-			<div className="lg:w-1/3 md:w-1/2 w-4/5 h-6 bg-gray-800">
+			<div className="relative lg:w-1/3 md:w-1/2 w-4/5 h-6 bg-gray-800">
+				{songLimits.map((interval, index) => (
+					<div
+						key={index}
+						className="absolute h-full bg-gray-300"
+						style={{
+							left: `${(interval / 16000) * 100}%`,
+							width: "2px",
+						}}
+					></div>
+				))}
 				<div
 					className="h-full bg-[#1fd660]"
 					style={{

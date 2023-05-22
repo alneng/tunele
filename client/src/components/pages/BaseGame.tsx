@@ -6,6 +6,7 @@ import Game from "../modules/Game";
 import GameConclusion from "../modules/GameConclusion";
 import HelpModal from "../modules/HelpModal";
 import StatsModal from "../modules/StatsModal";
+import Loader from "../modules/Loader";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
@@ -228,7 +229,12 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 				setHelpModal={setHelpModalState}
 				setStatsModal={setStatsModalState}
 			/>
-			{!gameFinished && (
+			{!trackPreview && (
+				<div id="loader">
+					<Loader></Loader>
+				</div>
+			)}
+			{!gameFinished && trackPreview && (
 				<div id="game">
 					<Game
 						song={song}
@@ -240,7 +246,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 					/>
 				</div>
 			)}
-			{gameFinished && (
+			{gameFinished && trackPreview && (
 				<div id="conclusion">
 					<GameConclusion
 						song={song}

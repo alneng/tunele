@@ -9,6 +9,7 @@ import GameConclusion from "../modules/GameConclusion";
 import PlaylistSearch from "../modules/PlaylistSearch";
 import HelpModal from "../modules/HelpModal";
 import StatsModal from "../modules/StatsModal";
+import Loader from "../modules/Loader";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
 import trackFormat from "../interfaces/TrackFormat";
@@ -246,7 +247,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		const playlistId = queryParams.playlist;
 		const localData = JSON.parse(
 			localStorage.getItem("userData") || "null"
-		);
+		) || { main: [], custom: {} };
 
 		if (playlistId && localData.custom[playlistId as string]) {
 			const barHeights = calculateBarHeights(localData, playlistId);
@@ -263,12 +264,17 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 				setHelpModal={setHelpModalState}
 				setStatsModal={setStatsModalState}
 			/>
+			{!trackPreview && self.location.search.split("&")[1] === "r=1" && (
+				<div id="loader">
+					<Loader></Loader>
+				</div>
+			)}
 			{!validPlaylist && (
 				<div id="playlist-search">
 					<PlaylistSearch></PlaylistSearch>
 				</div>
 			)}
-			{!gameFinished && validPlaylist && (
+			{!gameFinished && trackPreview && validPlaylist && (
 				<div id="game">
 					<Game
 						song={song}
@@ -280,7 +286,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 					/>
 				</div>
 			)}
-			{gameFinished && (
+			{gameFinished && trackPreview && (
 				<div id="conclusion">
 					<GameConclusion
 						song={song}
