@@ -33,6 +33,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 				audioRef.current?.pause();
 			}, timeoutDuration + 100);
 
+			audioRef.current.volume = 0.3;
 			audioRef.current.play();
 		}
 	};
