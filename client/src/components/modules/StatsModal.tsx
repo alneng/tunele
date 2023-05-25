@@ -83,7 +83,7 @@ const StatsModal: React.FC<StatsModalProps> = ({
 					</div>
 					<div
 						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[5]}px` }}
+						style={{ height: `${statsBarHeights[6]}px` }}
 					></div>
 				</div>
 				<div className="relative ml-6">
