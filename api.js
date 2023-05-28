@@ -394,12 +394,38 @@ async function fetchSongsFromPlaylist(playlistId, token) {
 			},
 			url: `https://api.spotify.com/v1/playlists/${playlistId}`,
 		})
-			.then((response) => {
-				const data = response.data;
+			.then(async (response) => {
+				let data = response.data;
+				if (data.tracks.next) {
+					data.tracks.items = data.tracks.items.concat(
+						await fetchTracks(data.tracks.next, token)
+					);
+				}
 				resolve(data);
 			})
 			.catch((err) => reject(err));
 	});
+}
+
+async function fetchTracks(nextUrl, token) {
+	try {
+		const response = await axios({
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			url: nextUrl,
+		});
+		let items = response.data.items;
+		if (response.data.next) {
+			items = items.concat(await fetchTracks(response.data.next, token));
+		}
+		return items;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
 }
 
 async function sortPlaylistResponse(response, pastGameTracks) {

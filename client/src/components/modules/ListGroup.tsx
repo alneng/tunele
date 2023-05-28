@@ -19,7 +19,7 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
 			{userGuesses.map((item, index) => (
 				<div
 					key={index}
-					className={`lg:w-1/3 md:w-1/2 w-4/5 px-4 py-1.5 m-1 bg-gray-800 ${
+					className={`md:w-612px w-4/5 px-4 py-1.5 m-1 bg-gray-800 ${
 						item.isCorrect
 							? "text-green border-2 border-green"
 							: item.isSkipped
@@ -36,7 +36,7 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
 			{emptyGuesses.map((_, index) => (
 				<div
 					key={index}
-					className="lg:w-1/3 md:w-1/2 w-4/5 h-10 px-4 m-1 text-black bg-gray-800"
+					className="md:w-612px w-4/5 h-10 px-4 m-1 text-black bg-gray-800"
 				>
 					<p></p>
 				</div>
