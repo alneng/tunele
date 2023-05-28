@@ -47,14 +47,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 	};
 
 	return (
-		<div className="w-full flex flex-col items-center mt-24">
+		<div className="w-full flex flex-col items-center mt-16">
 			<audio
 				src={audioSrc}
 				ref={audioRef}
 				onTimeUpdate={handleProgress}
 				onLoadedData={handleProgress}
 			></audio>
-			<div className="relative lg:w-1/3 md:w-1/2 w-4/5 h-6 bg-gray-800">
+			<div className="relative md:w-612px w-4/5 h-6 bg-gray-800">
 				{songLimits.map((interval, index) => (
 					<div
 						key={index}

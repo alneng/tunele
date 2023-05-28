@@ -16,6 +16,9 @@ export default {
 				red: "#f8312f",
 				green: "#00d26a",
 			},
+			width: {
+				"612px": "612px",
+			},
 		},
 	},
 	plugins: [],
