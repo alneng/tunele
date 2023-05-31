@@ -194,12 +194,8 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 		};
 
 		if (req.query.r && playlistObject) {
-			songsToAdd.gameTracks = playlistObject
-				? playlistObject.gameTracks
-				: [];
-			songsToAdd.createdAt = playlistObject
-				? playlistObject.createdAt
-				: songsToAdd.createdAt;
+			songsToAdd.gameTracks = playlistObject.gameTracks;
+			songsToAdd.createdAt = playlistObject.createdAt;
 			songsToAdd.updatedAt = DateTime.now()
 				.setZone("America/New_York")
 				.toFormat("yyyy-MM-dd HH:mm:ss");
