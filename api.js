@@ -204,35 +204,61 @@ router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 			await db.createDocument("customPlaylists", playlistId, songsToAdd);
 		}
 	} else {
-		// Check if most recent game track = today
-		const mostRecentGameTrack =
+		// Check if either of the last two game tracks = today
+		const recentGameTrack =
 			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+		const secondRecentGameTrack =
+			playlistObject.gameTracks.length > 1
+				? playlistObject.gameTracks?.[
+						playlistObject.gameTracks.length - 2
+				  ]
+				: null;
 
-		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
+		if (
+			(recentGameTrack && recentGameTrack.date === localDate) ||
+			(secondRecentGameTrack && secondRecentGameTrack.date === localDate)
+		) {
+			const selectedGameTrack =
+				recentGameTrack.date === localDate
+					? recentGameTrack
+					: secondRecentGameTrack;
 			return res.json({
-				song: mostRecentGameTrack.song,
-				artists: mostRecentGameTrack.artists,
-				id: mostRecentGameTrack.id,
-				trackPreview: mostRecentGameTrack.trackPreview,
-				albumCover: mostRecentGameTrack.albumCover,
-				externalUrl: mostRecentGameTrack.externalUrl,
+				song: selectedGameTrack.song,
+				artists: selectedGameTrack.artists,
+				id: selectedGameTrack.id,
+				trackPreview: selectedGameTrack.trackPreview,
+				albumCover: selectedGameTrack.albumCover,
+				externalUrl: selectedGameTrack.externalUrl,
 			});
 		}
 	}
 
 	// Check if refresh flag is true but the daily song was already chosen
 	if (req.query.r && playlistObject) {
-		const mostRecentGameTrack =
+		const recentGameTrack =
 			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+		const secondRecentGameTrack =
+			playlistObject.gameTracks.length > 1
+				? playlistObject.gameTracks?.[
+						playlistObject.gameTracks.length - 2
+				  ]
+				: null;
 
-		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
+		if (
+			(recentGameTrack && recentGameTrack.date === localDate) ||
+			(secondRecentGameTrack && secondRecentGameTrack.date === localDate)
+		) {
+			const selectedGameTrack =
+				recentGameTrack.date === localDate
+					? recentGameTrack
+					: secondRecentGameTrack;
 			return res.json({
-				song: mostRecentGameTrack.song,
-				artists: mostRecentGameTrack.artists,
-				id: mostRecentGameTrack.id,
-				trackPreview: mostRecentGameTrack.trackPreview,
-				albumCover: mostRecentGameTrack.albumCover,
-				externalUrl: mostRecentGameTrack.externalUrl,
+				song: selectedGameTrack.song,
+				artists: selectedGameTrack.artists,
+				id: selectedGameTrack.id,
+				trackPreview: selectedGameTrack.trackPreview,
+				albumCover: selectedGameTrack.albumCover,
+				externalUrl: selectedGameTrack.externalUrl,
 			});
 		}
 	}
