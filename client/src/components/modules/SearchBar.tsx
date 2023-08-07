@@ -197,6 +197,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 				<button
 					className="w-28 p-4 rounded-full text-center text-white py-2 bg-gray-800 hover:bg-gray-500 focus:outline-none"
 					onClick={handleSkip}
+					title="Skip"
 				>
 					{userGuesses.length < 5 && (
 						<p>Skip (+{userGuesses.length + 1}s)</p>
@@ -211,6 +212,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					}`}
 					disabled={isButtonDisabled}
 					onClick={handleAddGuess}
+					title="Submit"
 				>
 					Submit
 				</button>

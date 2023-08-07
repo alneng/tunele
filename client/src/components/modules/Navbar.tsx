@@ -28,6 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 				<button
 					className="text-white p-2 focus:outline-none"
 					onClick={redirectCustomPlaylist}
+					title="Custom Playlist"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -47,6 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 				<button
 					className="text-white p-2 focus:outline-none"
 					onClick={redirectToGithub}
+					title="GitHub"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -65,12 +67,19 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 				</button>
 			</div>
 			<div className="text-white">
-				<a href="/">Tunele</a>
+				<a href="/">
+					<img
+						src="/tunele-transparent-bg.png"
+						alt="Tunele (logo)"
+						className="max-h-5"
+					/>
+				</a>
 			</div>
 			<div className="mr-4">
 				<button
 					className="text-white p-2 focus:outline-none"
 					onClick={handleShowStats}
+					title="Stats"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal }) => {
 				<button
 					className="text-white p-2 focus:outline-none"
 					onClick={handleShowHelp}
+					title="Help"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
