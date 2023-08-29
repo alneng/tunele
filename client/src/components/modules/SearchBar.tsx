@@ -178,6 +178,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					type="text"
 					value={inputValue.formattedString}
 					onChange={handleInputChange}
+					placeholder="Enter a song title or artist..."
 				/>
 			</div>
 			{possibleAnswers.length > 0 && (
