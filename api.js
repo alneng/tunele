@@ -26,14 +26,20 @@ router.use(bodyParser.json());
  * @apiSuccess {String} externalUrl The external URL of the song (spotify url).
  */
 router.get("/dailySong", async (req, res) => {
-	let timeZone = req.query.timeZone || "America/New_York";
-	const now = DateTime.local().setZone(timeZone);
+	const timeZone = req.query.timeZone || "America/New_York";
+	let now;
+	// prevents error in case timeZone is not valid
+	try {
+		now = DateTime.local().setZone(timeZone);
+	} catch {
+		now = DateTime.local().setZone("America/New_York");
+	}
 	const localDate = now.toFormat("yyyy-MM-dd");
 
 	const dailyGameTrack = await db.getDocument("gameTracks", localDate);
 
 	if (dailyGameTrack) {
-		res.json({
+		return res.json({
 			song: dailyGameTrack.song,
 			artists: dailyGameTrack.artists,
 			id: dailyGameTrack.id,
@@ -46,15 +52,18 @@ router.get("/dailySong", async (req, res) => {
 		const mostRecentTracksTracklist =
 			mostRecentTracksSnapshot.data.tracklist;
 
-		const randomTrackIndex = Math.floor(
-			Math.random() * mostRecentTracksTracklist.length
-		);
-		const chosenTrack = mostRecentTracksTracklist[randomTrackIndex];
+		let randomTrackIndex, chosenTrack;
+		do {
+			randomTrackIndex = Math.floor(
+				Math.random() * mostRecentTracksTracklist.length
+			);
+			chosenTrack = mostRecentTracksTracklist[randomTrackIndex];
+		} while (chosenTrack.playedBefore);
 
 		const mostRecentGameTrack = await db.getLastDocument("gameTracks");
-		let gameId;
-		if (mostRecentGameTrack) gameId = mostRecentGameTrack.data.id + 1;
-		else gameId = 1;
+		const gameId = mostRecentGameTrack
+			? mostRecentGameTrack.data.id + 1
+			: 1;
 
 		const date = DateTime.now()
 			.setZone("America/New_York")
@@ -94,7 +103,7 @@ router.get("/dailySong", async (req, res) => {
 		);
 
 		// return track info to user
-		res.json({
+		return res.json({
 			song: chosenTrack.song,
 			artists: chosenTrack.artists,
 			id: gameId,
@@ -117,7 +126,7 @@ router.get("/allSongs", async (req, res) => {
 		song,
 		artists,
 	}));
-	res.json({
+	return res.json({
 		tracklist: tracklist,
 	});
 });
@@ -143,10 +152,10 @@ router.post("/stats", async (req, res) => {
 			todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
 			todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
 			await db.updateDocument("gameTracks", localDate, todaysGameTrack);
-			res.json({ success: true });
+			return res.json({ success: true });
 		} else throw Error;
 	} catch (err) {
-		res.json({ success: false });
+		return res.json({ success: false });
 	}
 });
 
@@ -164,137 +173,46 @@ router.post("/stats", async (req, res) => {
  */
 router.get("/playlist/:playlistId/dailySong", async (req, res) => {
 	const playlistId = req.params.playlistId;
-	const playlistObject = await db.getDocument("customPlaylists", playlistId);
+	let playlistObject = await db.getDocument("customPlaylists", playlistId);
 
-	let timeZone = req.query.timeZone || "America/New_York";
-	const now = DateTime.local().setZone(timeZone);
+	const timeZone = req.query.timeZone || "America/New_York";
+	let now;
+	// prevents error in case timeZone is not valid
+	try {
+		now = DateTime.local().setZone(timeZone);
+	} catch {
+		now = DateTime.local().setZone("America/New_York");
+	}
 	const localDate = now.toFormat("yyyy-MM-dd");
+	const refreshFlag = req.query.r === "1";
 
-	if (!playlistObject || req.query.r === "1") {
-		// If no playlist object or refresh songs flag passed
-		// Create or update playlist, tracklist, createdAt
-		const accessToken = await fetchAccessToken();
-		const response = await fetchSongsFromPlaylist(playlistId, accessToken);
-		const sortedSongs =
-			req.query.r && playlistObject
-				? await sortPlaylistResponse(
-						response,
-						playlistObject.gameTracks
-				  )
-				: await sortPlaylistResponse(response);
-
-		const songsToAdd = {
-			tracklist: sortedSongs,
-			snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
-			gameTracks: [],
-			createdAt: DateTime.now()
-				.setZone("America/New_York")
-				.toFormat("yyyy-MM-dd HH:mm:ss"),
-			updatedAt: "",
-		};
-
-		if (req.query.r && playlistObject) {
-			songsToAdd.gameTracks = playlistObject
-				? playlistObject.gameTracks
-				: [];
-			songsToAdd.createdAt = playlistObject
-				? playlistObject.createdAt
-				: songsToAdd.createdAt;
-			songsToAdd.updatedAt = DateTime.now()
-				.setZone("America/New_York")
-				.toFormat("yyyy-MM-dd HH:mm:ss");
-			await db.updateDocument("customPlaylists", playlistId, songsToAdd);
-		} else {
-			await db.createDocument("customPlaylists", playlistId, songsToAdd);
-		}
-	} else {
-		// Check if most recent game track = today
-		const mostRecentGameTrack =
-			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
-
-		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
-			return res.json({
-				song: mostRecentGameTrack.song,
-				artists: mostRecentGameTrack.artists,
-				id: mostRecentGameTrack.id,
-				trackPreview: mostRecentGameTrack.trackPreview,
-				albumCover: mostRecentGameTrack.albumCover,
-				externalUrl: mostRecentGameTrack.externalUrl,
-			});
-		}
+	if (!playlistObject || refreshFlag) {
+		playlistObject = await refreshPlaylist(
+			playlistId,
+			playlistObject,
+			refreshFlag
+		);
 	}
 
-	// Check if refresh flag is true but the daily song was already chosen
-	if (req.query.r && playlistObject) {
-		const mostRecentGameTrack =
-			playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+	const selectedGameTrack = getExistingGameTrack(playlistObject, localDate);
 
-		if (mostRecentGameTrack && mostRecentGameTrack.date === localDate) {
-			return res.json({
-				song: mostRecentGameTrack.song,
-				artists: mostRecentGameTrack.artists,
-				id: mostRecentGameTrack.id,
-				trackPreview: mostRecentGameTrack.trackPreview,
-				albumCover: mostRecentGameTrack.albumCover,
-				externalUrl: mostRecentGameTrack.externalUrl,
-			});
-		}
+	if (selectedGameTrack) {
+		return res.json({
+			song: selectedGameTrack.song,
+			artists: selectedGameTrack.artists,
+			id: selectedGameTrack.id,
+			trackPreview: selectedGameTrack.trackPreview,
+			albumCover: selectedGameTrack.albumCover,
+			externalUrl: selectedGameTrack.externalUrl,
+		});
 	}
 
-	// Choose new game track
-	const updatedPlaylistObject = await db.getDocument(
-		"customPlaylists",
-		playlistId
-	);
-	const allTracksList = updatedPlaylistObject.tracklist;
-
-	// Use while loop to make sure chosenTrack.playedBefore === false
-	let randomTrackIndex;
-	let chosenTrack;
-	do {
-		randomTrackIndex = Math.floor(Math.random() * allTracksList.length);
-		chosenTrack = allTracksList[randomTrackIndex];
-	} while (chosenTrack.playedBefore);
-
-	const gameTracksList = updatedPlaylistObject.gameTracks;
-	const gameId =
-		gameTracksList.length > 0
-			? gameTracksList[gameTracksList.length - 1].id + 1
-			: 1;
-
-	// Make modifications to `updatedPlaylistObject`
-	const newGameTrack = {
-		song: chosenTrack.song,
-		artists: chosenTrack.artists,
-		date: localDate,
-		id: gameId,
-		totalPlays: 0,
-		trackPreview: chosenTrack.trackPreview,
-		albumCover: chosenTrack.albumCover,
-		externalUrl: chosenTrack.externalUrl,
-		stats: {
-			0: 0,
-			1: 0,
-			2: 0,
-			3: 0,
-			4: 0,
-			5: 0,
-			6: 0,
-		},
-	};
-
-	updatedPlaylistObject.createdAt = DateTime.now()
-		.setZone("America/New_York")
-		.toFormat("yyyy-MM-dd HH:mm:ss");
-	updatedPlaylistObject.gameTracks.push(newGameTrack);
-	updatedPlaylistObject.tracklist[randomTrackIndex].playedBefore = true;
-	await db.updateDocument(
-		"customPlaylists",
+	const newGameTrack = await chooseNewGameTrack(
 		playlistId,
-		updatedPlaylistObject
+		playlistObject,
+		localDate
 	);
-
-	res.json({
+	return res.json({
 		song: newGameTrack.song,
 		artists: newGameTrack.artists,
 		id: newGameTrack.id,
@@ -318,7 +236,7 @@ router.get("/playlist/:playlistId/allSongs", async (req, res) => {
 		song,
 		artists,
 	}));
-	res.json({
+	return res.json({
 		tracklist: tracklist,
 	});
 });
@@ -355,15 +273,119 @@ router.post("/playlist/:playlistId/stats", async (req, res) => {
 					playlistId,
 					playlistObject
 				);
-				res.json({ success: true });
+				return res.json({ success: true });
 			}
 		}
 		if (!foundTrack) throw Error;
 	} catch (err) {
-		res.json({ success: false });
+		return res.json({ success: false });
 	}
 });
 
+// refreshPlaylist : String {PlaylistObject} Boolean -> {PlaylistObject}
+// Generates or refreshes a PlaylistObject with new songs
+const refreshPlaylist = async (playlistId, playlistObject, refreshFlag) => {
+	const accessToken = await fetchAccessToken();
+	const response = await fetchSongsFromPlaylist(playlistId, accessToken);
+	const sortedSongs =
+		refreshFlag && playlistObject
+			? await sortPlaylistResponse(response, playlistObject.gameTracks)
+			: await sortPlaylistResponse(response);
+
+	const songsToAdd = {
+		tracklist: sortedSongs,
+		snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
+		gameTracks: [],
+		createdAt: DateTime.now()
+			.setZone("America/New_York")
+			.toFormat("yyyy-MM-dd HH:mm:ss"),
+		updatedAt: "",
+	};
+
+	if (refreshFlag && playlistObject) {
+		songsToAdd.gameTracks = playlistObject.gameTracks;
+		songsToAdd.createdAt = playlistObject.createdAt;
+		songsToAdd.updatedAt = DateTime.now()
+			.setZone("America/New_York")
+			.toFormat("yyyy-MM-dd HH:mm:ss");
+		await db.updateDocument("customPlaylists", playlistId, songsToAdd);
+	} else {
+		await db.createDocument("customPlaylists", playlistId, songsToAdd);
+	}
+
+	return await db.getDocument("customPlaylists", playlistId);
+};
+
+// getExistingGameTrack : {PlaylistObject} String -> {GameTrack}?
+// Gets an existing gameTrack by date or null if it does not exist
+const getExistingGameTrack = (playlistObject, localDate) => {
+	const recentGameTrack =
+		playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
+	const secondRecentGameTrack =
+		playlistObject.gameTracks.length > 1
+			? playlistObject.gameTracks?.[playlistObject.gameTracks.length - 2]
+			: null;
+
+	if (
+		(recentGameTrack && recentGameTrack.date === localDate) ||
+		(secondRecentGameTrack && secondRecentGameTrack.date === localDate)
+	) {
+		return recentGameTrack.date === localDate
+			? recentGameTrack
+			: secondRecentGameTrack;
+	}
+
+	return null;
+};
+
+// chooseNewGameTrack : String {PlaylistObject} String -> {GameTrack}
+// Selects a new gameTrack
+const chooseNewGameTrack = async (playlistId, playlistObject, localDate) => {
+	const allTracksList = playlistObject.tracklist;
+	let randomTrackIndex, chosenTrack;
+	do {
+		randomTrackIndex = Math.floor(Math.random() * allTracksList.length);
+		chosenTrack = allTracksList[randomTrackIndex];
+	} while (chosenTrack.playedBefore);
+
+	const gameId =
+		playlistObject.gameTracks.length > 0
+			? playlistObject.gameTracks[playlistObject.gameTracks.length - 1]
+					.id + 1
+			: 1;
+
+	const newGameTrack = {
+		song: chosenTrack.song,
+		artists: chosenTrack.artists,
+		date: localDate,
+		id: gameId,
+		totalPlays: 0,
+		trackPreview: chosenTrack.trackPreview,
+		albumCover: chosenTrack.albumCover,
+		externalUrl: chosenTrack.externalUrl,
+		stats: {
+			0: 0,
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+			5: 0,
+			6: 0,
+		},
+	};
+
+	playlistObject.updatedAt = DateTime.now()
+		.setZone("America/New_York")
+		.toFormat("yyyy-MM-dd HH:mm:ss");
+	playlistObject.gameTracks.push(newGameTrack);
+	playlistObject.tracklist[randomTrackIndex].playedBefore = true;
+	await db.updateDocument("customPlaylists", playlistId, playlistObject);
+
+	return newGameTrack;
+};
+
+// fetchAccessToken : () -> String
+// Produces a Spotify access token
 async function fetchAccessToken() {
 	return new Promise(async (resolve, reject) => {
 		const data = {
@@ -384,6 +406,8 @@ async function fetchAccessToken() {
 	});
 }
 
+// fetchSongsFromPlaylist : String String -> [{TrackItem}]
+// Requests a fetch for all songs in a playlist from Spotify's API
 async function fetchSongsFromPlaylist(playlistId, token) {
 	return new Promise((resolve, reject) => {
 		axios({
@@ -407,6 +431,8 @@ async function fetchSongsFromPlaylist(playlistId, token) {
 	});
 }
 
+// fetchTracks : String String -> [{TrackItem}]
+// Fetches all tracks in a playlist from Spotify's API
 async function fetchTracks(nextUrl, token) {
 	try {
 		const response = await axios({
@@ -428,6 +454,8 @@ async function fetchTracks(nextUrl, token) {
 	}
 }
 
+// sortPlaylistResponse : [{TrackItem}] [{PackagedTrackItem}]? -> [{PackagedTrackItem}]
+// Generates a new list of gameTracks and keeps track whether songs have been played before
 async function sortPlaylistResponse(response, pastGameTracks) {
 	return new Promise((resolve, reject) => {
 		const trackItems = response.tracks.items;
@@ -463,6 +491,8 @@ async function sortPlaylistResponse(response, pastGameTracks) {
 	});
 }
 
+// checkIfInGameTracks : String [{PackagedTrackItem}] -> Boolean
+// Checks if a track has been played before
 function checkIfInGameTracks(externalUrl, gameTracks) {
 	for (const track of gameTracks) {
 		if (track.externalUrl === externalUrl) return true;

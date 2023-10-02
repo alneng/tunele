@@ -73,7 +73,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
 					}}
 				></div>
 			</div>
-			<button onClick={handlePlayback} className="text-white my-4">
+			<button
+				onClick={handlePlayback}
+				className="text-white my-4"
+				title="Play"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="56"
