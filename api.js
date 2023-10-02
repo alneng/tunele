@@ -282,6 +282,8 @@ router.post("/playlist/:playlistId/stats", async (req, res) => {
 	}
 });
 
+// refreshPlaylist : String {PlaylistObject} Boolean -> {PlaylistObject}
+// Generates or refreshes a PlaylistObject with new songs
 const refreshPlaylist = async (playlistId, playlistObject, refreshFlag) => {
 	const accessToken = await fetchAccessToken();
 	const response = await fetchSongsFromPlaylist(playlistId, accessToken);
@@ -314,6 +316,8 @@ const refreshPlaylist = async (playlistId, playlistObject, refreshFlag) => {
 	return await db.getDocument("customPlaylists", playlistId);
 };
 
+// getExistingGameTrack : {PlaylistObject} String -> {GameTrack}?
+// Gets an existing gameTrack by date or null if it does not exist
 const getExistingGameTrack = (playlistObject, localDate) => {
 	const recentGameTrack =
 		playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
@@ -334,6 +338,8 @@ const getExistingGameTrack = (playlistObject, localDate) => {
 	return null;
 };
 
+// chooseNewGameTrack : String {PlaylistObject} String -> {GameTrack}
+// Selects a new gameTrack
 const chooseNewGameTrack = async (playlistId, playlistObject, localDate) => {
 	const allTracksList = playlistObject.tracklist;
 	let randomTrackIndex, chosenTrack;
@@ -368,7 +374,7 @@ const chooseNewGameTrack = async (playlistId, playlistObject, localDate) => {
 		},
 	};
 
-	playlistObject.createdAt = DateTime.now()
+	playlistObject.updatedAt = DateTime.now()
 		.setZone("America/New_York")
 		.toFormat("yyyy-MM-dd HH:mm:ss");
 	playlistObject.gameTracks.push(newGameTrack);
@@ -378,6 +384,8 @@ const chooseNewGameTrack = async (playlistId, playlistObject, localDate) => {
 	return newGameTrack;
 };
 
+// fetchAccessToken : () -> String
+// Produces a Spotify access token
 async function fetchAccessToken() {
 	return new Promise(async (resolve, reject) => {
 		const data = {
@@ -398,6 +406,8 @@ async function fetchAccessToken() {
 	});
 }
 
+// fetchSongsFromPlaylist : String String -> [{TrackItem}]
+// Requests a fetch for all songs in a playlist from Spotify's API
 async function fetchSongsFromPlaylist(playlistId, token) {
 	return new Promise((resolve, reject) => {
 		axios({
@@ -421,6 +431,8 @@ async function fetchSongsFromPlaylist(playlistId, token) {
 	});
 }
 
+// fetchTracks : String String -> [{TrackItem}]
+// Fetches all tracks in a playlist from Spotify's API
 async function fetchTracks(nextUrl, token) {
 	try {
 		const response = await axios({
@@ -442,6 +454,8 @@ async function fetchTracks(nextUrl, token) {
 	}
 }
 
+// sortPlaylistResponse : [{TrackItem}] [{PackagedTrackItem}]? -> [{PackagedTrackItem}]
+// Generates a new list of gameTracks and keeps track whether songs have been played before
 async function sortPlaylistResponse(response, pastGameTracks) {
 	return new Promise((resolve, reject) => {
 		const trackItems = response.tracks.items;
@@ -477,6 +491,8 @@ async function sortPlaylistResponse(response, pastGameTracks) {
 	});
 }
 
+// checkIfInGameTracks : String [{PackagedTrackItem}] -> Boolean
+// Checks if a track has been played before
 function checkIfInGameTracks(externalUrl, gameTracks) {
 	for (const track of gameTracks) {
 		if (track.externalUrl === externalUrl) return true;
