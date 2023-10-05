@@ -72,7 +72,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		const baseUrl = "https://accounts.google.com";
 		const endpoint = "/o/oauth2/v2/auth";
 		const queryParams = {
-			redirect_uri: `${apiOrigin}/auth/callback`,
+			redirect_uri: `https://tunele.app/auth/callback`,
 			prompt: "consent",
 			response_type: "code",
 			client_id:

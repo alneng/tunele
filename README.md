@@ -28,7 +28,8 @@ Starting the client
 
 Running Tunele locally
 
-1. Edit `API_ORIGIN` to the origin of your API ("http://localhost:7600" for local dev)
+1. Edit `API_ORIGIN` in `client/src/components/App.tsx` to the origin of your API ("http://localhost:7600" for local dev)
+2. Edit `queryParams.redirect_uri` in `client/src/components/modules/UserAccountModal.tsx` to your redirect_uri
 
 Deploying to Production (on servers)
 
