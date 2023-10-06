@@ -6,6 +6,7 @@ import Game from "../modules/Game";
 import GameConclusion from "../modules/GameConclusion";
 import HelpModal from "../modules/HelpModal";
 import StatsModal from "../modules/StatsModal";
+import UserAccountModal from "../modules/UserAccountModal";
 import Loader from "../modules/Loader";
 
 import trackGuessFormat from "../interfaces/TrackGuessFormat";
@@ -27,6 +28,8 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 
 	const [gameFinished, setGameFinished] = useState<boolean>(false);
 
+	const [isUserAccountModalOpen, setUserAccountModalState] =
+		useState<boolean>(false);
 	const [isHelpModalOpen, setHelpModalState] = useState<boolean>(false);
 	const [isStatsModalOpen, setStatsModalState] = useState<boolean>(false);
 	const [statsBarHeights, setStatsBarHeights] =
@@ -40,6 +43,9 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	};
 	const closeStatsModal = () => {
 		setStatsModalState(false);
+	};
+	const closeUAModel = () => {
+		setUserAccountModalState(false);
 	};
 
 	useEffect(() => {
@@ -228,6 +234,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 			<NavBar
 				setHelpModal={setHelpModalState}
 				setStatsModal={setStatsModalState}
+				setUAModel={setUserAccountModalState}
 			/>
 			{!trackPreview && (
 				<div id="loader">
@@ -283,6 +290,15 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 					statsCorrectString={statsCorrectString}
 					statsCorrectPercentageString={statsCorrectPercentageString}
 				></StatsModal>
+			</Modal>
+			<Modal
+				isOpen={isUserAccountModalOpen}
+				onRequestClose={closeUAModel}
+				className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
+				overlayClassName="overlay"
+				ariaHideApp={false}
+			>
+				<UserAccountModal apiOrigin={apiOrigin}></UserAccountModal>
 			</Modal>
 		</div>
 	);
