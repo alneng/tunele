@@ -153,7 +153,6 @@ router.post("/refresh-token", (req, res) => {
  * @apiError {Number} 401 Unauthorized - Access token or ID token is expired. Retry with refresh token.
  * @apiError {Number} 401 Unauthorized - Access token or ID token is unauthenticated. Retry with refresh token.
  */
-
 router.get("/vat", async (req, res) => {
 	const { accessToken, idToken, refreshToken } = req.cookies;
 

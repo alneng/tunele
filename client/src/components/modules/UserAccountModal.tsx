@@ -87,13 +87,53 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	};
 
 	const updateLocalData = () => {
+		function mergeGameData(existingData: any, newData: any) {
+			existingData.main = mergeArrays(existingData.main, newData.main);
+
+			if (!existingData.custom) {
+				existingData.custom = newData.custom;
+			} else {
+				for (let key in newData.custom) {
+					if (!existingData.custom[key]) {
+						existingData.custom[key] = newData.custom[key];
+					} else {
+						existingData.custom[key] = mergeArrays(
+							existingData.custom[key],
+							newData.custom[key]
+						);
+					}
+				}
+			}
+			return existingData;
+		}
+
+		function mergeArrays(existingArray: any, newArray: any) {
+			if (!newArray) return existingArray;
+
+			let uniqueIds = new Set(existingArray.map((g: any) => g.id));
+
+			let newData = newArray.filter((g: any) => !uniqueIds.has(g.id));
+
+			const concat_array = existingArray.concat(newData);
+			const sorted_array = concat_array.sort(
+				(a: any, b: any) => a.id - b.id
+			);
+			return sorted_array;
+		}
+
 		fetch(`${apiOrigin}/api/user/${id}/fetch-data`, {
 			method: "GET",
 			credentials: "include",
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				localStorage.setItem("userData", JSON.stringify(data));
+				const clientData: string | null =
+					localStorage.getItem("userData");
+				const dataToMerge = mergeGameData(
+					JSON.parse(clientData || "{ 'main': [], 'custom': {} }"),
+					data
+				);
+				localStorage.setItem("userData", JSON.stringify(dataToMerge));
 				toast.success(
 					"Successfuly updated local data! Reloading page...",
 					{
