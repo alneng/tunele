@@ -135,7 +135,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 				);
 				localStorage.setItem("userData", JSON.stringify(dataToMerge));
 				toast.success(
-					"Successfuly updated local data! Reloading page...",
+					"Successfully updated local data! Reloading page...",
 					{
 						position: toast.POSITION.BOTTOM_CENTER,
 						pauseOnFocusLoss: false,
@@ -170,7 +170,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		})
 			.then((response) => {
 				if (response.status === 200 || response.status === 201) {
-					toast.success("Successfuly saved data to cloud!", {
+					toast.success("Successfully saved data to cloud!", {
 						position: toast.POSITION.BOTTOM_CENTER,
 						pauseOnFocusLoss: false,
 						hideProgressBar: true,
