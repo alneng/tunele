@@ -53,6 +53,13 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 		fetchAllSongs();
 	}, []);
 
+	useEffect(() => {
+		if (localStorage.getItem("firstTimeUser") !== "false") {
+			localStorage.setItem("firstTimeUser", "false");
+			setHelpModalState(true);
+		}
+	}, []);
+
 	const fetchData = () => {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		fetch(`${apiOrigin}/api/dailySong?timeZone=${timezone}`)

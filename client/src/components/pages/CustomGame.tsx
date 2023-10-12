@@ -55,6 +55,13 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 	const location = useLocation();
 
 	useEffect(() => {
+		if (localStorage.getItem("firstTimeUser") !== "false") {
+			localStorage.setItem("firstTimeUser", "false");
+			setHelpModalState(true);
+		}
+	}, []);
+
+	useEffect(() => {
 		const queryParams = queryString.parse(location.search);
 		const playlistId = queryString.parse(location.search).playlist;
 
