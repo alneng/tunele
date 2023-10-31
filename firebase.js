@@ -117,4 +117,5 @@ class FirestoreDB {
 	}
 }
 
-module.exports = FirestoreDB;
+const FirestoreSDK = new FirestoreDB();
+module.exports = FirestoreSDK;

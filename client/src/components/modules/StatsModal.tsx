@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import queryString from "query-string";
+import Tooltip from "@mui/material/Tooltip";
 
 interface StatsBarHeightsState {
 	[key: number]: number;
@@ -15,6 +17,36 @@ const StatsModal: React.FC<StatsModalProps> = ({
 	statsCorrectString,
 	statsCorrectPercentageString,
 }) => {
+	const [scores, setScores] = useState<{ [key: number]: number }>({});
+
+	useEffect(() => {
+		function countScores(array: any[]): { [key: number]: number } {
+			const scoreCounts: { [key: number]: number } = {};
+			for (let i = 1; i <= 6; i++) scoreCounts[i] = 0;
+			scoreCounts[0] = 0;
+
+			for (const item of array) {
+				const score = item.score;
+				scoreCounts[score] += 1;
+			}
+
+			return scoreCounts;
+		}
+
+		const localData = JSON.parse(
+			localStorage.getItem("userData") || "null"
+		);
+		const queryParams = queryString.parse(location.search);
+		const playlistId = queryParams.playlist;
+
+		if (localData) {
+			const scores = playlistId
+				? countScores(localData.custom[playlistId as string])
+				: countScores(localData.main);
+			setScores(scores);
+		}
+	}, []);
+
 	return (
 		<div className="flex flex-col items-center">
 			<p className="text-2xl font-semibold mb-4">Stats</p>
@@ -26,10 +58,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							1°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[1]}px` }}
-					></div>
+					<Tooltip title={scores[1]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[1]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -37,10 +71,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							2°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[2]}px` }}
-					></div>
+					<Tooltip title={scores[2]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[2]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -48,10 +84,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							3°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[3]}px` }}
-					></div>
+					<Tooltip title={scores[3]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[3]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -59,10 +97,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							4°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[4]}px` }}
-					></div>
+					<Tooltip title={scores[4]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[4]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -70,10 +110,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							5°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[5]}px` }}
-					></div>
+					<Tooltip title={scores[5]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[5]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -81,10 +123,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							6°
 						</div>
 					</div>
-					<div
-						className={`bg-green w-4`}
-						style={{ height: `${statsBarHeights[6]}px` }}
-					></div>
+					<Tooltip title={scores[6]} placement="bottom" arrow>
+						<div
+							className={`bg-green w-4`}
+							style={{ height: `${statsBarHeights[6]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 				<div className="relative ml-6">
 					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
@@ -92,10 +136,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
 							X
 						</div>
 					</div>
-					<div
-						className={`bg-red w-4`}
-						style={{ height: `${statsBarHeights[0]}px` }}
-					></div>
+					<Tooltip title={scores[0]} placement="bottom" arrow>
+						<div
+							className={`bg-red w-4`}
+							style={{ height: `${statsBarHeights[0]}px` }}
+						></div>
+					</Tooltip>
 				</div>
 			</div>
 

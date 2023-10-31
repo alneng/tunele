@@ -8,11 +8,14 @@ require("dotenv").config();
 const crypto = require("crypto");
 const bodyParser = require("body-parser");
 
-const FirestoreSDK = require("./firebase");
-const db = new FirestoreSDK();
+const db = require("./firebase");
+const AUTH = require("./auth");
+const USER = require("./user");
 
-router.use(cors());
+router.use(cors(JSON.parse(process.env.CORS_OPTIONS)));
 router.use(bodyParser.json());
+router.use("/auth", AUTH);
+router.use("/user", USER);
 
 /**
  * @api {get} /dailySong Get Daily Song

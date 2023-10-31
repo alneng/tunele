@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import BaseGame from "./pages/BaseGame";
 import CustomGame from "./pages/CustomGame";
+import OAuthCallback from "./pages/OAuthCallback";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const API_ORIGIN: string = "https://api.tunele.app";
@@ -15,6 +17,16 @@ const App: React.FC = () => {
 				<Route
 					path="/custom"
 					element={<CustomGame apiOrigin={API_ORIGIN} />}
+				/>
+				<Route
+					path="/auth/callback"
+					element={
+						<OAuthCallback apiOrigin={API_ORIGIN}></OAuthCallback>
+					}
+				/>
+				<Route
+					path="/privacy"
+					element={<PrivacyPolicy></PrivacyPolicy>}
 				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>

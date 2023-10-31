@@ -76,11 +76,35 @@ const HelpModal: React.FC<HelpModalProps> = ({ onRequestCloseHelpModal }) => {
 						Answer in as few tries as possible and share your score!
 					</span>
 				</div>
+				<div className="direction flex text-left items-center py-3">
+					<div className="icon pr-4">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="28"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							className="feather feather-user-check"
+						>
+							<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="8.5" cy="7" r="4"></circle>
+							<polyline points="17 11 19 13 23 9"></polyline>
+						</svg>
+					</div>
+					<span className="direction-text">
+						Create an account to sync your game data to the cloud
+						and across multiple devices
+					</span>
+				</div>
 			</div>
 			<div>
 				<button
 					onClick={onRequestCloseHelpModal}
-					className="mt-2 px-7 py-3 rounded-full bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none font-semibold"
+					className="mt-4 px-7 py-3 rounded-full bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none font-semibold"
 				>
 					Play
 				</button>
