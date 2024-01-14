@@ -30,80 +30,80 @@ router.use(cookieParser());
  * @apiError {Number} 401 Unauthorized - Access token or ID token is unauthenticated. Retry with refresh token.
  */
 router.get("/:id/fetch-data", async (req, res) => {
-	const { accessToken, idToken, refreshToken } = req.cookies;
-	const id = req.params.id;
-	let email = "";
+    const { accessToken, idToken, refreshToken } = req.cookies;
+    const id = req.params.id;
+    let email = "";
 
-	if (!accessToken || !idToken || !refreshToken) {
-		if (refreshToken) {
-			return res.status(401).json({
-				success: false,
-				message:
-					"Unauthorized access token or id token. Retry with refresh token",
-				retry: true,
-			});
-		}
-		return res
-			.status(401)
-			.json({ success: false, message: "Unauthorized" });
-	}
+    if (!accessToken || !idToken || !refreshToken) {
+        if (refreshToken) {
+            return res.status(401).json({
+                success: false,
+                message:
+                    "Unauthorized access token or id token. Retry with refresh token",
+                retry: true,
+            });
+        }
+        return res
+            .status(401)
+            .json({ success: false, message: "Unauthorized" });
+    }
 
-	await verifyIdToken(idToken)
-		.then((data) => {
-			if (data?.status === 401) {
-				return res.status(401).json({
-					success: false,
-					message: "Bad ID token",
-					retry: true,
-				});
-			}
-		})
-		.catch((error) => {
-			return res.status(500).json({
-				success: false,
-				message: "Could not verify ID token",
-				retry: true,
-			});
-		});
+    await verifyIdToken(idToken)
+        .then((data) => {
+            if (data?.status === 401) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Bad ID token",
+                    retry: true,
+                });
+            }
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                success: false,
+                message: "Could not verify ID token",
+                retry: true,
+            });
+        });
 
-	await verifyAccessToken(accessToken)
-		.then((response) => {
-			const data = response.data;
+    await verifyAccessToken(accessToken)
+        .then((response) => {
+            const data = response.data;
 
-			if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
-				return res.status(401).json({
-					success: false,
-					message:
-						"Unauthenticated access token or id token. Retry with refresh token",
-					retry: true,
-				});
-			} else if (data?.id !== id) {
-				return res.status(401).json({
-					success: false,
-					message: "Unauthorized",
-				});
-			}
+            if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Unauthenticated access token or id token. Retry with refresh token",
+                    retry: true,
+                });
+            } else if (data?.id !== id) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Unauthorized",
+                });
+            }
 
-			email = data.email;
-		})
-		.catch((error) => {
-			return res
-				.status(401)
-				.json({ success: false, message: "Unauthorized", retry: true });
-		});
+            email = data.email;
+        })
+        .catch((error) => {
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized", retry: true });
+        });
 
-	const data = await db.getDocument("users", id);
+    const data = await db.getDocument("users", id);
 
-	if (data) return res.status(200).json(data.data);
-	else {
-		const doc = {
-			data: { main: [], custom: {} },
-			email: email,
-		};
-		await db.createDocument("users", id, doc);
+    if (data) return res.status(200).json(data.data);
+    else {
+        const doc = {
+            data: { main: [], custom: {} },
+            email: email,
+        };
+        await db.createDocument("users", id, doc);
 
-		return res.status(201).json(doc.data);
-	}
+        return res.status(201).json(doc.data);
+    }
 });
 
 /**
@@ -124,130 +124,130 @@ router.get("/:id/fetch-data", async (req, res) => {
  * @apiError {Number} 401 Unauthorized - Access token or ID token is unauthenticated. Retry with refresh token.
  */
 router.post("/:id/post-data", async (req, res) => {
-	const { accessToken, idToken, refreshToken } = req.cookies;
-	const id = req.params.id;
-	const body_data = req.body;
-	let email = "";
+    const { accessToken, idToken, refreshToken } = req.cookies;
+    const id = req.params.id;
+    const body_data = req.body;
+    let email = "";
 
-	if (!accessToken || !idToken || !refreshToken) {
-		if (refreshToken) {
-			return res.status(401).json({
-				success: false,
-				message:
-					"Unauthorized access token or id token. Retry with refresh token",
-				retry: true,
-			});
-		}
-		return res
-			.status(401)
-			.json({ success: false, message: "Unauthorized" });
-	}
+    if (!accessToken || !idToken || !refreshToken) {
+        if (refreshToken) {
+            return res.status(401).json({
+                success: false,
+                message:
+                    "Unauthorized access token or id token. Retry with refresh token",
+                retry: true,
+            });
+        }
+        return res
+            .status(401)
+            .json({ success: false, message: "Unauthorized" });
+    }
 
-	await verifyIdToken(idToken)
-		.then((data) => {
-			if (data?.status === 401) {
-				return res.status(401).json({
-					success: false,
-					message: "Bad ID token",
-					retry: true,
-				});
-			}
-		})
-		.catch((error) => {
-			return res.status(500).json({
-				success: false,
-				message: "Could not verify ID token",
-				retry: true,
-			});
-		});
+    await verifyIdToken(idToken)
+        .then((data) => {
+            if (data?.status === 401) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Bad ID token",
+                    retry: true,
+                });
+            }
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                success: false,
+                message: "Could not verify ID token",
+                retry: true,
+            });
+        });
 
-	await verifyAccessToken(accessToken)
-		.then((response) => {
-			const data = response.data;
+    await verifyAccessToken(accessToken)
+        .then((response) => {
+            const data = response.data;
 
-			if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
-				return res.status(401).json({
-					success: false,
-					message:
-						"Unauthenticated access token or id token. Retry with refresh token",
-					retry: true,
-				});
-			} else if (data?.id !== id) {
-				return res.status(401).json({
-					success: false,
-					message: "Unauthorized",
-				});
-			}
+            if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Unauthenticated access token or id token. Retry with refresh token",
+                    retry: true,
+                });
+            } else if (data?.id !== id) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Unauthorized",
+                });
+            }
 
-			email = data.email;
-		})
-		.catch((error) => {
-			return res
-				.status(401)
-				.json({ success: false, message: "Unauthorized", retry: true });
-		});
+            email = data.email;
+        })
+        .catch((error) => {
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized", retry: true });
+        });
 
-	const saved_data = await db.getDocument("users", id);
-	let game_data = saved_data?.data;
-	if (!game_data) {
-		game_data = { main: [], custom: {} };
-		const doc = {
-			data: game_data,
-			email: email,
-		};
-		await db.createDocument("users", id, doc);
-	}
+    const saved_data = await db.getDocument("users", id);
+    let game_data = saved_data?.data;
+    if (!game_data) {
+        game_data = { main: [], custom: {} };
+        const doc = {
+            data: game_data,
+            email: email,
+        };
+        await db.createDocument("users", id, doc);
+    }
 
-	if (_.isEqual(game_data, body_data)) {
-		return res.status(200).json(game_data);
-	}
+    if (_.isEqual(game_data, body_data)) {
+        return res.status(200).json(game_data);
+    }
 
-	const doc = {
-		data: mergeGameData(game_data, body_data),
-		email: email,
-	};
-	await db.updateDocument("users", id, doc);
-	return res.status(201).json(doc.data);
+    const doc = {
+        data: mergeGameData(game_data, body_data),
+        email: email,
+    };
+    await db.updateDocument("users", id, doc);
+    return res.status(201).json(doc.data);
 });
 
 function mergeGameData(serverData, clientData) {
-	// Merge main data
-	serverData.main = mergeArrays(serverData.main, clientData.main);
+    // Merge main data
+    serverData.main = mergeArrays(serverData.main, clientData.main);
 
-	// If the server does not have custom data, use client's custom data
-	if (!serverData.custom) {
-		serverData.custom = clientData.custom;
-	} else {
-		// Otherwise, iterate through each custom key in client's data
-		for (let key in clientData.custom) {
-			if (!serverData.custom[key]) {
-				// If the server doesn't have this key, simply use the client's data for this key
-				serverData.custom[key] = clientData.custom[key];
-			} else {
-				// If the server has this key, merge the arrays
-				serverData.custom[key] = mergeArrays(
-					serverData.custom[key],
-					clientData.custom[key]
-				);
-			}
-		}
-	}
-	return serverData;
+    // If the server does not have custom data, use client's custom data
+    if (!serverData.custom) {
+        serverData.custom = clientData.custom;
+    } else {
+        // Otherwise, iterate through each custom key in client's data
+        for (let key in clientData.custom) {
+            if (!serverData.custom[key]) {
+                // If the server doesn't have this key, simply use the client's data for this key
+                serverData.custom[key] = clientData.custom[key];
+            } else {
+                // If the server has this key, merge the arrays
+                serverData.custom[key] = mergeArrays(
+                    serverData.custom[key],
+                    clientData.custom[key]
+                );
+            }
+        }
+    }
+    return serverData;
 }
 
 function mergeArrays(serverArray, clientArray) {
-	if (!clientArray) return serverArray;
+    if (!clientArray) return serverArray;
 
-	// Create a set to hold unique IDs from the server
-	let uniqueIds = new Set(serverArray.map((g) => g.id));
+    // Create a set to hold unique IDs from the server
+    let uniqueIds = new Set(serverArray.map((g) => g.id));
 
-	// Filter out client data that has IDs already in server data
-	let newData = clientArray.filter((g) => !uniqueIds.has(g.id));
+    // Filter out client data that has IDs already in server data
+    let newData = clientArray.filter((g) => !uniqueIds.has(g.id));
 
-	// Combine server data with the new data from the client and sort by id
-	const concat_array = serverArray.concat(newData);
-	const sorted_array = concat_array.sort((a, b) => a.id - b.id);
-	return sorted_array;
+    // Combine server data with the new data from the client and sort by id
+    const concat_array = serverArray.concat(newData);
+    const sorted_array = concat_array.sort((a, b) => a.id - b.id);
+    return sorted_array;
 }
 
 module.exports = router;

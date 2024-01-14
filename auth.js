@@ -27,50 +27,50 @@ router.use(cookieParser());
  * @apiError {Number} 500 Bad token request - Unable to exchange authorization code.
  */
 router.post("/code", (req, res) => {
-	if (!req.body?.code || !req.body?.scope)
-		return res.status(400).json({ error: "Bad request" });
+    if (!req.body?.code || !req.body?.scope)
+        return res.status(400).json({ error: "Bad request" });
 
-	const data = {
-		code: req.body.code,
-		redirect_uri: process.env.REDIRECT_URI,
-		client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-		client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-		scope: req.body.scope,
-		grant_type: "authorization_code",
-	};
+    const data = {
+        code: req.body.code,
+        redirect_uri: process.env.REDIRECT_URI,
+        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        scope: req.body.scope,
+        grant_type: "authorization_code",
+    };
 
-	axios
-		.post(
-			"https://oauth2.googleapis.com/token",
-			querystring.stringify(data),
-			{
-				"Content-Type": "application/x-www-form-urlencoded",
-			}
-		)
-		.then((response) => {
-			const data = response.data;
+    axios
+        .post(
+            "https://oauth2.googleapis.com/token",
+            querystring.stringify(data),
+            {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        )
+        .then((response) => {
+            const data = response.data;
 
-			res.cookie("refreshToken", data.refresh_token, {
-				...process.env.COOKIE_OPTIONS,
-				maxAge: 180 * 24 * 60 * 60 * 1000,
-			});
-			res.cookie("idToken", data.id_token, {
-				...process.env.COOKIE_OPTIONS,
-				maxAge: data.expires_in * 1000,
-			});
-			res.cookie("accessToken", data.access_token, {
-				...process.env.COOKIE_OPTIONS,
-				maxAge: data.expires_in * 1000,
-			});
+            res.cookie("refreshToken", data.refresh_token, {
+                ...process.env.COOKIE_OPTIONS,
+                maxAge: 180 * 24 * 60 * 60 * 1000,
+            });
+            res.cookie("idToken", data.id_token, {
+                ...process.env.COOKIE_OPTIONS,
+                maxAge: data.expires_in * 1000,
+            });
+            res.cookie("accessToken", data.access_token, {
+                ...process.env.COOKIE_OPTIONS,
+                maxAge: data.expires_in * 1000,
+            });
 
-			return res.status(200).json({ success: true });
-		})
-		.catch((error) => {
-			return res.status(500).json({
-				success: false,
-				message: "Bad token request",
-			});
-		});
+            return res.status(200).json({ success: true });
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                success: false,
+                message: "Bad token request",
+            });
+        });
 });
 
 /**
@@ -86,50 +86,50 @@ router.post("/code", (req, res) => {
  * @apiError {Number} 500 Bad refresh token request - Unable to refresh access token.
  */
 router.post("/refresh-token", (req, res) => {
-	const { refreshToken } = req.cookies;
+    const { refreshToken } = req.cookies;
 
-	if (!refreshToken) {
-		return res.status(401).json({ message: "Unauthorized" });
-	}
+    if (!refreshToken) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
-	const data = {
-		client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-		grant_type: "refresh_token",
-		refresh_token: refreshToken,
-		client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-	};
+    const data = {
+        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    };
 
-	axios
-		.post(
-			"https://oauth2.googleapis.com/token",
-			querystring.stringify(data),
-			{
-				"Content-Type": "application/x-www-form-urlencoded",
-			}
-		)
-		.then((response) => {
-			const data = response.data;
+    axios
+        .post(
+            "https://oauth2.googleapis.com/token",
+            querystring.stringify(data),
+            {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        )
+        .then((response) => {
+            const data = response.data;
 
-			res.cookie("idToken", data.id_token, {
-				...process.env.COOKIE_OPTIONS,
-				maxAge: data.expires_in * 1000,
-			});
-			res.cookie("accessToken", data.access_token, {
-				...process.env.COOKIE_OPTIONS,
-				maxAge: data.expires_in * 1000,
-			});
+            res.cookie("idToken", data.id_token, {
+                ...process.env.COOKIE_OPTIONS,
+                maxAge: data.expires_in * 1000,
+            });
+            res.cookie("accessToken", data.access_token, {
+                ...process.env.COOKIE_OPTIONS,
+                maxAge: data.expires_in * 1000,
+            });
 
-			return res.status(200).json({ success: true });
-		})
-		.catch((error) => {
-			res.clearCookie("refreshToken", { path: "/" });
-			res.clearCookie("accessToken", { path: "/" });
+            return res.status(200).json({ success: true });
+        })
+        .catch((error) => {
+            res.clearCookie("refreshToken", { path: "/" });
+            res.clearCookie("accessToken", { path: "/" });
 
-			return res.status(500).json({
-				success: false,
-				message: "Bad refresh token request",
-			});
-		});
+            return res.status(500).json({
+                success: false,
+                message: "Bad refresh token request",
+            });
+        });
 });
 
 /**
@@ -154,60 +154,60 @@ router.post("/refresh-token", (req, res) => {
  * @apiError {Number} 401 Unauthorized - Access token or ID token is unauthenticated. Retry with refresh token.
  */
 router.get("/vat", async (req, res) => {
-	const { accessToken, idToken, refreshToken } = req.cookies;
+    const { accessToken, idToken, refreshToken } = req.cookies;
 
-	if (!accessToken || !idToken || !refreshToken) {
-		if (refreshToken) {
-			return res.status(401).json({
-				success: false,
-				message:
-					"Unauthorized access token or id token. Retry with refresh token",
-				retry: true,
-			});
-		}
-		return res
-			.status(401)
-			.json({ success: false, message: "Unauthorized" });
-	}
+    if (!accessToken || !idToken || !refreshToken) {
+        if (refreshToken) {
+            return res.status(401).json({
+                success: false,
+                message:
+                    "Unauthorized access token or id token. Retry with refresh token",
+                retry: true,
+            });
+        }
+        return res
+            .status(401)
+            .json({ success: false, message: "Unauthorized" });
+    }
 
-	await verifyIdToken(idToken)
-		.then((data) => {
-			if (data?.status === 401) {
-				return res.status(401).json({
-					success: false,
-					message: "Bad ID token",
-					retry: true,
-				});
-			}
-		})
-		.catch((error) => {
-			return res.status(500).json({
-				success: false,
-				message: "Could not verify ID token",
-				retry: true,
-			});
-		});
+    await verifyIdToken(idToken)
+        .then((data) => {
+            if (data?.status === 401) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Bad ID token",
+                    retry: true,
+                });
+            }
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                success: false,
+                message: "Could not verify ID token",
+                retry: true,
+            });
+        });
 
-	await verifyAccessToken(accessToken)
-		.then((response) => {
-			const data = response.data;
+    await verifyAccessToken(accessToken)
+        .then((response) => {
+            const data = response.data;
 
-			if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
-				return res.status(401).json({
-					success: false,
-					message:
-						"Unauthenticated access token or id token. Retry with refresh token",
-					retry: true,
-				});
-			}
+            if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Unauthenticated access token or id token. Retry with refresh token",
+                    retry: true,
+                });
+            }
 
-			return res.status(200).json(data);
-		})
-		.catch((error) => {
-			return res
-				.status(401)
-				.json({ success: false, message: "Unauthorized", retry: true });
-		});
+            return res.status(200).json(data);
+        })
+        .catch((error) => {
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized", retry: true });
+        });
 });
 
 /**
@@ -218,10 +218,10 @@ router.get("/vat", async (req, res) => {
  * @apiSuccess (Success 200) {void} - Successful logout.
  */
 router.get("/logout", (req, res) => {
-	res.clearCookie("refreshToken", { path: "/" });
-	res.clearCookie("accessToken", { path: "/" });
-	res.clearCookie("idToken", { path: "/" });
-	res.status(200).send();
+    res.clearCookie("refreshToken", { path: "/" });
+    res.clearCookie("accessToken", { path: "/" });
+    res.clearCookie("idToken", { path: "/" });
+    res.status(200).send();
 });
 
 module.exports = router;

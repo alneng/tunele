@@ -3,27 +3,27 @@
 @import "tailwindcss/utilities";
 
 @font-face {
-	font-family: "SF Pro";
-	src: url("../fonts/sf-pro-text_regular.woff2") format("woff2");
+    font-family: "SF Pro";
+    src: url("../fonts/sf-pro-text_regular.woff2") format("woff2");
 }
 
 html,
 body,
 #root {
-	height: 100%;
-	overflow: hidden;
-	font-family: "SF Pro", system-ui, -apple-system, BlinkMacSystemFont,
-		Segoe UI, Roboto;
+    height: 100%;
+    overflow: hidden;
+    font-family: "SF Pro", system-ui, -apple-system, BlinkMacSystemFont,
+        Segoe UI, Roboto;
 }
 
 .overlay {
-	background-color: rgba(0, 0, 0, 0.7);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

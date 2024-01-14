@@ -1,6 +1,6 @@
 interface trackFormat {
-	song: string;
-	artists: string[];
+    song: string;
+    artists: string[];
 }
 
 export default trackFormat;

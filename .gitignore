@@ -1,4 +1,6 @@
 node_modules/
+tools/
+
 .env
 .env.local
 .DS_Store
