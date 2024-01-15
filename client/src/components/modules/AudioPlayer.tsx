@@ -16,6 +16,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [progress, setProgress] = useState<number>(0);
     const [currentLevel, setCurrentLevel] = useState<number>(0);
+    const [audioPlayerTimeout, setAudioPlayerTimeout] =
+        useState<NodeJS.Timeout>();
 
     const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 
@@ -24,17 +26,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     }, [userGuesses]);
 
     const handlePlayback = () => {
-        if (audioRef.current && audioRef.current.paused) {
+        if (audioRef.current) {
             audioRef.current.currentTime = 0;
-
             const timeoutDuration = songLimits[currentLevel];
-
-            setTimeout(() => {
-                audioRef.current?.pause();
-            }, timeoutDuration + 100);
 
             audioRef.current.volume = 0.3;
             audioRef.current.play();
+
+            const timeout = setTimeout(() => {
+                audioRef.current?.pause();
+            }, timeoutDuration + 100);
+            setAudioPlayerTimeout(timeout);
+        }
+    };
+
+    const handlePause = () => {
+        if (audioRef.current && !audioRef.current.paused) {
+            clearTimeout(audioPlayerTimeout);
+            audioRef.current.pause();
         }
     };
 
@@ -69,31 +78,57 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
                     className="h-full bg-[#1fd660]"
                     style={{
                         width: `${progress}%`,
-                        transition: "width 0.3s ease-in-out",
+                        transition: "width 0.3s linear",
                     }}
                 ></div>
             </div>
-            <button
-                onClick={handlePlayback}
-                className="text-white my-4"
-                title="Play"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="56"
-                    height="56"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-play-circle"
+            {audioRef.current && audioRef.current.paused && (
+                <button
+                    onClick={handlePlayback}
+                    className="text-white my-4"
+                    title="Play"
                 >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                </svg>
-            </button>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="56"
+                        height="56"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-play-circle"
+                    >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                </button>
+            )}
+            {audioRef.current && !audioRef.current.paused && (
+                <button
+                    onClick={handlePause}
+                    className="text-white my-4"
+                    title="Pause"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="56"
+                        height="56"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-pause-circle"
+                    >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="10" y1="15" x2="10" y2="9"></line>
+                        <line x1="14" y1="15" x2="14" y2="9"></line>
+                    </svg>
+                </button>
+            )}
         </div>
     );
 };
