@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({
     };
 
     const redirectToGithub = () => {
-        window.open("https://github.com/wildrxge/tunele", "_blank");
+        window.open("https://github.com/alneng/tunele", "_blank");
     };
 
     const redirectPrivacyPolicy = () => {
