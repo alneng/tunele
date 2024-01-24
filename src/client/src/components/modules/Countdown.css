@@ -1,0 +1,5 @@
+@media (max-height: 700px) {
+  .countdown {
+    display: none !important;
+  }
+}

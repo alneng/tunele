@@ -1,6 +1,11 @@
+# dependencies
 node_modules/
-tools/
 
+# production
+dist/
+
+# misc
+tools/
 .env
-.env.local
+.env.*
 .DS_Store
