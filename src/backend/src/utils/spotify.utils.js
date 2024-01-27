@@ -30,10 +30,10 @@ async function fetchAccessToken() {
  * Fetches all of the songs in a Spotify playlist
  *
  * @param playlistId the id of the playlist
- * @param token a Spotify access token
  * @returns all of the songs in a Spotify playlist, in Spotify object track format
  */
-async function fetchSongsFromPlaylist(playlistId, token) {
+async function fetchSongsFromPlaylist(playlistId) {
+  const token = await fetchAccessToken();
   return new Promise((resolve, reject) => {
     axios({
       method: "GET",
@@ -84,4 +84,4 @@ async function fetchTracks(nextUrl, token) {
   }
 }
 
-module.exports = { fetchAccessToken, fetchSongsFromPlaylist };
+module.exports = { fetchSongsFromPlaylist };

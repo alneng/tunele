@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const { DateTime } = require("luxon");
 const db = require("../utils/firebase.utils");
-const { fetchAccessToken, fetchSongsFromPlaylist } = require("./spotify.utils");
+const { fetchSongsFromPlaylist } = require("./spotify.utils");
 
 /**
  * Generates or refreshes a custom game playlist object
@@ -12,8 +12,7 @@ const { fetchAccessToken, fetchSongsFromPlaylist } = require("./spotify.utils");
  * @returns a custom game playlist object
  */
 async function refreshPlaylist(playlistId, playlistObject, refreshFlag) {
-  const accessToken = await fetchAccessToken();
-  const response = await fetchSongsFromPlaylist(playlistId, accessToken);
+  const response = await fetchSongsFromPlaylist(playlistId);
   const sortedSongs =
     refreshFlag && playlistObject
       ? await sortPlaylistResponse(response, playlistObject.gameTracks)
