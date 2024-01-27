@@ -39,7 +39,7 @@ These services are **required** for Tunele to work properly.
 
 `src/backend/src/` - Where the express app is located
 
-`src/backend/src/app.js` - Main server entryway
+`src/backend/src/index.js` - Main server entryway
 
 `src/backend/src/api.js` - Where the API is located
 
@@ -49,7 +49,7 @@ These services are **required** for Tunele to work properly.
 
    - Edit `googleSsoParams` to your redirect_uri and ClientId
 
-2. `src/backend/.env.development` - Should contain the following environment variables
+2. `src/backend/.env.development` - Should contain the following environment variables, or `src/backend/.env` for production environments
 
    - SPOTIFY_CLIENT_KEY - <base64 encoded `client_id:client_secret`>
    - FIREBASE_SERVICE_ACCOUNT_KEY - JSON of Service Key with read/write access to Firebase project's Firestore Database
