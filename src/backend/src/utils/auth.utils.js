@@ -1,7 +1,6 @@
+const { verifyAccessToken, verifyIdToken } = require("../utils/tokens.utils");
 const { loadDotenv } = require("./utils");
 loadDotenv();
-
-const { verifyAccessToken, verifyIdToken } = require("../utils/tokens.utils");
 
 const COOKIE_SETTINGS = JSON.parse(process.env.COOKIE_SETTINGS);
 
