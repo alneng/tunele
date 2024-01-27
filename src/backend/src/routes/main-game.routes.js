@@ -1,6 +1,7 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { isValidTimezoneString, validateInputs } = require("../utils/utils");
+const { validateInputs } = require("../utils/utils");
+const { isValidTimezoneString } = require("../utils/validation.utils");
 const MainGameController = require("../controllers/main-game.controllers");
 
 const router = express.Router();

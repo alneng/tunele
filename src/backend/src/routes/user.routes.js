@@ -1,10 +1,7 @@
 const express = require("express");
-const { body, cookie, param } = require("express-validator");
-const {
-  isValidJsonBody,
-  isValidUserId,
-  validateInputs,
-} = require("../utils/utils");
+const { cookie, param } = require("express-validator");
+const { validateInputs } = require("../utils/utils");
+const { isValidJsonBody, isValidUserId } = require("../utils/validation.utils");
 const UserController = require("../controllers/user.controllers");
 
 const router = express.Router();

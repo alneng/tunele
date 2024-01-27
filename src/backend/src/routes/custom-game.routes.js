@@ -1,10 +1,10 @@
 const express = require("express");
 const { body, param } = require("express-validator");
+const { validateInputs } = require("../utils/utils");
 const {
   isValidPlaylistId,
   isValidTimezoneString,
-  validateInputs,
-} = require("../utils/utils");
+} = require("../utils/validation.utils");
 const CustomGameController = require("../controllers/custom-game.controllers");
 
 const router = express.Router();
