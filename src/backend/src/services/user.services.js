@@ -14,6 +14,7 @@ module.exports = class UserService {
    * @param accessToken auth access token
    * @param idToken auth id token
    * @param refreshToken auth refresh token
+   * @throws AccessDeniedException if bad access or id token
    * @returns the user's saved data
    */
   static async getUserData(userId, accessToken, idToken, refreshToken) {
@@ -44,6 +45,7 @@ module.exports = class UserService {
    * @param accessToken auth access token
    * @param idToken auth id token
    * @param refreshToken auth refresh token
+   * @throws AccessDeniedException if bad access or id token
    * @returns the user's saved data, or an error message
    */
   static async updateUserData(
