@@ -14,49 +14,26 @@ module.exports = class UserService {
    * @param accessToken auth access token
    * @param idToken auth id token
    * @param refreshToken auth refresh token
-   * @returns the user's saved data, or an error message
+   * @returns the user's saved data
    */
   static async getUserData(userId, accessToken, idToken, refreshToken) {
-    const tokenExistenceCheck = doesAccessIdTokenExist(
-      accessToken,
-      idToken,
-      refreshToken
-    );
-    if (tokenExistenceCheck) return tokenExistenceCheck;
-
-    const badIdToken = await getIdTokenAuthStatus(idToken);
-    if (badIdToken) return badIdToken;
-    const tokenVerificationResult = await getAccessTokenAuthStatus(
-      accessToken,
-      userId
-    );
-    if (tokenVerificationResult.status !== 200) {
-      return tokenVerificationResult;
-    }
-    const email = tokenVerificationResult.email;
+    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
+    await getIdTokenAuthStatus(idToken);
+    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
 
     const data = await db.getDocument("users", id);
-    if (data) {
-      return {
-        status: 200,
-        success: true,
-        message: data.data,
-        retry: false,
-      };
-    } else {
-      const doc = {
-        data: { main: [], custom: {} },
-        email: email,
-      };
-      await db.createDocument("users", id, doc);
+    if (data) return { status: 200, message: data.data };
 
-      return {
-        status: 201,
-        success: true,
-        message: doc.data,
-        retry: false,
-      };
-    }
+    const doc = {
+      data: { main: [], custom: {} },
+      email: email,
+    };
+    await db.createDocument("users", id, doc);
+
+    return {
+      status: 201,
+      message: doc.data,
+    };
   }
 
   /**
@@ -76,23 +53,9 @@ module.exports = class UserService {
     idToken,
     refreshToken
   ) {
-    const tokenExistenceCheck = doesAccessIdTokenExist(
-      accessToken,
-      idToken,
-      refreshToken
-    );
-    if (tokenExistenceCheck) return tokenExistenceCheck;
-
-    const badIdToken = await getIdTokenAuthStatus(idToken);
-    if (badIdToken) return badIdToken;
-    const tokenVerificationResult = await getAccessTokenAuthStatus(
-      accessToken,
-      userId
-    );
-    if (tokenVerificationResult.status !== 200) {
-      return tokenVerificationResult;
-    }
-    const email = tokenVerificationResult.email;
+    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
+    await getIdTokenAuthStatus(idToken);
+    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
 
     const savedData = await db.getDocument("users", id);
     let gameData = savedData?.data;
@@ -104,14 +67,8 @@ module.exports = class UserService {
       });
     }
 
-    if (_.isEqual(gameData, bodyData)) {
-      return {
-        status: 200,
-        success: true,
-        message: gameData,
-        retry: false,
-      };
-    }
+    if (_.isEqual(gameData, bodyData))
+      return { status: 200, message: gameData };
 
     const doc = {
       data: mergeGameData(gameData, bodyData),
@@ -120,9 +77,7 @@ module.exports = class UserService {
     await db.updateDocument("users", id, doc);
     return {
       status: 201,
-      success: true,
       message: doc.data,
-      retry: false,
     };
   }
 };

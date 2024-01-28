@@ -1,3 +1,4 @@
+const { AccessDeniedException } = require("../utils/errors.utils");
 const { verifyAccessToken, verifyIdToken } = require("../utils/tokens.utils");
 const { loadDotenv } = require("./utils");
 loadDotenv();
@@ -25,25 +26,17 @@ function createCookie(res, cookieName, cookieValue, maxAge) {
  * @param accessToken auth access token
  * @param idToken auth id token
  * @param refreshToken auth refresh token
- * @returns auth status if no access or id token
+ * @throws AccessDeniedException if no access or id token
  */
 function doesAccessIdTokenExist(accessToken, idToken, refreshToken) {
   if (!accessToken || !idToken) {
-    if (refreshToken) {
-      return {
-        status: 401,
-        success: false,
-        message:
-          "Unauthorized access token or id token. Retry with refresh token",
-        retry: true,
-      };
-    }
-    return {
-      status: 401,
-      success: false,
-      message: "Unauthorized",
-      retry: false,
-    };
+    throw new AccessDeniedException(
+      401,
+      `Invalid access token or id token${
+        refreshToken ? ". Retry with refresh token" : ""
+      }`,
+      refreshToken ? true : false
+    );
   }
 }
 
@@ -51,72 +44,27 @@ function doesAccessIdTokenExist(accessToken, idToken, refreshToken) {
  * Gets the auth status of a user's id token
  *
  * @param idToken auth id token
- * @returns auth status if invalid id token
+ * @throws AccessDeniedException if bad id token
  */
 async function getIdTokenAuthStatus(idToken) {
-  try {
-    const idTokenStatus = await verifyIdToken(idToken);
-    if (idTokenStatus.status === 401) {
-      return {
-        status: 401,
-        success: false,
-        message: "Bad ID token",
-        retry: true,
-      };
-    }
-  } catch (error) {
-    return {
-      status: 500,
-      success: false,
-      message: "Could not verify ID token",
-      retry: true,
-    };
-  }
+  await verifyIdToken(idToken);
 }
 
 /**
  * Gets the auth status of a user's access token
  *
  * @param accessToken auth access token
- * @param callback callback function to handle data on valid access token
- * @returns auth status if invalid access token, or callback on success
+ * @param userId a user id to verify against the access token
+ * @throws AccessDeniedException if bad access token
+ * @returns status of the access token
  */
 async function getAccessTokenAuthStatus(accessToken, userId = null) {
-  try {
-    const accessTokenStatus = await verifyAccessToken(accessToken);
-    const data = accessTokenStatus.data;
+  const accessTokenStatus = await verifyAccessToken(accessToken);
 
-    if (data?.code === 401 && data?.status === "UNAUTHENTICATED") {
-      return {
-        status: 401,
-        success: false,
-        message:
-          "Unauthenticated access token or id token. Retry with refresh token",
-        retry: true,
-      };
-    }
+  if (userId !== null && accessTokenStatus.id !== userId)
+    throw new AccessDeniedException(401, "Unauthorized", false);
 
-    if (userId !== null && data?.id !== userId) {
-      return {
-        status: 401,
-        success: false,
-        message: "Unauthorized",
-        retry: false,
-      };
-    }
-
-    return {
-      ...data,
-      status: 200,
-    };
-  } catch (error) {
-    return {
-      status: 401,
-      success: false,
-      message: "Unauthorized",
-      retry: true,
-    };
-  }
+  return accessTokenStatus;
 }
 
 module.exports = {

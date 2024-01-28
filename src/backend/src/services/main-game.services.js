@@ -1,4 +1,5 @@
 const { DateTime } = require("luxon");
+const { HttpException } = require("../utils/errors.utils");
 const db = require("../utils/firebase.utils");
 
 module.exports = class MainGameService {
@@ -103,6 +104,7 @@ module.exports = class MainGameService {
    *
    * @param timeZone the user's time zone
    * @param score the user's score
+   * @throws HttpException if stats update fails
    * @returns status of post
    */
   static async postStats(localDate, score) {
@@ -113,9 +115,9 @@ module.exports = class MainGameService {
         todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
         await db.updateDocument("gameTracks", localDate, todaysGameTrack);
         return { success: true };
-      } else throw Error;
+      } else throw Error();
     } catch (err) {
-      return { success: false };
+      throw new HttpException(400, { success: false });
     }
   }
 };

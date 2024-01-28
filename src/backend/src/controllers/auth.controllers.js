@@ -6,21 +6,8 @@ module.exports = class AuthController {
     try {
       const { code, scope } = req.body;
 
-      const {
-        success,
-        message,
-        refreshToken,
-        idToken,
-        accessToken,
-        expiresIn,
-      } = await AuthService.getAuthWithCode(code, scope);
-
-      if (!success) {
-        return res.status(500).json({
-          success: false,
-          message,
-        });
-      }
+      const { refreshToken, idToken, accessToken, expiresIn } =
+        await AuthService.getAuthWithCode(code, scope);
 
       createCookie(res, "accessToken", accessToken, expiresIn * 1000);
       createCookie(res, "idToken", idToken, expiresIn * 1000);
@@ -30,7 +17,7 @@ module.exports = class AuthController {
         refreshToken,
         180 * 24 * 60 * 60 * 1000
       );
-      return res.status(200).json({ success });
+      return res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }
@@ -40,19 +27,12 @@ module.exports = class AuthController {
     try {
       const { refreshToken } = req.cookies;
 
-      const { success, message, idToken, accessToken, expiresIn } =
+      const { idToken, accessToken, expiresIn } =
         await AuthService.getAuthWithRefreshToken(refreshToken);
-
-      if (!success) {
-        return res.status(500).json({
-          success: false,
-          message,
-        });
-      }
 
       createCookie(res, "accessToken", accessToken, expiresIn * 1000);
       createCookie(res, "idToken", idToken, expiresIn * 1000);
-      return res.status(200).json({ success });
+      return res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }
@@ -67,7 +47,7 @@ module.exports = class AuthController {
         idToken,
         refreshToken
       );
-      return res.status(status.status).json(status);
+      return res.status(200).json(status);
     } catch (error) {
       next(error);
     }

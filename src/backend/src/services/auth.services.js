@@ -5,6 +5,7 @@ const {
   getIdTokenAuthStatus,
   getAccessTokenAuthStatus,
 } = require("../utils/auth.utils");
+const { HttpException } = require("../utils/errors.utils");
 
 module.exports = class AuthService {
   static authClientCredentials = {
@@ -17,6 +18,7 @@ module.exports = class AuthService {
    *
    * @param code auth code
    * @param scope auth scope
+   * @throws HttpException if error generating credentials
    * @returns new auth status, or error
    */
   static async getAuthWithCode(code, scope) {
@@ -38,21 +40,13 @@ module.exports = class AuthService {
 
       return {
         success: true,
-        message: "",
         refreshToken: auth.refresh_token,
         idToken: auth.id_token,
         accessToken: auth.access_token,
         expiresIn: auth.expires_in,
       };
     } catch (error) {
-      return {
-        success: false,
-        message: "Bad token request",
-        refreshToken: null,
-        idToken: null,
-        accessToken: null,
-        expiresIn: null,
-      };
+      throw new HttpException(401, "Bad token request");
     }
   }
 
@@ -60,6 +54,7 @@ module.exports = class AuthService {
    * Exchanges refresh token for access, and id token
    *
    * @param refreshToken auth refresh token
+   * @throws HttpException if error generating credentials
    * @returns new auth status, or error
    */
   static async getAuthWithRefreshToken(refreshToken) {
@@ -84,12 +79,7 @@ module.exports = class AuthService {
         accessToken: auth.access_token,
       };
     } catch (error) {
-      return {
-        success: false,
-        message: "Bad token request",
-        idToken: null,
-        accessToken: null,
-      };
+      throw new HttpException(401, "Bad token request");
     }
   }
 
@@ -99,18 +89,12 @@ module.exports = class AuthService {
    * @param accessToken auth access token
    * @param idToken auth id token
    * @param refreshToken auth refresh token
+   * @throws AccessDeniedException if bad access token
    * @returns access token auth status
    */
   static async verifyAccessToken(accessToken, idToken, refreshToken) {
-    const tokenExistenceCheck = doesAccessIdTokenExist(
-      accessToken,
-      idToken,
-      refreshToken
-    );
-    if (tokenExistenceCheck) return tokenExistenceCheck;
-
-    const badIdToken = await getIdTokenAuthStatus(idToken);
-    if (badIdToken) return badIdToken;
+    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
+    await getIdTokenAuthStatus(idToken);
     return await getAccessTokenAuthStatus(accessToken);
   }
 };

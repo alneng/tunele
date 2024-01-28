@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const apiRouter = require("./api");
+const { errorHandler } = require("./utils/errors.utils");
 const { loadDotenv } = require("./utils/utils");
 loadDotenv();
 
@@ -19,6 +20,8 @@ app.use("/api", apiRouter);
 app.get("/monitor", (req, res, next) => {
   return res.status(200).json({ success: "API is up and running" });
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`API running at http://localhost:${PORT}`);

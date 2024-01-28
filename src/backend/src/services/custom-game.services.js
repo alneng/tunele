@@ -1,3 +1,4 @@
+const { HttpException } = require("../utils/errors.utils");
 const db = require("../utils/firebase.utils");
 const {
   refreshPlaylist,
@@ -74,6 +75,7 @@ module.exports = class CustomGameService {
    * @param playlistId the id of the custom playlist
    * @param timeZone the user's time zone
    * @param score the user's score
+   * @throws HttpException if stats update fails
    * @returns status of post
    */
   static async postStats(playlistId, localDate, score) {
@@ -97,9 +99,9 @@ module.exports = class CustomGameService {
           return { success: true };
         }
       }
-      if (!foundTrack) return { success: false };
-    } catch (err) {
-      return { success: false };
+      if (!foundTrack) throw Error();
+    } catch (error) {
+      throw new HttpException(400, { success: false });
     }
   }
 };

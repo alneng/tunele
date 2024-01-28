@@ -79,7 +79,6 @@ async function fetchTracks(nextUrl, token) {
     }
     return items;
   } catch (error) {
-    console.error(error);
     return [];
   }
 }
