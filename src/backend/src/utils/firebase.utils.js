@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
+const { loadDotenv } = require("./utils");
+loadDotenv();
 
-class FirestoreDB {
+class FirestoreSDK {
   constructor() {
     admin.initializeApp({
       credential: admin.credential.cert(
@@ -11,6 +13,13 @@ class FirestoreDB {
     this.db = admin.firestore();
   }
 
+  /**
+   * Creates a document in the Firestore database
+   *
+   * @param collection the collection to add the document to
+   * @param id the id of the document to be created
+   * @param document the document
+   */
   async createDocument(collection, id, document) {
     const docRef = this.db.collection(collection).doc(id);
 
@@ -26,6 +35,13 @@ class FirestoreDB {
     });
   }
 
+  /**
+   * Gets a document in the Firestore database
+   *
+   * @param collection the collection to get the document from
+   * @param id the id of the document to get
+   * @returns the returned document, or null if it doesn't exist
+   */
   async getDocument(collection, id) {
     const docRef = this.db.collection(collection).doc(id);
 
@@ -45,6 +61,13 @@ class FirestoreDB {
     });
   }
 
+  /**
+   * Updates a document in the Firestore database
+   *
+   * @param collection the collection of the document to update
+   * @param id the id of the document to update
+   * @param newDocument the new document
+   */
   async updateDocument(collection, id, newDocument) {
     const docRef = this.db.collection(collection).doc(id);
 
@@ -60,6 +83,12 @@ class FirestoreDB {
     });
   }
 
+  /**
+   * Deletes a document in the Firestore database
+   *
+   * @param collection the collection of the document to delete
+   * @param id the id of the document to delete
+   */
   async deleteDocument(collection, id) {
     const docRef = this.db.collection(collection).doc(id);
 
@@ -75,6 +104,13 @@ class FirestoreDB {
     });
   }
 
+  /**
+   * Gets all the documents in a collection in the Firestore database
+   *
+   * @param collection the collection to get all the documents from
+   * @param filter a search filter
+   * @returns the documents that meet the criteria of the filter
+   */
   async getAllDocuments(collection, filter) {
     return new Promise(async (resolve, reject) => {
       const querySnapshot = await this.db.collection(collection).get();
@@ -98,6 +134,12 @@ class FirestoreDB {
     });
   }
 
+  /**
+   * Gets the last document of a collection in the Firestore database
+   *
+   * @param collection the collection to get the last document of
+   * @returns the last document of the collection, or null if it doesn't exist
+   */
   async getLastDocument(collection) {
     return new Promise(async (resolve, reject) => {
       const querySnapshot = await this.db
@@ -116,5 +158,5 @@ class FirestoreDB {
   }
 }
 
-const FirestoreSDK = new FirestoreDB();
-module.exports = FirestoreSDK;
+const db = new FirestoreSDK();
+module.exports = db;

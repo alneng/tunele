@@ -8,11 +8,13 @@
     "src/client"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace backend start\" \"yarn workspace client dev\"",
-    "backend": "yarn workspace backend start",
+    "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace client dev\"",
+    "backend": "yarn workspace backend dev",
     "client": "yarn workspace client dev",
     "client:build": "yarn workspace client build",
-    "client:preview": "yarn workspace client preview"
+    "client:preview": "yarn workspace client preview",
+    "test": "yarn workspace backend test",
+    "test:watch": "yarn workspace backend test:watch"
   },
   "keywords": [
     "Heardle",
