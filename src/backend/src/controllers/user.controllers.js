@@ -6,13 +6,13 @@ module.exports = class UserController {
       const userId = req.params.id;
       const { accessToken, idToken, refreshToken } = req.cookies;
 
-      const status = await UserService.getUserData(
+      const { status, message } = await UserService.getUserData(
         userId,
         accessToken,
         idToken,
         refreshToken
       );
-      return res.status(status.status).json(status.message);
+      return res.status(status).json(message);
     } catch (error) {
       next(error);
     }
@@ -24,14 +24,14 @@ module.exports = class UserController {
       const { accessToken, idToken, refreshToken } = req.cookies;
       const bodyData = req.body;
 
-      const status = await UserService.getUserData(
+      const { status, message } = await UserService.updateUserData(
         userId,
         bodyData,
         accessToken,
         idToken,
         refreshToken
       );
-      return res.status(status.status).json(status.message);
+      return res.status(status).json(message);
     } catch (error) {
       next(error);
     }
