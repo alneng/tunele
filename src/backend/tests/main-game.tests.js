@@ -19,7 +19,7 @@ describe("Main Game Tests", () => {
     test("getDailySong returns a song if one already exists", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue(NeverGonna);
 
-      const dailySong = await MainGameService.getDailySong("01-26-2024");
+      const dailySong = await MainGameService.getDailySong("2024-01-26");
       expect(dailySong).toEqual(NeverGonna);
     });
 
@@ -33,7 +33,7 @@ describe("Main Game Tests", () => {
         .spyOn(db, "getLastDocument")
         .mockResolvedValueOnce({ id: "2024-01-26", data: NeverGonna });
 
-      const dailySong = await MainGameService.getDailySong("01-27-2024");
+      const dailySong = await MainGameService.getDailySong("2024-01-27");
       expect(dailySong).toEqual(TalkThatTalk);
     });
   });
@@ -62,14 +62,14 @@ describe("Main Game Tests", () => {
         ...gameTrackDocumentExtras,
       });
 
-      const status = await MainGameService.postStats("01-27-2024", 1);
+      const status = await MainGameService.postStats("2024-01-27", 1);
       expect(status).toEqual({ success: true });
     });
 
     test("postStats fails if a game track with that date does not exist", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue(null);
 
-      await expect(MainGameService.postStats("01-28-2024", 1)).rejects.toThrow(
+      await expect(MainGameService.postStats("2024-01-28", 1)).rejects.toThrow(
         new HttpException(400, { success: false })
       );
     });
