@@ -4,13 +4,15 @@ loadDotenv();
 
 class FirestoreSDK {
   constructor() {
-    admin.initializeApp({
-      credential: admin.credential.cert(
-        JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-      ),
-    });
-
-    this.db = admin.firestore();
+    // For running tests, if there are no credentials, skip creating the firestore instance, as it will be mocked by jest
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      admin.initializeApp({
+        credential: admin.credential.cert(
+          JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
+        ),
+      });
+      this.db = admin.firestore();
+    }
   }
 
   /**
