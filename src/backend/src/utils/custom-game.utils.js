@@ -58,23 +58,10 @@ async function refreshPlaylist(playlistId, playlistObject, refreshFlag) {
  * @returns an existing game track, or null if it does not exist
  */
 function getExistingGameTrack(playlistObject, localDate) {
-  const recentGameTrack =
-    playlistObject.gameTracks?.[playlistObject.gameTracks.length - 1];
-  const secondRecentGameTrack =
-    playlistObject.gameTracks.length > 1
-      ? playlistObject.gameTracks?.[playlistObject.gameTracks.length - 2]
-      : null;
-
-  if (
-    (recentGameTrack && recentGameTrack.date === localDate) ||
-    (secondRecentGameTrack && secondRecentGameTrack.date === localDate)
-  ) {
-    return recentGameTrack.date === localDate
-      ? recentGameTrack
-      : secondRecentGameTrack;
-  }
-
-  return null;
+  const filteredGameTracks = playlistObject.gameTracks.filter(
+    (track) => track.date === localDate
+  );
+  return filteredGameTracks.length > 0 ? filteredGameTracks[0] : null;
 }
 
 /**
