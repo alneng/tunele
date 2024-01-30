@@ -1,6 +1,8 @@
 const axios = require("axios");
 const { OAuth2Client } = require("google-auth-library");
 const { AccessDeniedException } = require("../utils/errors.utils");
+const { loadDotenv } = require("../utils/utils");
+loadDotenv();
 
 const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const OAUTH2_CLIENT = new OAuth2Client(OAUTH_CLIENT_ID);
