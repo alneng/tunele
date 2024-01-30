@@ -5,6 +5,7 @@ const {
   getAccessTokenAuthStatus,
 } = require("../utils/auth.utils");
 const db = require("../utils/firebase.utils");
+const { mergeGameData } = require("../utils/user.utils");
 
 module.exports = class UserService {
   /**
