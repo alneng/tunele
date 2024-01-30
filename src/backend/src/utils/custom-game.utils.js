@@ -86,7 +86,12 @@ function getExistingGameTrack(playlistObject, localDate) {
  * @returns the selected game track
  */
 async function chooseNewGameTrack(playlistId, playlistObject, localDate) {
-  const allTracksList = playlistObject.tracklist;
+  let allTracksList = playlistObject.tracklist;
+
+  if (allTracksList.filter((song) => !song.playedBefore).length === 0) {
+    allTracksList = resetTrackListPlayedBeforeStatus(allTracksList);
+  }
+
   let randomTrackIndex, chosenTrack;
   do {
     randomTrackIndex = Math.floor(Math.random() * allTracksList.length);
@@ -182,6 +187,20 @@ function checkIfInGameTracks(externalUrl, gameTracks) {
     if (track.externalUrl === externalUrl) return true;
   }
   return false;
+}
+
+/**
+ * Resets the playedBefore status of all tracks in the track list.
+ * Warning: This action is irreversible
+ *
+ * @param trackList the track list to reset the status of
+ * @returns the new track list of reset statuses
+ */
+function resetTrackListPlayedBeforeStatus(trackList) {
+  return trackList.map((track) => ({
+    ...track,
+    playedBefore: false,
+  }));
 }
 
 module.exports = { refreshPlaylist, getExistingGameTrack, chooseNewGameTrack };

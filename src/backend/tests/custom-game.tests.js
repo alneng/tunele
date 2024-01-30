@@ -45,6 +45,23 @@ describe("Custom Game Tests", () => {
       );
       expect(dailySong).toEqual(TalkThatTalk);
     });
+
+    test("getDailySong resets track list playedBefore status and returns a new song if all songs have been played before", async () => {
+      const singleTrackPlaylist = structuredClone(allTracks);
+      singleTrackPlaylist.tracklist.pop();
+      jest.spyOn(db, "getDocument").mockResolvedValue({
+        ...singleTrackPlaylist,
+        updatedAt: "",
+        gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
+      });
+
+      const dailySong = await CustomGameService.getDailySong(
+        "37i9dQZEVXbLp5XoPON0wI",
+        "2024-01-28",
+        false
+      );
+      expect(dailySong).toEqual({ ...NeverGonna, id: 2 });
+    });
   });
 
   describe("/allSongs endpoint", () => {
