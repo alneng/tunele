@@ -74,9 +74,9 @@ module.exports = class AuthService {
 
       return {
         success: true,
-        message: "",
         idToken: auth.id_token,
         accessToken: auth.access_token,
+        expiresIn: auth.expires_in,
       };
     } catch (error) {
       throw new HttpException(401, "Bad token request");
