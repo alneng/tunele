@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import mergeGameData from "../utils/saved-data.utils";
+import mergeGameData from "../../utils/saved-data.utils";
 
 import SavedGameData from "../interfaces/SavedGameData";
 

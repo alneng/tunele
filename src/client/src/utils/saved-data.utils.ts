@@ -1,5 +1,5 @@
-import GameResult from "../interfaces/GameResult";
-import SavedGameData from "../interfaces/SavedGameData";
+import GameResult from "../components/interfaces/GameResult";
+import SavedGameData from "../components/interfaces/SavedGameData";
 
 /**
  * Merges two data sources, giving priority to existing data

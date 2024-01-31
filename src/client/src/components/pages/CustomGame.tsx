@@ -15,7 +15,7 @@ import Loader from "../modules/Loader";
 import {
   calculateBarHeights,
   calculateStatsBottom,
-} from "../utils/stats.utils";
+} from "../../utils/stats.utils";
 
 import SavedGameData from "../interfaces/SavedGameData";
 import TrackGuessFormat from "../interfaces/TrackGuessFormat";

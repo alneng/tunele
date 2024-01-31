@@ -1,4 +1,4 @@
-import GameResult from "../interfaces/GameResult";
+import GameResult from "../components/interfaces/GameResult";
 
 /**
  * Counts the scores of an array of GameResult

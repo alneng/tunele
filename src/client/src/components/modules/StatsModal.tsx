@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import queryString from "query-string";
 import Tooltip from "@mui/material/Tooltip";
-import { countScores } from "../utils/stats.utils";
+import { countScores } from "../../utils/stats.utils";
 
 interface StatsBarHeightsState {
   [key: number]: number;
