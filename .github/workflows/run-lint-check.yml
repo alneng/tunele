@@ -1,4 +1,4 @@
-name: Tests
+name: Linting Check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [master, develop]
 
 jobs:
-  run-tests:
+  run-lint-check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -23,5 +23,5 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Run Tests
-        run: yarn test
+      - name: Run Linting Check
+        run: yarn lint

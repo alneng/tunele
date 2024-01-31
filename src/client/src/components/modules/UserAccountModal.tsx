@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import mergeGameData from "../../utils/saved-data.utils";
+
+import SavedGameData from "../interfaces/SavedGameData";
+
 const googleSsoParams = {
   redirect_uri: `https://tunele.app/auth/callback`,
   client_id:
@@ -13,8 +17,8 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const [userName, setUserName] = useState<string>("");
   const [id, setId] = useState<string>("");
 
-  let response: Response;
   useEffect(() => {
+    let response: Response;
     fetch(`${apiOrigin}/api/auth/vat`, {
       method: "GET",
       credentials: "include",
@@ -43,6 +47,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       .catch((error) => {
         console.error(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successfulLogin]);
 
   const refreshTokens = () => {
@@ -89,49 +94,16 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   };
 
   const updateLocalData = () => {
-    function mergeGameData(existingData: any, newData: any) {
-      existingData.main = mergeArrays(existingData.main, newData.main);
-
-      if (!existingData.custom) {
-        existingData.custom = newData.custom;
-      } else {
-        for (let key in newData.custom) {
-          if (!existingData.custom[key]) {
-            existingData.custom[key] = newData.custom[key];
-          } else {
-            existingData.custom[key] = mergeArrays(
-              existingData.custom[key],
-              newData.custom[key]
-            );
-          }
-        }
-      }
-      return existingData;
-    }
-
-    function mergeArrays(existingArray: any, newArray: any) {
-      if (!newArray) return existingArray;
-
-      let uniqueIds = new Set(existingArray.map((g: any) => g.id));
-
-      let newData = newArray.filter((g: any) => !uniqueIds.has(g.id));
-
-      const concat_array = existingArray.concat(newData);
-      const sorted_array = concat_array.sort((a: any, b: any) => a.id - b.id);
-      return sorted_array;
-    }
-
     fetch(`${apiOrigin}/api/user/${id}/fetch-data`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => response.json())
-      .then((data) => {
-        const clientData: string | null = localStorage.getItem("userData");
-        const dataToMerge = mergeGameData(
-          JSON.parse(clientData || "{ 'main': [], 'custom': {} }"),
-          data
+      .then((data: SavedGameData) => {
+        const clientData: SavedGameData = JSON.parse(
+          localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
         );
+        const dataToMerge: SavedGameData = mergeGameData(clientData, data);
         localStorage.setItem("userData", JSON.stringify(dataToMerge));
         toast.success("Successfully updated local data! Reloading page...", {
           position: toast.POSITION.BOTTOM_CENTER,

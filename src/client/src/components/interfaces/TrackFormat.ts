@@ -1,6 +1,4 @@
-interface trackFormat {
+export default interface TrackFormat {
   song: string;
   artists: string[];
 }
-
-export default trackFormat;

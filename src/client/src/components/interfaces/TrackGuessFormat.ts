@@ -1,10 +1,8 @@
 import FormattedPossibleAnswer from "./FormattedPossibleAnswer";
 
-interface trackGuessFormat {
+export default interface TrackGuessFormat {
   answer: FormattedPossibleAnswer;
   isCorrect: boolean;
   isSkipped: boolean;
   isArtist: boolean;
 }
-
-export default trackGuessFormat;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-import trackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackGuessFormat from "../interfaces/TrackGuessFormat";
 
 interface ListGroupProps {
-  userGuesses: trackGuessFormat[];
+  userGuesses: TrackGuessFormat[];
 }
 
 const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {

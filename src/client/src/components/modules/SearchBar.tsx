@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
-import trackGuessFormat from "../interfaces/TrackGuessFormat";
-import trackFormat from "../interfaces/TrackFormat";
+import TrackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackFormat from "../interfaces/TrackFormat";
 import FormattedPossibleAnswer from "../interfaces/FormattedPossibleAnswer";
 
 interface SearchBarProps {
-  userGuesses: trackGuessFormat[];
-  onUpdateGuesses: (newGuesses: trackGuessFormat[]) => void;
+  userGuesses: TrackGuessFormat[];
+  onUpdateGuesses: (newGuesses: TrackGuessFormat[]) => void;
   song: string;
   artists: string[];
-  allSongs: trackFormat[];
+  allSongs: TrackFormat[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({

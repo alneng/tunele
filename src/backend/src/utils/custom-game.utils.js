@@ -114,7 +114,8 @@ async function chooseNewGameTrack(playlistId, playlistObject, localDate) {
     .setZone("America/New_York")
     .toFormat("yyyy-MM-dd HH:mm:ss");
   playlistObject.gameTracks.push(newGameTrack);
-  playlistObject.tracklist[randomTrackIndex].playedBefore = true;
+  allTracksList[randomTrackIndex].playedBefore = true;
+  playlistObject.tracklist = allTracksList;
   await db.updateDocument("customPlaylists", playlistId, playlistObject);
 
   return newGameTrack;
