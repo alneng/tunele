@@ -14,6 +14,7 @@ import {
   calculateStatsBottom,
 } from "../../utils/stats.utils";
 
+import GameResult from "../interfaces/GameResult";
 import SavedGameData from "../interfaces/SavedGameData";
 import TrackGuessFormat from "../interfaces/TrackGuessFormat";
 import TrackFormat from "../interfaces/TrackFormat";
@@ -139,7 +140,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       });
     }
 
-    const todaysDataObject = {
+    const todaysDataObject: GameResult = {
       hasFinished: isGameFinished,
       hasStarted: true,
       id: id,
@@ -147,15 +148,12 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       guessList: newGuesses,
     };
 
-    const data = JSON.parse(localStorage.getItem("userData") || "null") || {
-      main: [],
-      custom: {},
-    };
+    const data: SavedGameData = JSON.parse(
+      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
+    );
 
     const isLastDataObjectMatchingId =
-      Array.isArray(data.main) &&
-      data.main.length > 0 &&
-      data.main[data.main.length - 1].id === id;
+      data.main.length > 0 && data.main[data.main.length - 1].id === id;
 
     if (isLastDataObjectMatchingId) {
       data.main[data.main.length - 1] = todaysDataObject;

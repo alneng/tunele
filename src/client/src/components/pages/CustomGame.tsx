@@ -17,6 +17,7 @@ import {
   calculateStatsBottom,
 } from "../../utils/stats.utils";
 
+import GameResult from "../interfaces/GameResult";
 import SavedGameData from "../interfaces/SavedGameData";
 import TrackGuessFormat from "../interfaces/TrackGuessFormat";
 import TrackFormat from "../interfaces/TrackFormat";
@@ -157,7 +158,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       });
     }
 
-    const todaysDataObject = {
+    const todaysDataObject: GameResult = {
       hasFinished: isGameFinished,
       hasStarted: true,
       id: id,
@@ -165,17 +166,15 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       guessList: newGuesses,
     };
 
-    const data = JSON.parse(localStorage.getItem("userData") || "null") || {
-      main: [],
-      custom: [],
-    };
+    const data: SavedGameData = JSON.parse(
+      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
+    );
 
     const playlistId = queryString.parse(location.search).playlist;
     const playlistData = data.custom[playlistId as string];
 
     if (playlistData) {
       const isLastDataObjectMatchingId =
-        Array.isArray(playlistData) &&
         playlistData.length > 0 &&
         playlistData[playlistData.length - 1].id === id;
 
