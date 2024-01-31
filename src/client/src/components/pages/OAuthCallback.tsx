@@ -27,7 +27,7 @@ const OAuthCallback: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           console.log(error);
         });
     }
-  }, []);
+  }, [apiOrigin]);
 
   return (
     <div className="font-sf-pro flex flex-col justify-center items-center h-screen bg-[#131213] text-center text-white">

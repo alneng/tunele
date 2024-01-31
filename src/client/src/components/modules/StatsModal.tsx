@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import queryString from "query-string";
 import Tooltip from "@mui/material/Tooltip";
+import { countScores } from "../../utils/stats.utils";
 
 interface StatsBarHeightsState {
   [key: number]: number;
@@ -20,19 +21,6 @@ const StatsModal: React.FC<StatsModalProps> = ({
   const [scores, setScores] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
-    function countScores(array: any[]): { [key: number]: number } {
-      const scoreCounts: { [key: number]: number } = {};
-      for (let i = 1; i <= 6; i++) scoreCounts[i] = 0;
-      scoreCounts[0] = 0;
-
-      for (const item of array) {
-        const score = item.score;
-        scoreCounts[score] += 1;
-      }
-
-      return scoreCounts;
-    }
-
     const localData = JSON.parse(localStorage.getItem("userData") || "null");
     const queryParams = queryString.parse(location.search);
     const playlistId = queryParams.playlist;
