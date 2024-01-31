@@ -4,16 +4,16 @@ import ListGroup from "./ListGroup";
 import AudioPlayer from "./AudioPlayer";
 import SearchBar from "./SearchBar";
 
-import trackGuessFormat from "../interfaces/TrackGuessFormat";
-import trackFormat from "../interfaces/TrackFormat";
+import TrackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackFormat from "../interfaces/TrackFormat";
 
 interface GameProps {
   song: string;
   artists: string[];
   trackPreview: string;
-  userGuesses: trackGuessFormat[];
-  setUserGuesses: (newGuesses: trackGuessFormat[]) => void;
-  allSongs: trackFormat[];
+  userGuesses: TrackGuessFormat[];
+  setUserGuesses: (newGuesses: TrackGuessFormat[]) => void;
+  allSongs: TrackFormat[];
 }
 
 const Game: React.FC<GameProps> = ({

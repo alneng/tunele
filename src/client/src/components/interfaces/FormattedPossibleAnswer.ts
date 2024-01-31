@@ -1,7 +1,5 @@
-interface FormattedPossibleAnswer {
+export default interface FormattedPossibleAnswer {
   formattedString: string;
   song: string;
   artists: string[];
 }
-
-export default FormattedPossibleAnswer;

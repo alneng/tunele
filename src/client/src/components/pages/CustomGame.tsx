@@ -12,8 +12,14 @@ import StatsModal from "../modules/StatsModal";
 import UserAccountModal from "../modules/UserAccountModal";
 import Loader from "../modules/Loader";
 
-import trackGuessFormat from "../interfaces/TrackGuessFormat";
-import trackFormat from "../interfaces/TrackFormat";
+import {
+  calculateBarHeights,
+  calculateStatsBottom,
+} from "../utils/stats.utils";
+
+import SavedGameData from "../interfaces/SavedGameData";
+import TrackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackFormat from "../interfaces/TrackFormat";
 
 interface StatsBarHeightsState {
   [key: number]: number;
@@ -26,8 +32,8 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const [trackPreview, setTrackPreview] = useState<string>("");
   const [albumCover, setAlbumCover] = useState<string>("");
   const [externalUrl, setExternalUrl] = useState<string>("");
-  const [songsInDb, setSongsInDb] = useState<trackFormat[]>([]);
-  const [userGuesses, setUserGuesses] = useState<trackGuessFormat[]>([]);
+  const [songsInDb, setSongsInDb] = useState<TrackFormat[]>([]);
+  const [userGuesses, setUserGuesses] = useState<TrackGuessFormat[]>([]);
 
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const [validPlaylist, setvalidPlaylist] = useState<boolean>(false);
@@ -123,9 +129,9 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         })
         .catch((err) => console.error(err));
     }
-  }, [location.search]);
+  }, [apiOrigin, location.search]);
 
-  const handleUserGuessesUpdate = (newGuesses: trackGuessFormat[]) => {
+  const handleUserGuessesUpdate = (newGuesses: TrackGuessFormat[]) => {
     setUserGuesses(newGuesses);
 
     const isGameFinished =
@@ -159,7 +165,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       guessList: newGuesses,
     };
 
-    let data = JSON.parse(localStorage.getItem("userData") || "null") || {
+    const data = JSON.parse(localStorage.getItem("userData") || "null") || {
       main: [],
       custom: [],
     };
@@ -187,82 +193,26 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   };
 
   useEffect(() => {
-    function countScores(array: any[]): { [key: number]: number } {
-      const scoreCounts: { [key: number]: number } = {};
-      for (let i = 1; i <= 6; i++) scoreCounts[i] = 0;
-      scoreCounts[0] = 0;
-
-      for (const item of array) {
-        const score = item.score;
-        scoreCounts[score] += 1;
-      }
-
-      return scoreCounts;
-    }
-
-    function mapObject(
-      obj: { [key: string]: any },
-      callback: (value: any, key: string) => any
-    ): { [key: string]: any } {
-      return Object.keys(obj).reduce(
-        (result: { [key: string]: any }, key: string) => {
-          result[key] = callback(obj[key], key);
-          return result;
-        },
-        {}
-      );
-    }
-
-    function maxProp(obj: { [key: string]: number }): number {
-      let maxValue = -Infinity;
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          const value = obj[key];
-          if (value > maxValue) {
-            maxValue = value;
-          }
-        }
-      }
-      return maxValue;
-    }
-
-    const calculateBarHeights = (localData: any, playlistId: any) => {
-      const scores: {} = countScores(localData.custom[playlistId as string]);
-      const max: number = maxProp(scores);
-      if (max === 0) return Array(7).fill(0);
-      return mapObject(scores, (value, _) => (value / max) * 100);
-    };
-
-    function calculateStatsBottom(localData: any, playlistId: any) {
-      localData = localData.custom[playlistId as string];
-      const totalLength = localData.length;
-      let numCorrect = 0;
-      for (const game of localData) {
-        if (game.score > 0) numCorrect++;
-      }
-      const formattedString = `${numCorrect}/${totalLength}`;
-      const formattedPercentageString = `${(
-        (numCorrect / totalLength) *
-        100
-      ).toFixed(1)}`;
-      setStatsCorrectString(formattedString);
-      setStatsCorrectPercentageString(formattedPercentageString);
-    }
-
     const queryParams = queryString.parse(location.search);
     const playlistId = queryParams.playlist;
-    const localData = JSON.parse(
-      localStorage.getItem("userData") || "null"
-    ) || { main: [], custom: {} };
+    const localData: SavedGameData = JSON.parse(
+      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
+    );
 
     if (playlistId && localData.custom[playlistId as string]) {
-      const barHeights = calculateBarHeights(localData, playlistId);
+      const barHeights = calculateBarHeights(
+        localData.custom[playlistId as string]
+      );
       setStatsBarHeights(barHeights);
-      calculateStatsBottom(localData, playlistId);
+
+      const { statsNumCorrectString, statsCorrectPercentageString } =
+        calculateStatsBottom(localData.custom[playlistId as string]);
+      setStatsCorrectString(statsNumCorrectString);
+      setStatsCorrectPercentageString(statsCorrectPercentageString);
     } else {
       setStatsBarHeights(Array(7).fill(0));
     }
-  }, [isStatsModalOpen]);
+  }, [isStatsModalOpen, location.search]);
 
   return (
     <div className="font-sf-pro">
