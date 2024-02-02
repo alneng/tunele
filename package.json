@@ -10,6 +10,7 @@
   "scripts": {
     "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace client dev\"",
     "backend": "yarn workspace backend dev",
+    "backend:preview": "yarn workspace backend start",
     "client": "yarn workspace client dev",
     "client:build": "yarn workspace client build",
     "client:preview": "yarn workspace client preview",
