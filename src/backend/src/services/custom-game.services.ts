@@ -70,11 +70,12 @@ export default class CustomGameService {
    * @returns List of song objects {song: String, artists: String[]}
    */
   static async getAllSongs(playlistId: string): Promise<ClientAllTracks[]> {
-    const allTracks: CustomPlaylistSchema = await db.getDocument(
+    const allTracks: CustomPlaylistSchema | null = await db.getDocument(
       "customPlaylists",
       playlistId
     );
 
+    if (!allTracks) return [];
     return clientAllTracksTransformer(allTracks.tracklist);
   }
 
@@ -89,10 +90,11 @@ export default class CustomGameService {
    */
   static async postStats(playlistId: string, localDate: string, score: number) {
     try {
-      const playlistObject = await db.getDocument(
+      const playlistObject: CustomPlaylistSchema | null = await db.getDocument(
         "customPlaylists",
         playlistId
       );
+
       let foundTrack = false;
       for (const track of playlistObject.gameTracks) {
         if (track.date === localDate) {

@@ -104,6 +104,7 @@ export default class MainGameService {
     const allTracks: { id: string; data: MainPlaylistSchema } =
       await db.getLastDocument("allTracks");
 
+    if (!allTracks) return [];
     return clientAllTracksTransformer(allTracks.data.tracklist);
   }
 
@@ -117,7 +118,10 @@ export default class MainGameService {
    */
   static async postStats(localDate: string, score: number) {
     try {
-      const todaysGameTrack = await db.getDocument("gameTracks", localDate);
+      const todaysGameTrack: GameTrackSchema | null = await db.getDocument(
+        "gameTracks",
+        localDate
+      );
       if (todaysGameTrack) {
         todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
         todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;

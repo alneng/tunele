@@ -12,23 +12,20 @@ import {
  * @returns a Spotify access token
  */
 async function fetchAccessToken(): Promise<string> {
-  return new Promise(async (resolve, _reject) => {
-    const data = {
-      grant_type: "client_credentials",
-    };
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${process.env.SPOTIFY_CLIENT_KEY}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      data: querystring.stringify(data),
-      url: "https://accounts.spotify.com/api/token",
-    };
-    const response = (await axios(options)).data;
-    const accessToken = response.access_token;
-    resolve(accessToken);
-  });
+  const data = {
+    grant_type: "client_credentials",
+  };
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${process.env.SPOTIFY_CLIENT_KEY}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    data: querystring.stringify(data),
+    url: "https://accounts.spotify.com/api/token",
+  };
+  const response = await axios(options);
+  return response.data.access_token;
 }
 
 /**
@@ -41,26 +38,22 @@ export async function fetchSongsFromPlaylist(
   playlistId: string
 ): Promise<SpotifyPlaylistObject> {
   const token = await fetchAccessToken();
-  return new Promise((resolve, reject) => {
-    axios({
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      url: `https://api.spotify.com/v1/playlists/${playlistId}`,
-    })
-      .then(async (response) => {
-        let data = response.data;
-        if (data.tracks.next) {
-          data.tracks.items = data.tracks.items.concat(
-            await fetchTracks(data.tracks.next, token)
-          );
-        }
-        resolve(data);
-      })
-      .catch((err) => reject(err));
+  const response = await axios({
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    url: `https://api.spotify.com/v1/playlists/${playlistId}`,
   });
+
+  const data = response.data;
+  if (data.tracks.next) {
+    data.tracks.items = data.tracks.items.concat(
+      await fetchTracks(data.tracks.next, token)
+    );
+  }
+  return data;
 }
 
 /**
