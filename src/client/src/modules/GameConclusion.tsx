@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TrackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackGuessFormat from "../types/TrackGuessFormat";
 
 import "./Countdown.css";
 
@@ -142,7 +142,8 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
           onClick={handleShare}
           className={`mt-5 px-6 py-3 rounded-full ${
             isShareClicked ? "bg-white" : "bg-[#1fd660] hover:bg-[#18b853]"
-          } active:bg-white focus:outline-none transition-colors duration-300 text-black`}>
+          } active:bg-white focus:outline-none transition-colors duration-300 text-black`}
+        >
           Share
         </button>
       </div>
