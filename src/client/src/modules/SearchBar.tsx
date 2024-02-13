@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import TrackGuessFormat from "../interfaces/TrackGuessFormat";
-import TrackFormat from "../interfaces/TrackFormat";
-import FormattedPossibleAnswer from "../interfaces/FormattedPossibleAnswer";
+import TrackGuessFormat from "../types/TrackGuessFormat";
+import TrackFormat from "../types/TrackFormat";
+import FormattedPossibleAnswer from "../types/FormattedPossibleAnswer";
 
 interface SearchBarProps {
   userGuesses: TrackGuessFormat[];
@@ -145,7 +145,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="absolute left-3 text-gray-500">
+          className="absolute left-3 text-gray-500"
+        >
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
@@ -161,7 +162,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
             strokeLinecap="round"
             strokeLinejoin="round"
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-            onClick={handleClearAnswer}>
+            onClick={handleClearAnswer}
+          >
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -180,7 +182,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <div
               key={index}
               className="py-2 px-4 cursor-pointer border-b-2 border-gray-500"
-              onClick={() => handleListClick(index)}>
+              onClick={() => handleListClick(index)}
+            >
               {item.formattedString}
             </div>
           ))}
@@ -190,7 +193,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <button
           className="w-28 p-4 rounded-full text-center text-white py-2 bg-gray-800 hover:bg-gray-500 focus:outline-none"
           onClick={handleSkip}
-          title="Skip">
+          title="Skip"
+        >
           {userGuesses.length < 5 && <p>Skip (+{userGuesses.length + 1}s)</p>}
           {userGuesses.length === 5 && <p>Reveal</p>}
         </button>
@@ -202,7 +206,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
           }`}
           disabled={isButtonDisabled}
           onClick={handleAddGuess}
-          title="Submit">
+          title="Submit"
+        >
           Submit
         </button>
       </div>

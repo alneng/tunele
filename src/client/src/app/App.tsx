@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import BaseGame from "./pages/BaseGame";
-import CustomGame from "./pages/CustomGame";
-import OAuthCallback from "./pages/OAuthCallback";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import NotFound from "./pages/NotFound";
+import BaseGame from "../pages/BaseGame";
+import CustomGame from "../pages/CustomGame";
+import OAuthCallback from "../pages/OAuthCallback";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import NotFound from "../pages/NotFound";
 
 const API_ORIGIN: string =
   import.meta.env.MODE === "development"

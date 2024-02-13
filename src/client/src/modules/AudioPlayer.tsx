@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import FormattedPossibleAnswer from "../interfaces/FormattedPossibleAnswer";
+import FormattedPossibleAnswer from "../types/FormattedPossibleAnswer";
 
 interface AudioPlayerProps {
   audioSrc: string;
@@ -61,7 +61,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
         src={audioSrc}
         ref={audioRef}
         onTimeUpdate={handleProgress}
-        onLoadedData={handleProgress}></audio>
+        onLoadedData={handleProgress}
+      ></audio>
       <div className="relative md:w-612px w-4/5 h-6 bg-gray-800">
         {songLimits.map((interval, index) => (
           <div
@@ -70,20 +71,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
             style={{
               left: `${(interval / 16000) * 100}%`,
               width: "2px",
-            }}></div>
+            }}
+          ></div>
         ))}
         <div
           className="h-full bg-[#1fd660]"
           style={{
             width: `${progress}%`,
             transition: "width 0.3s linear",
-          }}></div>
+          }}
+        ></div>
       </div>
       {audioRef.current && audioRef.current.paused && (
         <button
           onClick={handlePlayback}
           className="text-white my-4"
-          title="Play">
+          title="Play"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="56"
@@ -94,7 +98,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
             strokeWidth="1"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="feather feather-play-circle">
+            className="feather feather-play-circle"
+          >
             <circle cx="12" cy="12" r="10"></circle>
             <polygon points="10 8 16 12 10 16 10 8"></polygon>
           </svg>
@@ -112,7 +117,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
             strokeWidth="1"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="feather feather-pause-circle">
+            className="feather feather-pause-circle"
+          >
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="10" y1="15" x2="10" y2="9"></line>
             <line x1="14" y1="15" x2="14" y2="9"></line>

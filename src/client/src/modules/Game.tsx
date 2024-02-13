@@ -4,8 +4,8 @@ import ListGroup from "./ListGroup";
 import AudioPlayer from "./AudioPlayer";
 import SearchBar from "./SearchBar";
 
-import TrackGuessFormat from "../interfaces/TrackGuessFormat";
-import TrackFormat from "../interfaces/TrackFormat";
+import TrackGuessFormat from "../types/TrackGuessFormat";
+import TrackFormat from "../types/TrackFormat";
 
 interface GameProps {
   song: string;
