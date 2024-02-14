@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import Modal from "react-modal";
+import useFetchCustomPlaylist from "../hooks/useFetchCustomPlaylist";
+import useFirstTimeUser from "../hooks/useFirstTimeUser";
+import useLoadUserData from "../hooks/useLoadUserData";
 
 import NavBar from "../modules/Navbar";
 import Game from "../modules/Game";
@@ -18,26 +21,30 @@ import {
 } from "../utils/stats.utils";
 
 import GameResult from "../types/GameResult";
-import SavedGameData from "../types/SavedGameData";
 import TrackGuessFormat from "../types/TrackGuessFormat";
-import TrackFormat from "../types/TrackFormat";
 
 interface StatsBarHeightsState {
   [key: number]: number;
 }
 
 const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
-  const [song, setSong] = useState<string>("");
-  const [artists, setArtists] = useState<string[]>([]);
-  const [id, setId] = useState<number>(0);
-  const [trackPreview, setTrackPreview] = useState<string>("");
-  const [albumCover, setAlbumCover] = useState<string>("");
-  const [externalUrl, setExternalUrl] = useState<string>("");
-  const [songsInDb, setSongsInDb] = useState<TrackFormat[]>([]);
   const [userGuesses, setUserGuesses] = useState<TrackGuessFormat[]>([]);
-
   const [gameFinished, setGameFinished] = useState<boolean>(false);
-  const [validPlaylist, setvalidPlaylist] = useState<boolean>(false);
+  const { main, custom } = useLoadUserData(userGuesses);
+  const existingGameId = useRef<number>();
+
+  const location = useLocation();
+  const {
+    validPlaylist,
+    playlistId,
+    song,
+    artists,
+    id,
+    trackPreview,
+    albumCover,
+    externalUrl,
+    songsInDb,
+  } = useFetchCustomPlaylist(apiOrigin, location.search);
 
   const [isUserAccountModalOpen, setUserAccountModalState] =
     useState<boolean>(false);
@@ -50,87 +57,44 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const [statsCorrectPercentageString, setStatsCorrectPercentageString] =
     useState<string>("0.0");
 
-  const onRequestCloseHelpModal = () => {
-    setHelpModalState(false);
-  };
-  const closeStatsModal = () => {
-    setStatsModalState(false);
-  };
-  const closeUAModel = () => {
-    setUserAccountModalState(false);
-  };
+  useFirstTimeUser(setHelpModalState);
 
-  const location = useLocation();
-
+  // Load existing game data from local storage
   useEffect(() => {
-    if (localStorage.getItem("firstTimeUser") !== "false") {
-      localStorage.setItem("firstTimeUser", "false");
-      setHelpModalState(true);
-    }
-  }, []);
+    if (existingGameId.current !== id) {
+      const customPlaylistObject = custom[playlistId];
+      const isLastDataObjectMatchingId =
+        customPlaylistObject &&
+        customPlaylistObject[customPlaylistObject.length - 1] &&
+        customPlaylistObject[customPlaylistObject.length - 1].id === id;
 
+      if (isLastDataObjectMatchingId) {
+        setUserGuesses(
+          customPlaylistObject[customPlaylistObject.length - 1].guessList
+        );
+        if (customPlaylistObject[customPlaylistObject.length - 1].hasFinished) {
+          setGameFinished(true);
+        }
+      }
+
+      existingGameId.current = id;
+    }
+  }, [custom, id, playlistId]);
+
+  // Update stats modal data when it's opened
   useEffect(() => {
-    const queryParams = queryString.parse(location.search);
-    const playlistId = queryString.parse(location.search).playlist;
+    if (playlistId && custom[playlistId]) {
+      const barHeights = calculateBarHeights(custom[playlistId]);
+      setStatsBarHeights(barHeights);
 
-    if (playlistId) {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      fetch(
-        `${apiOrigin}/api/playlist/${playlistId}/dailySong?timeZone=${timezone}${
-          queryParams.r ? "&r=1" : ""
-        }`,
-        { method: "GET" }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const userData = JSON.parse(
-            localStorage.getItem("userData") || "null"
-          ) || { main: [], custom: {} };
-          if (!localStorage.getItem("userData")) {
-            localStorage.setItem(
-              "userData",
-              JSON.stringify({ main: [], custom: {} })
-            );
-          }
-
-          const customPlaylistObject = userData.custom[playlistId as string];
-          const isLastDataObjectMatchingId =
-            customPlaylistObject &&
-            customPlaylistObject[customPlaylistObject.length - 1] &&
-            customPlaylistObject[customPlaylistObject.length - 1].id ===
-              data.id;
-
-          setvalidPlaylist(true);
-          setSong(data.song);
-          setArtists(data.artists);
-          setId(data.id);
-          setTrackPreview(data.trackPreview);
-          setAlbumCover(data.albumCover);
-          setExternalUrl(data.externalUrl);
-
-          if (isLastDataObjectMatchingId) {
-            setUserGuesses(
-              customPlaylistObject[customPlaylistObject.length - 1].guessList
-            );
-            if (
-              customPlaylistObject[customPlaylistObject.length - 1].hasFinished
-            ) {
-              setGameFinished(true);
-            }
-          }
-
-          fetch(`${apiOrigin}/api/playlist/${playlistId}/allSongs`, {
-            method: "GET",
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              setSongsInDb(data.tracklist);
-            })
-            .catch((err) => console.error(err));
-        })
-        .catch((err) => console.error(err));
+      const { statsNumCorrectString, statsCorrectPercentageString } =
+        calculateStatsBottom(custom[playlistId]);
+      setStatsCorrectString(statsNumCorrectString);
+      setStatsCorrectPercentageString(statsCorrectPercentageString);
+    } else {
+      setStatsBarHeights(Array(7).fill(0));
     }
-  }, [apiOrigin, location.search]);
+  }, [isStatsModalOpen, playlistId, gameFinished, custom]);
 
   const handleUserGuessesUpdate = (newGuesses: TrackGuessFormat[]) => {
     setUserGuesses(newGuesses);
@@ -161,17 +125,13 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     const todaysDataObject: GameResult = {
       hasFinished: isGameFinished,
       hasStarted: true,
-      id: id,
-      score: score,
+      id,
+      score,
       guessList: newGuesses,
     };
 
-    const data: SavedGameData = JSON.parse(
-      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-    );
-
-    const playlistId = queryString.parse(location.search).playlist;
-    const playlistData = data.custom[playlistId as string];
+    const updatedData = { main, custom };
+    const playlistData = updatedData.custom[playlistId];
 
     if (playlistData) {
       const isLastDataObjectMatchingId =
@@ -183,35 +143,13 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       } else {
         playlistData.push(todaysDataObject);
       }
-      data.custom[playlistId as string] = playlistData;
+      updatedData.custom[playlistId] = playlistData;
     } else {
-      data.custom[playlistId as string] = [todaysDataObject];
+      updatedData.custom[playlistId] = [todaysDataObject];
     }
 
-    localStorage.setItem("userData", JSON.stringify(data));
+    localStorage.setItem("userData", JSON.stringify(updatedData));
   };
-
-  useEffect(() => {
-    const queryParams = queryString.parse(location.search);
-    const playlistId = queryParams.playlist;
-    const localData: SavedGameData = JSON.parse(
-      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-    );
-
-    if (playlistId && localData.custom[playlistId as string]) {
-      const barHeights = calculateBarHeights(
-        localData.custom[playlistId as string]
-      );
-      setStatsBarHeights(barHeights);
-
-      const { statsNumCorrectString, statsCorrectPercentageString } =
-        calculateStatsBottom(localData.custom[playlistId as string]);
-      setStatsCorrectString(statsNumCorrectString);
-      setStatsCorrectPercentageString(statsCorrectPercentageString);
-    } else {
-      setStatsBarHeights(Array(7).fill(0));
-    }
-  }, [isStatsModalOpen, location.search]);
 
   return (
     <div className="font-sf-pro">
@@ -258,18 +196,18 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       {/* modals */}
       <Modal
         isOpen={isHelpModalOpen}
-        onRequestClose={onRequestCloseHelpModal}
+        onRequestClose={() => setHelpModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}
       >
         <HelpModal
-          onRequestCloseHelpModal={onRequestCloseHelpModal}
+          onRequestCloseHelpModal={() => setHelpModalState(false)}
         ></HelpModal>
       </Modal>
       <Modal
         isOpen={isStatsModalOpen}
-        onRequestClose={closeStatsModal}
+        onRequestClose={() => setStatsModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}
@@ -282,7 +220,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       </Modal>
       <Modal
         isOpen={isUserAccountModalOpen}
-        onRequestClose={closeUAModel}
+        onRequestClose={() => setUserAccountModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}

@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
+import useFetchMainPlaylist from "../hooks/useFetchMainPlaylist";
+import useFirstTimeUser from "../hooks/useFirstTimeUser";
+import useLoadUserData from "../hooks/useLoadUserData";
 
 import NavBar from "../modules/Navbar";
 import Game from "../modules/Game";
@@ -15,25 +18,26 @@ import {
 } from "../utils/stats.utils";
 
 import GameResult from "../types/GameResult";
-import SavedGameData from "../types/SavedGameData";
 import TrackGuessFormat from "../types/TrackGuessFormat";
-import TrackFormat from "../types/TrackFormat";
 
 interface StatsBarHeightsState {
   [key: number]: number;
 }
 
 const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
-  const [song, setSong] = useState<string>("");
-  const [artists, setArtists] = useState<string[]>([]);
-  const [id, setId] = useState<number>(0);
-  const [trackPreview, setTrackPreview] = useState<string>("");
-  const [albumCover, setAlbumCover] = useState<string>("");
-  const [externalUrl, setExternalUrl] = useState<string>("");
-  const [songsInDb, setSongsInDb] = useState<TrackFormat[]>([]);
   const [userGuesses, setUserGuesses] = useState<TrackGuessFormat[]>([]);
-
   const [gameFinished, setGameFinished] = useState<boolean>(false);
+  const { main, custom } = useLoadUserData(userGuesses);
+  const existingGameId = useRef<number>();
+  const {
+    song,
+    artists,
+    id,
+    trackPreview,
+    albumCover,
+    externalUrl,
+    songsInDb,
+  } = useFetchMainPlaylist(apiOrigin);
 
   const [isUserAccountModalOpen, setUserAccountModalState] =
     useState<boolean>(false);
@@ -46,74 +50,41 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const [statsCorrectPercentageString, setStatsCorrectPercentageString] =
     useState<string>("0.0");
 
-  const onRequestCloseHelpModal = () => {
-    setHelpModalState(false);
-  };
-  const closeStatsModal = () => {
-    setStatsModalState(false);
-  };
-  const closeUAModel = () => {
-    setUserAccountModalState(false);
-  };
+  useFirstTimeUser(setHelpModalState);
 
+  // Load existing game data from local storage
   useEffect(() => {
-    fetchData();
-    fetchAllSongs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (existingGameId.current !== id) {
+      const isLastDataObjectMatchingId =
+        Array.isArray(main) &&
+        main.length > 0 &&
+        main[main.length - 1].id === id;
 
-  useEffect(() => {
-    if (localStorage.getItem("firstTimeUser") !== "false") {
-      localStorage.setItem("firstTimeUser", "false");
-      setHelpModalState(true);
+      if (isLastDataObjectMatchingId) {
+        setUserGuesses(main[main.length - 1].guessList);
+        if (main[main.length - 1].hasFinished) {
+          setGameFinished(true);
+        }
+      }
+
+      existingGameId.current = id;
     }
-  }, []);
+  }, [main, id]);
 
-  const fetchData = () => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    fetch(`${apiOrigin}/api/dailySong?timeZone=${timezone}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const userData = JSON.parse(
-          localStorage.getItem("userData") || "null"
-        ) || { main: [], custom: {} };
-        if (!localStorage.getItem("userData")) {
-          localStorage.setItem(
-            "userData",
-            JSON.stringify({ main: [], custom: {} })
-          );
-        }
+  // Update stats modal data when it's opened
+  useEffect(() => {
+    if (main) {
+      const barHeights = calculateBarHeights(main);
+      setStatsBarHeights(barHeights);
 
-        const isLastDataObjectMatchingId =
-          Array.isArray(userData.main) &&
-          userData.main.length > 0 &&
-          userData.main[userData.main.length - 1].id === data.id;
-
-        setSong(data.song);
-        setArtists(data.artists);
-        setId(data.id);
-        setTrackPreview(data.trackPreview);
-        setAlbumCover(data.albumCover);
-        setExternalUrl(data.externalUrl);
-
-        if (isLastDataObjectMatchingId) {
-          setUserGuesses(userData.main[userData.main.length - 1].guessList);
-          if (userData.main[userData.main.length - 1].hasFinished) {
-            setGameFinished(true);
-          }
-        }
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const fetchAllSongs = () => {
-    fetch(`${apiOrigin}/api/allSongs`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSongsInDb(data.tracklist);
-      })
-      .catch((err) => console.error(err));
-  };
+      const { statsNumCorrectString, statsCorrectPercentageString } =
+        calculateStatsBottom(main);
+      setStatsCorrectString(statsNumCorrectString);
+      setStatsCorrectPercentageString(statsCorrectPercentageString);
+    } else {
+      setStatsBarHeights(Array(7).fill(0));
+    }
+  }, [isStatsModalOpen, main]);
 
   const handleUserGuessesUpdate = (newGuesses: TrackGuessFormat[]) => {
     setUserGuesses(newGuesses);
@@ -143,44 +114,26 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     const todaysDataObject: GameResult = {
       hasFinished: isGameFinished,
       hasStarted: true,
-      id: id,
-      score: score,
+      id,
+      score,
       guessList: newGuesses,
     };
 
-    const data: SavedGameData = JSON.parse(
-      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-    );
+    const updatedData = { main, custom };
+    const playlistData = updatedData.main;
 
     const isLastDataObjectMatchingId =
-      data.main.length > 0 && data.main[data.main.length - 1].id === id;
+      playlistData.length > 0 &&
+      playlistData[playlistData.length - 1].id === id;
 
     if (isLastDataObjectMatchingId) {
-      data.main[data.main.length - 1] = todaysDataObject;
+      playlistData[playlistData.length - 1] = todaysDataObject;
     } else {
-      data.main.push(todaysDataObject);
+      playlistData.push(todaysDataObject);
     }
 
-    localStorage.setItem("userData", JSON.stringify(data));
+    localStorage.setItem("userData", JSON.stringify(updatedData));
   };
-
-  useEffect(() => {
-    const localData: SavedGameData = JSON.parse(
-      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-    );
-
-    if (localData) {
-      const barHeights = calculateBarHeights(localData.main);
-      setStatsBarHeights(barHeights);
-
-      const { statsNumCorrectString, statsCorrectPercentageString } =
-        calculateStatsBottom(localData.main);
-      setStatsCorrectString(statsNumCorrectString);
-      setStatsCorrectPercentageString(statsCorrectPercentageString);
-    } else {
-      setStatsBarHeights(Array(7).fill(0));
-    }
-  }, [isStatsModalOpen]);
 
   return (
     <div className="font-sf-pro">
@@ -222,18 +175,18 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       {/* modals */}
       <Modal
         isOpen={isHelpModalOpen}
-        onRequestClose={onRequestCloseHelpModal}
+        onRequestClose={() => setHelpModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}
       >
         <HelpModal
-          onRequestCloseHelpModal={onRequestCloseHelpModal}
+          onRequestCloseHelpModal={() => setHelpModalState(false)}
         ></HelpModal>
       </Modal>
       <Modal
         isOpen={isStatsModalOpen}
-        onRequestClose={closeStatsModal}
+        onRequestClose={() => setStatsModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}
@@ -246,7 +199,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       </Modal>
       <Modal
         isOpen={isUserAccountModalOpen}
-        onRequestClose={closeUAModel}
+        onRequestClose={() => setUserAccountModalState(false)}
         className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
         overlayClassName="overlay"
         ariaHideApp={false}
