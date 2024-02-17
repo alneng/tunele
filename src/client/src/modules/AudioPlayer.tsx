@@ -25,14 +25,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     setCurrentLevel(userGuesses.length);
   }, [userGuesses]);
 
-  const handlePlayback = () => {
+  const handlePlayback = async () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
+      audioRef.current.volume = 0.3;
       const timeoutDuration = songLimits[currentLevel];
 
-      audioRef.current.volume = 0.3;
-      audioRef.current.play();
-
+      await audioRef.current.play();
+      clearTimeout(audioPlayerTimeout);
       const timeout = setTimeout(() => {
         audioRef.current?.pause();
       }, timeoutDuration + 100);
@@ -54,6 +54,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
       setProgress(progressPercentage);
     }
   };
+
+  // Cleanup timeout after component unmounts
+  useEffect(() => {
+    return () => {
+      if (audioPlayerTimeout) {
+        clearTimeout(audioPlayerTimeout);
+      }
+    };
+  }, [audioPlayerTimeout]);
 
   return (
     <div className="w-full flex flex-col items-center mt-16">
