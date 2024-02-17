@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import queryString from "query-string";
 import Tooltip from "@mui/material/Tooltip";
 import { countScores } from "../utils/stats.utils";
+import useLoadUserData from "../hooks/useLoadUserData";
 
 interface StatsBarHeightsState {
   [key: number]: number;
@@ -20,18 +21,16 @@ const StatsModal: React.FC<StatsModalProps> = ({
 }) => {
   const [scores, setScores] = useState<{ [key: number]: number }>({});
 
+  const { main, custom } = useLoadUserData();
+
   useEffect(() => {
-    const localData = JSON.parse(localStorage.getItem("userData") || "null");
     const queryParams = queryString.parse(location.search);
     const playlistId = queryParams.playlist;
-
-    if (localData) {
-      const scores = playlistId
-        ? countScores(localData.custom[playlistId as string])
-        : countScores(localData.main);
-      setScores(scores);
-    }
-  }, []);
+    const scores = playlistId
+      ? countScores(custom[playlistId as string])
+      : countScores(main);
+    setScores(scores);
+  }, [custom, main]);
 
   return (
     <div className="flex flex-col items-center">

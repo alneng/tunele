@@ -8,8 +8,8 @@ import GameResult from "../types/GameResult";
  */
 export function countScores(array: GameResult[]): { [key: number]: number } {
   const scoreCounts: { [key: number]: number } = {};
-  for (let i = 1; i <= 6; i++) scoreCounts[i] = 0;
-  scoreCounts[0] = 0;
+  for (let i = 0; i <= 6; i++) scoreCounts[i] = 0;
+  if (!array) return scoreCounts;
 
   for (const item of array) {
     const score = item.score;
