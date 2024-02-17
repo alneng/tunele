@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import TrackGuessFormat from "../types/TrackGuessFormat";
-
+import useCountdown from "../hooks/useCountdown";
 import "./Countdown.css";
+
+import TrackGuessFormat from "../types/TrackGuessFormat";
 
 interface GameConclusionProps {
   song: string;
@@ -23,18 +24,16 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
   const [usedAttempts, setUsedAttempts] = useState<number>(1);
   const [numberSeconds, setNumberSeconds] = useState<number>(1);
   const [isShareClicked, setIsShareClicked] = useState(false);
-  const [countdownTime, setCountdownTime] = useState<number>(0);
+  const countdownTime = useCountdown(new Date().setHours(24, 0, 0, 0));
 
   useEffect(() => {
     if (userGuesses.length === 6 && !userGuesses[5].isCorrect)
       setUsedAttempts(0);
     else setUsedAttempts(userGuesses.length);
-  }, [userGuesses]);
 
-  useEffect(() => {
     const songLimits: number[] = [1, 2, 4, 7, 11, 16];
     setNumberSeconds(songLimits[usedAttempts - 1]);
-  }, [usedAttempts]);
+  }, [usedAttempts, userGuesses]);
 
   const handleShare = () => {
     setIsShareClicked(true);
@@ -65,29 +64,6 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
       shareString = `Custom ${shareString}`;
     navigator.clipboard.writeText(shareString);
   };
-
-  useEffect(() => {
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const timeUntilMidnight = midnight.getTime() - now.getTime();
-
-    setCountdownTime(timeUntilMidnight);
-
-    const interval = setInterval(() => {
-      setCountdownTime((prevTime) => {
-        const updatedTime = prevTime - 1000;
-        if (updatedTime < 0) {
-          clearInterval(interval);
-          window.location.reload();
-          return 0;
-        }
-        return updatedTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const formatCountdown = (time: number) => {
     const hours = Math.floor(time / (1000 * 60 * 60));
