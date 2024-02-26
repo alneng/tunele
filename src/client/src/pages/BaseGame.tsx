@@ -11,6 +11,7 @@ import HelpModal from "../modules/HelpModal";
 import StatsModal from "../modules/StatsModal";
 import UserAccountModal from "../modules/UserAccountModal";
 import Loader from "../modules/Loader";
+import ErrorMessage from "../modules/ErrorMessage";
 
 import {
   calculateBarHeights,
@@ -29,6 +30,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const { main, custom } = useLoadUserData(userGuesses);
   const existingGameId = useRef<number>();
+  const { loading, data, error } = useFetchMainPlaylist(apiOrigin);
   const {
     song,
     artists,
@@ -37,7 +39,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     albumCover,
     externalUrl,
     songsInDb,
-  } = useFetchMainPlaylist(apiOrigin);
+  } = data;
 
   const [isUserAccountModalOpen, setUserAccountModalState] =
     useState<boolean>(false);
@@ -142,12 +144,9 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         setStatsModal={setStatsModalState}
         setUAModel={setUserAccountModalState}
       />
-      {!trackPreview && (
-        <div id="loader">
-          <Loader></Loader>
-        </div>
-      )}
-      {!gameFinished && trackPreview && (
+      {loading && <Loader />}
+      {error && <ErrorMessage message={error} />}
+      {!error && !gameFinished && trackPreview && (
         <div id="game">
           <Game
             song={song}
@@ -159,7 +158,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           />
         </div>
       )}
-      {gameFinished && trackPreview && (
+      {!error && gameFinished && trackPreview && (
         <div id="conclusion">
           <GameConclusion
             song={song}
@@ -168,7 +167,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
             id={id}
             albumCover={albumCover}
             externalUrl={externalUrl}
-          ></GameConclusion>
+          />
         </div>
       )}
 

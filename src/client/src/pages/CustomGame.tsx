@@ -14,6 +14,7 @@ import HelpModal from "../modules/HelpModal";
 import StatsModal from "../modules/StatsModal";
 import UserAccountModal from "../modules/UserAccountModal";
 import Loader from "../modules/Loader";
+import ErrorMessage from "../modules/ErrorMessage";
 
 import {
   calculateBarHeights,
@@ -34,6 +35,10 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
   const existingGameId = useRef<number>();
 
   const location = useLocation();
+  const { loading, data, error } = useFetchCustomPlaylist(
+    apiOrigin,
+    location.search
+  );
   const {
     validPlaylist,
     playlistId,
@@ -44,7 +49,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     albumCover,
     externalUrl,
     songsInDb,
-  } = useFetchCustomPlaylist(apiOrigin, location.search);
+  } = data;
 
   const [isUserAccountModalOpen, setUserAccountModalState] =
     useState<boolean>(false);
@@ -158,17 +163,10 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         setStatsModal={setStatsModalState}
         setUAModel={setUserAccountModalState}
       />
-      {!trackPreview && self.location.search.split("&")[1] === "r=1" && (
-        <div id="loader">
-          <Loader></Loader>
-        </div>
-      )}
-      {!validPlaylist && (
-        <div id="playlist-search">
-          <PlaylistSearch></PlaylistSearch>
-        </div>
-      )}
-      {!gameFinished && trackPreview && validPlaylist && (
+      {loading && <Loader />}
+      {error && <ErrorMessage message={error} />}
+      {!error && !loading && !validPlaylist && <PlaylistSearch />}
+      {!error && !gameFinished && trackPreview && validPlaylist && (
         <div id="game">
           <Game
             song={song}
@@ -180,7 +178,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           />
         </div>
       )}
-      {gameFinished && trackPreview && (
+      {!error && gameFinished && trackPreview && (
         <div id="conclusion">
           <GameConclusion
             song={song}
@@ -189,7 +187,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
             id={id}
             albumCover={albumCover}
             externalUrl={externalUrl}
-          ></GameConclusion>
+          />
         </div>
       )}
 
