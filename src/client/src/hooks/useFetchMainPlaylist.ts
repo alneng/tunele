@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import TrackFormat from "../types/TrackFormat";
 
 const useFetchMainPlaylist = (apiOrigin: string) => {
-  const [playlistData, setPlaylistData] = useState<{
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<{
     song: string;
     artists: string[];
     id: number;
@@ -20,6 +21,7 @@ const useFetchMainPlaylist = (apiOrigin: string) => {
     externalUrl: "",
     songsInDb: [],
   });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -33,7 +35,7 @@ const useFetchMainPlaylist = (apiOrigin: string) => {
           );
         }
 
-        setPlaylistData((prevState) => ({
+        setData((prevState) => ({
           ...prevState,
           song: data.song,
           artists: data.artists,
@@ -45,17 +47,33 @@ const useFetchMainPlaylist = (apiOrigin: string) => {
 
         return fetch(`${apiOrigin}/api/allSongs`, { method: "GET" });
       })
-      .then((response) => response.json())
+      .then(async (response) => {
+        console.log(response);
+        if (!response.ok) {
+          return response.json().then((errorBody) => {
+            setError(errorBody);
+            throw new Error("Failed to fetch main playlist");
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
-        setPlaylistData((prevState) => ({
+        setData((prevState) => ({
           ...prevState,
           songsInDb: data.tracklist,
         }));
       })
-      .catch((err) => console.error(err));
-  }, [apiOrigin]);
+      .catch((err) => {
+        if (!error) setError(err.message);
+        console.error(
+          "Encountered the following error while fetching:",
+          err.message
+        );
+      })
+      .finally(() => setLoading(false));
+  }, [apiOrigin, error]);
 
-  return playlistData;
+  return { loading, data, error };
 };
 
 export default useFetchMainPlaylist;

@@ -1,6 +1,8 @@
 import axios from "axios";
 import querystring from "querystring";
 
+import { HttpException } from "./errors.utils";
+
 import {
   SpotifyPlaylistObject,
   PlaylistTrackObject,
@@ -38,22 +40,34 @@ export async function fetchSongsFromPlaylist(
   playlistId: string
 ): Promise<SpotifyPlaylistObject> {
   const token = await fetchAccessToken();
-  const response = await axios({
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    url: `https://api.spotify.com/v1/playlists/${playlistId}`,
-  });
+  try {
+    const response = await axios({
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      url: `https://api.spotify.com/v1/playlists/${playlistId}`,
+    });
 
-  const data = response.data;
-  if (data.tracks.next) {
-    data.tracks.items = data.tracks.items.concat(
-      await fetchTracks(data.tracks.next, token)
-    );
+    const data = response.data;
+    if (data.tracks.next) {
+      data.tracks.items = data.tracks.items.concat(
+        await fetchTracks(data.tracks.next, token)
+      );
+    }
+    return data;
+  } catch (error) {
+    const errorData = error.response.data;
+    if (
+      errorData.error.status === 404 &&
+      errorData.error.message === "Not found."
+    ) {
+      throw new HttpException(404, "Playlist not found");
+    }
+
+    throw new HttpException(500, "Failed to fetch playlist tracks");
   }
-  return data;
 }
 
 /**

@@ -4,7 +4,8 @@ import queryString from "query-string";
 import TrackFormat from "../types/TrackFormat";
 
 const useFetchCustomPlaylist = (apiOrigin: string, locationSearch: string) => {
-  const [playlistData, setPlaylistData] = useState<{
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<{
     validPlaylist: boolean;
     playlistId: string;
     song: string;
@@ -25,12 +26,15 @@ const useFetchCustomPlaylist = (apiOrigin: string, locationSearch: string) => {
     externalUrl: "",
     songsInDb: [],
   });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const queryParams = queryString.parse(locationSearch);
     const playlistId = queryParams.playlist;
 
     if (playlistId) {
+      setLoading(true);
+
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       fetch(
         `${apiOrigin}/api/playlist/${playlistId}/dailySong?timeZone=${timezone}${
@@ -38,7 +42,15 @@ const useFetchCustomPlaylist = (apiOrigin: string, locationSearch: string) => {
         }`,
         { method: "GET" }
       )
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) {
+            return response.json().then((errorBody) => {
+              setError(errorBody);
+              throw new Error("Failed to fetch custom playlist");
+            });
+          }
+          return response.json();
+        })
         .then((data) => {
           if (!localStorage.getItem("userData")) {
             localStorage.setItem(
@@ -47,7 +59,7 @@ const useFetchCustomPlaylist = (apiOrigin: string, locationSearch: string) => {
             );
           }
 
-          setPlaylistData((prevState) => ({
+          setData((prevState) => ({
             ...prevState,
             validPlaylist: true,
             playlistId: playlistId as string,
@@ -65,16 +77,22 @@ const useFetchCustomPlaylist = (apiOrigin: string, locationSearch: string) => {
         })
         .then((response) => response.json())
         .then((data) => {
-          setPlaylistData((prevState) => ({
+          setData((prevState) => ({
             ...prevState,
             songsInDb: data.tracklist,
           }));
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(
+            "Encountered the following error while fetching:",
+            err.message
+          );
+        })
+        .finally(() => setLoading(false));
     }
   }, [apiOrigin, locationSearch]);
 
-  return playlistData;
+  return { loading, data, error };
 };
 
 export default useFetchCustomPlaylist;
