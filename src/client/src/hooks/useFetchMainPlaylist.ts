@@ -48,7 +48,6 @@ const useFetchMainPlaylist = (apiOrigin: string) => {
         return fetch(`${apiOrigin}/api/allSongs`, { method: "GET" });
       })
       .then(async (response) => {
-        console.log(response);
         if (!response.ok) {
           return response.json().then((errorBody) => {
             setError(errorBody);
