@@ -20,6 +20,7 @@ import {
   calculateBarHeights,
   calculateStatsBottom,
 } from "../utils/stats.utils";
+import { fetchSavedData, mergeGameData } from "../utils/saved-data.utils";
 
 import GameResult from "../types/GameResult";
 import TrackGuessFormat from "../types/TrackGuessFormat";
@@ -153,7 +154,8 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       updatedData.custom[playlistId] = [todaysDataObject];
     }
 
-    localStorage.setItem("userData", JSON.stringify(updatedData));
+    const dataToSave = mergeGameData(fetchSavedData(), updatedData);
+    localStorage.setItem("userData", JSON.stringify(dataToSave));
   };
 
   return (
