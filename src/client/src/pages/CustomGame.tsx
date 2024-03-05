@@ -69,8 +69,8 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     if (existingGameId.current !== id) {
       const customPlaylistObject = custom[playlistId];
       const isLastDataObjectMatchingId =
-        customPlaylistObject &&
-        customPlaylistObject[customPlaylistObject.length - 1] &&
+        Array.isArray(customPlaylistObject) &&
+        customPlaylistObject.length > 0 &&
         customPlaylistObject[customPlaylistObject.length - 1].id === id;
 
       if (isLastDataObjectMatchingId) {
