@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchSavedData } from "../utils/saved-data.utils";
 
 import SavedGameData from "../types/SavedGameData";
 
@@ -15,9 +16,7 @@ const useLoadUserData = (dependencies?: unknown) => {
   });
 
   useEffect(() => {
-    const userData = JSON.parse(
-      localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-    );
+    const userData = fetchSavedData();
     setUserData(userData);
   }, [dependencies]);
 
