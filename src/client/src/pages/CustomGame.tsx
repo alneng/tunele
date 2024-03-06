@@ -154,7 +154,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       updatedData.custom[playlistId] = [todaysDataObject];
     }
 
-    const dataToSave = mergeGameData(fetchSavedData(), updatedData);
+    const dataToSave = mergeGameData(updatedData, fetchSavedData());
     localStorage.setItem("userData", JSON.stringify(dataToSave));
   };
 
