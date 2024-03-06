@@ -135,7 +135,7 @@ const BaseGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
       playlistData.push(todaysDataObject);
     }
 
-    const dataToSave = mergeGameData(fetchSavedData(), updatedData);
+    const dataToSave = mergeGameData(updatedData, fetchSavedData());
     localStorage.setItem("userData", JSON.stringify(dataToSave));
   };
 
