@@ -1,0 +1,45 @@
+name: CI to Prod
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          cd src/backend
+          docker build . -t tunele
+
+      - name: Save Docker image
+        run: docker save tunele > /tmp/tunele-image.tar
+
+      - name: Copy Docker image to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "/tmp/tunele-image.tar"
+          target: "/tmp"
+
+      - name: Run Image on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            docker load < /tmp/tunele-image.tar
+            docker stop tunele || true
+            docker rm tunele || true
+            docker run --env-file ~/.env -d --name tunele -p 7600:7600 tunele

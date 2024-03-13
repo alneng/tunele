@@ -1,13 +1,10 @@
 import { config } from "dotenv";
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import fs from "fs";
 
 export const loadDotenv = () => {
-  const envFile = fs.existsSync(".env.development")
-    ? ".env.development"
-    : ".env";
-  config({ path: envFile });
+  if (process.env.NODE_ENV !== "production")
+    config({ path: ".env.development" });
 };
 
 export const validateInputs = (
