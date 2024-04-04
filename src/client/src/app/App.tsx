@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 
 import BaseGame from "../pages/BaseGame";
 import CustomGame from "../pages/CustomGame";
@@ -14,18 +15,24 @@ const API_ORIGIN: string =
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<BaseGame apiOrigin={API_ORIGIN} />} />
-        <Route path="/custom" element={<CustomGame apiOrigin={API_ORIGIN} />} />
-        <Route
-          path="/auth/callback"
-          element={<OAuthCallback apiOrigin={API_ORIGIN}></OAuthCallback>}
-        />
-        <Route path="/privacy" element={<PrivacyPolicy></PrivacyPolicy>} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<BaseGame apiOrigin={API_ORIGIN} />} />
+          <Route
+            path="/custom"
+            element={<CustomGame apiOrigin={API_ORIGIN} />}
+          />
+          <Route
+            path="/auth/callback"
+            element={<OAuthCallback apiOrigin={API_ORIGIN}></OAuthCallback>}
+          />
+          <Route path="/privacy" element={<PrivacyPolicy></PrivacyPolicy>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+      <Analytics />
+    </>
   );
 };
 
