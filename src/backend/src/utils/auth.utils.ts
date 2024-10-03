@@ -1,8 +1,6 @@
 import { Response } from "express";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { verifyAccessToken, verifyIdToken } from "./tokens.utils";
-import { loadDotenv } from "./utils";
-loadDotenv();
 
 const COOKIE_SETTINGS = JSON.parse(process.env.COOKIE_SETTINGS);
 

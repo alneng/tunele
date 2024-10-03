@@ -1,7 +1,9 @@
 import express from "express";
 import { body } from "express-validator";
-import { validateInputs } from "../utils/utils";
-import { isValidTimezoneString } from "../utils/validation.utils";
+import {
+  isValidTimezoneString,
+  validateInputs,
+} from "../utils/validation.utils";
 import MainGameController from "../controllers/main-game.controllers";
 
 const router = express.Router();

@@ -1,8 +1,6 @@
 import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
 import { AccessDeniedException } from "../utils/errors.utils";
-import { loadDotenv } from "./utils";
-loadDotenv();
 
 const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const OAUTH2_CLIENT = new OAuth2Client(OAUTH_CLIENT_ID);

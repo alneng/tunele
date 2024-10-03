@@ -1,6 +1,4 @@
 import admin from "firebase-admin";
-import { loadDotenv } from "./utils";
-loadDotenv();
 
 class FirestoreSDK {
   private db: admin.firestore.Firestore;
