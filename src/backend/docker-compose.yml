@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
-  express:
-    container_name: express
+  tunele:
+    container_name: tunele
     env_file: ".env"
     build:
       context: ../../
