@@ -8,9 +8,7 @@ import PrivacyPolicy from "../pages/PrivacyPolicy";
 import NotFound from "../pages/NotFound";
 
 const API_ORIGIN: string =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:7600"
-    : "https://api.tunele.app";
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
 
 const App: React.FC = () => {
   return (
