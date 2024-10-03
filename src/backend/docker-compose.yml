@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  express:
+    container_name: express
+    env_file: ".env"
+    build:
+      context: ../../
+      dockerfile: ./src/backend/Dockerfile
+    ports:
+      - "7600:7600"
