@@ -11,6 +11,7 @@ import GameTrackSchema from "../types/GameTrackSchema";
 import MainPlaylistSchema from "../types/MainPlaylistSchema";
 import TrackSchema from "../types/TrackSchema";
 import ClientAllTracks from "../types/ClientAllTracks";
+import { resetAllMainGameTracks } from "../utils/main-game.utils";
 
 export default class MainGameService {
   /**
@@ -36,18 +37,31 @@ export default class MainGameService {
       };
     }
 
-    const mostRecentTracksSnapshot: { id: string; data: MainPlaylistSchema } =
+    let mostRecentTracksSnapshot: { id: string; data: MainPlaylistSchema } =
       await db.getLastDocument("allTracks");
-    const mostRecentTracksTracklist: TrackSchema[] =
+    let mostRecentTracksTracklist: TrackSchema[] =
       mostRecentTracksSnapshot.data.tracklist;
 
-    let randomTrackIndex: number, chosenTrack: TrackSchema;
-    do {
-      randomTrackIndex = Math.floor(
-        Math.random() * mostRecentTracksTracklist.length
-      );
-      chosenTrack = mostRecentTracksTracklist[randomTrackIndex];
-    } while (chosenTrack.playedBefore);
+    // If all tracks have been played, reset all tracks
+    let unplayedTracks = mostRecentTracksTracklist.filter(
+      (track) => !track.playedBefore
+    );
+    if (unplayedTracks.length === 0) {
+      await resetAllMainGameTracks();
+      mostRecentTracksSnapshot = await db.getLastDocument("allTracks");
+      mostRecentTracksTracklist = mostRecentTracksSnapshot.data.tracklist;
+      unplayedTracks = mostRecentTracksSnapshot.data.tracklist;
+    }
+
+    // Choose a random track from the unplayed tracks
+    const randomTrackIndex = Math.floor(Math.random() * unplayedTracks.length);
+    const chosenTrack = unplayedTracks[randomTrackIndex];
+
+    // Update the tracklist to mark the chosen track as played
+    const chosenTrackIndex = mostRecentTracksTracklist.findIndex(
+      (track) => track.trackPreview === chosenTrack.trackPreview
+    );
+    mostRecentTracksTracklist[chosenTrackIndex].playedBefore = true;
 
     const previousRecentGameTrack: { id: string; data: GameTrackSchema } =
       await db.getLastDocument("gameTracks");
@@ -80,7 +94,6 @@ export default class MainGameService {
     };
     await db.createDocument("gameTracks", localDate, newGameTrack);
 
-    mostRecentTracksTracklist[randomTrackIndex].playedBefore = true;
     const updatedDoc: MainPlaylistSchema = {
       createdAt: mostRecentTracksSnapshot.id,
       snapshotId: mostRecentTracksSnapshot.data.snapshotId,
