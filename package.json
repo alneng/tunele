@@ -1,6 +1,6 @@
 {
   "name": "tunele",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "An open-source clone of the music game Heardle",
   "private": true,
   "workspaces": [
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace client dev\"",
     "backend": "yarn workspace backend dev",
-    "backend:preview": "yarn workspace backend start",
+    "backend:preview": "yarn workspace backend build && yarn workspace backend preview",
     "client": "yarn workspace client dev",
     "client:build": "yarn workspace client build",
     "client:preview": "yarn workspace client preview",

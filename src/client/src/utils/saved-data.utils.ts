@@ -1,5 +1,5 @@
-import GameResult from "../components/interfaces/GameResult";
-import SavedGameData from "../components/interfaces/SavedGameData";
+import GameResult from "../types/GameResult";
+import SavedGameData from "../types/SavedGameData";
 
 /**
  * Merges two data sources, giving priority to existing data
@@ -8,7 +8,7 @@ import SavedGameData from "../components/interfaces/SavedGameData";
  * @param newData data coming from the server
  * @returns the new merged data
  */
-export default function mergeGameData(
+export function mergeGameData(
   existingData: SavedGameData,
   newData: SavedGameData
 ): SavedGameData {
@@ -44,4 +44,10 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
     (a: GameResult, b: GameResult) => a.id - b.id
   );
   return sorted_array;
+}
+
+export function fetchSavedData(): SavedGameData {
+  return JSON.parse(
+    localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
+  );
 }

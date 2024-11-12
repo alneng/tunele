@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import queryString from "query-string";
 import Tooltip from "@mui/material/Tooltip";
-import { countScores } from "../../utils/stats.utils";
+import { countScores } from "../utils/stats.utils";
+import useLoadUserData from "../hooks/useLoadUserData";
 
 interface StatsBarHeightsState {
   [key: number]: number;
@@ -20,18 +21,16 @@ const StatsModal: React.FC<StatsModalProps> = ({
 }) => {
   const [scores, setScores] = useState<{ [key: number]: number }>({});
 
+  const { main, custom } = useLoadUserData();
+
   useEffect(() => {
-    const localData = JSON.parse(localStorage.getItem("userData") || "null");
     const queryParams = queryString.parse(location.search);
     const playlistId = queryParams.playlist;
-
-    if (localData) {
-      const scores = playlistId
-        ? countScores(localData.custom[playlistId as string])
-        : countScores(localData.main);
-      setScores(scores);
-    }
-  }, []);
+    const scores = playlistId
+      ? countScores(custom[playlistId as string])
+      : countScores(main);
+    setScores(scores);
+  }, [custom, main]);
 
   return (
     <div className="flex flex-col items-center">
@@ -45,7 +44,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[1]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[1]}px` }}></div>
+              style={{ height: `${statsBarHeights[1]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -55,7 +55,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[2]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[2]}px` }}></div>
+              style={{ height: `${statsBarHeights[2]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -65,7 +66,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[3]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[3]}px` }}></div>
+              style={{ height: `${statsBarHeights[3]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -75,7 +77,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[4]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[4]}px` }}></div>
+              style={{ height: `${statsBarHeights[4]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -85,7 +88,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[5]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[5]}px` }}></div>
+              style={{ height: `${statsBarHeights[5]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -95,7 +99,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[6]} placement="bottom" arrow>
             <div
               className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[6]}px` }}></div>
+              style={{ height: `${statsBarHeights[6]}px` }}
+            ></div>
           </Tooltip>
         </div>
         <div className="relative ml-6">
@@ -105,7 +110,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
           <Tooltip title={scores[0]} placement="bottom" arrow>
             <div
               className={`bg-red w-4`}
-              style={{ height: `${statsBarHeights[0]}px` }}></div>
+              style={{ height: `${statsBarHeights[0]}px` }}
+            ></div>
           </Tooltip>
         </div>
       </div>

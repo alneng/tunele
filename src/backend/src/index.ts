@@ -4,8 +4,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import apiRouter from "./api";
 import { errorHandler } from "./utils/errors.utils";
-import { loadDotenv } from "./utils/utils";
-loadDotenv();
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;

@@ -1,6 +1,6 @@
 import express from "express";
 import { body, param } from "express-validator";
-import { validateInputs } from "../utils/utils";
+import { validateInputs } from "../utils/validation.utils";
 import {
   isValidPlaylistId,
   isValidTimezoneString,

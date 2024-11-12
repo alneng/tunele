@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import TrackGuessFormat from "../interfaces/TrackGuessFormat";
+import TrackGuessFormat from "../types/TrackGuessFormat";
 
 interface ListGroupProps {
   userGuesses: TrackGuessFormat[];
@@ -27,7 +27,8 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
               : item.isArtist
               ? "text-yellow border-2 border-yellow"
               : "text-red border-2 border-red"
-          }`}>
+          }`}
+        >
           {item.isSkipped && <p>Skipped</p>}
           {!item.isSkipped && <p>{item.answer.formattedString}</p>}
         </div>
@@ -35,7 +36,8 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
       {emptyGuesses.map((_, index) => (
         <div
           key={index}
-          className="md:w-612px w-4/5 h-10 px-4 m-1 text-black bg-gray-800">
+          className="md:w-612px w-4/5 h-10 px-4 m-1 text-black bg-gray-800"
+        >
           <p></p>
         </div>
       ))}
