@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -14,10 +14,6 @@ app.use(cookieParser());
 app.use(cors(JSON.parse(process.env.CORS_OPTIONS)));
 
 app.use("/api", apiRouter);
-
-app.get("/monitor", (_req: Request, res: Response, _next: NextFunction) => {
-  return res.status(200).json({ success: "API is up and running" });
-});
 
 app.use(errorHandler);
 
