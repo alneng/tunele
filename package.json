@@ -27,7 +27,7 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": "18.x"
+    "node": "18.x || 20.x || 22.x"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
