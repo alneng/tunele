@@ -5,18 +5,18 @@
   "private": true,
   "workspaces": [
     "src/backend",
-    "src/client"
+    "src/frontend"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace client dev\"",
+    "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\"",
     "backend": "yarn workspace backend dev",
     "backend:preview": "yarn workspace backend build && yarn workspace backend preview",
-    "client": "yarn workspace client dev",
-    "client:build": "yarn workspace client build",
-    "client:preview": "yarn workspace client preview",
+    "frontend": "yarn workspace frontend dev",
+    "frontend:build": "yarn workspace frontend build",
+    "frontend:preview": "yarn workspace frontend preview",
     "test": "yarn workspace backend test",
     "test:watch": "yarn workspace backend test:watch",
-    "lint": "yarn workspace backend lint && yarn workspace client lint"
+    "lint": "yarn workspace backend lint && yarn workspace frontend lint"
   },
   "keywords": [
     "Heardle",

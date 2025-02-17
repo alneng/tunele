@@ -22,8 +22,8 @@ These services are **required** for Tunele to work properly.
 
 1. Clone the repository to the directory of your choice - `git clone https://github.com/alneng/tunele.git`
 2. Download dependencies - `yarn install`
-3. \*Start the client and backend - `yarn start`
-4. Access the client - http://localhost:5173
+3. \*Start the frontend and backend - `yarn start`
+4. Access the frontend - http://localhost:5173
 
 \* Important files must be setup first; see below
 
@@ -31,9 +31,9 @@ These services are **required** for Tunele to work properly.
 
 ### Frontend
 
-`src/client/` - Vite React-TS app
+`src/frontend/` - Vite React-TS app
 
-`src/client/src/components/App.tsx` - Main App component of React app (route handler)
+`src/frontend/src/components/App.tsx` - Main App component of React app (route handler)
 
 ### Backend
 
@@ -45,7 +45,7 @@ These services are **required** for Tunele to work properly.
 
 ### Important Files for Running Tunele
 
-1. `src/client/src/components/modules/UserAccountModal.tsx`
+1. `src/frontend/src/components/modules/UserAccountModal.tsx`
 
    - Edit `googleSsoParams` to your redirect_uri and ClientId
 
