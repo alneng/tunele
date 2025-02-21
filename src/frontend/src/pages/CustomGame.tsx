@@ -6,15 +6,15 @@ import useFetchCustomPlaylist from "../hooks/useFetchCustomPlaylist";
 import useFirstTimeUser from "../hooks/useFirstTimeUser";
 import useLoadUserData from "../hooks/useLoadUserData";
 
-import NavBar from "../modules/Navbar";
-import Game from "../modules/Game";
-import GameConclusion from "../modules/GameConclusion";
-import PlaylistSearch from "../modules/PlaylistSearch";
-import HelpModal from "../modules/HelpModal";
-import StatsModal from "../modules/StatsModal";
-import UserAccountModal from "../modules/UserAccountModal";
-import Loader from "../modules/Loader";
-import ErrorMessage from "../modules/ErrorMessage";
+import NavBar from "../components/Navbar";
+import Game from "../components/Game";
+import GameConclusion from "../components/GameConclusion";
+import PlaylistSearch from "../components/PlaylistSearch";
+import HelpModal from "../components/HelpModal";
+import StatsModal from "../components/StatsModal";
+import UserAccountModal from "../components/UserAccountModal";
+import Loader from "../components/Loader";
+import ErrorMessage from "../components/ErrorMessage";
 
 import {
   calculateBarHeights,
