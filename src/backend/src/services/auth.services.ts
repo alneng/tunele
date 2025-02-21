@@ -6,11 +6,12 @@ import {
   getAccessTokenAuthStatus,
 } from "../utils/auth.utils";
 import { HttpException } from "../utils/errors.utils";
+import { GOOGLE_OAUTH_CONFIG } from "../config";
 
 export default class AuthService {
   static authClientCredentials = {
-    client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-    client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+    client_id: GOOGLE_OAUTH_CONFIG.client_id,
+    client_secret: GOOGLE_OAUTH_CONFIG.client_secret,
   };
 
   /**
@@ -27,7 +28,7 @@ export default class AuthService {
       grant_type: "authorization_code",
       code: code,
       scope: scope,
-      redirect_uri: process.env.REDIRECT_URI,
+      redirect_uri: GOOGLE_OAUTH_CONFIG.redirect_uri,
     };
 
     try {

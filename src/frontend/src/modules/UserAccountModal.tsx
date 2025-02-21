@@ -7,9 +7,8 @@ import { mergeGameData } from "../utils/saved-data.utils";
 import SavedGameData from "../types/SavedGameData";
 
 const googleSsoParams = {
-  redirect_uri: `https://tunele.app/auth/callback`,
-  client_id:
-    "602759062179-f1bmctur05h9p4uu60r08870b89hu3bl.apps.googleusercontent.com",
+  redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+  client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
 };
 
 const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {

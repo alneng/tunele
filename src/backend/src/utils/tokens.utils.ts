@@ -1,9 +1,7 @@
 import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
 import { AccessDeniedException } from "../utils/errors.utils";
-
-const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
-const OAUTH2_CLIENT = new OAuth2Client(OAUTH_CLIENT_ID);
+import { GOOGLE_OAUTH_CONFIG } from "../config";
 
 /**
  * Verifies an access token
@@ -36,14 +34,15 @@ export async function verifyAccessToken(accessToken: string) {
  * @throws AccessDeniedException if bad id token
  */
 export async function verifyIdToken(idToken: string) {
+  const OAUTH2_CLIENT = new OAuth2Client(GOOGLE_OAUTH_CONFIG.client_id);
   try {
     const ticket = await OAUTH2_CLIENT.verifyIdToken({
       idToken: idToken,
-      audience: OAUTH_CLIENT_ID,
+      audience: GOOGLE_OAUTH_CONFIG.client_id,
     });
     const payload = ticket.getPayload();
 
-    if (payload.aud !== OAUTH_CLIENT_ID)
+    if (payload.aud !== GOOGLE_OAUTH_CONFIG.client_id)
       throw new AccessDeniedException(401, "Bad ID token", true);
   } catch (error) {
     if (error?.status == 401)

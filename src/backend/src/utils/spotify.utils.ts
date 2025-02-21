@@ -1,12 +1,11 @@
 import axios from "axios";
 import querystring from "querystring";
-
 import { HttpException } from "./errors.utils";
-
 import {
   SpotifyPlaylistObject,
   PlaylistTrackObject,
 } from "../types/spotify-types";
+import { SPOTIFY_CLIENT_KEY } from "../config";
 
 /**
  * Produces a Spotify access token
@@ -20,7 +19,7 @@ async function fetchAccessToken(): Promise<string> {
   const options = {
     method: "POST",
     headers: {
-      Authorization: `Basic ${process.env.SPOTIFY_CLIENT_KEY}`,
+      Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     data: querystring.stringify(data),

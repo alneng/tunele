@@ -1,20 +1,21 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import apiRouter from "./api";
 import { errorHandler } from "./utils/errors.utils";
+import { CORS_OPTIONS, PORT } from "./config";
 
 const app = express();
-const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
 
-app.use(bodyParser.json());
+// Middlewares
+app.use(express.json());
 app.use(cookieParser());
+app.use(cors(CORS_OPTIONS));
 
-app.use(cors(JSON.parse(process.env.CORS_OPTIONS)));
-
+// Routes
 app.use("/api", apiRouter);
 
+// Error handler
 app.use(errorHandler);
 
 app.listen(PORT, "0.0.0.0", () => {
