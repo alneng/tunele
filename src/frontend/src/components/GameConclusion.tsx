@@ -80,7 +80,11 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
     <>
       <div className="bg-[#131213] flex flex-col h-screen justify-center items-center text-white">
         <a href={externalUrl} target="_blank">
-          <img src={albumCover} alt="Album Cover" className="max-w-[300px]" />
+          <img
+            src={albumCover}
+            alt="Album Cover"
+            className="w-full max-w-[300px] bg-gray-800"
+          />
         </a>
 
         <div>

@@ -10,6 +10,7 @@ import {
   FirebaseCustomPlaylist,
   FirebaseGameTrack,
 } from "../types";
+import { EmptyPlaylistException } from "./errors.utils";
 
 /**
  * Generates or refreshes a custom game playlist object
@@ -93,6 +94,9 @@ export async function chooseNewGameTrack(
   localDate: string
 ): Promise<FirebaseGameTrack> {
   let allTracksList: FirebaseTrack[] = playlistObject.tracklist;
+  if (!allTracksList || allTracksList.length === 0) {
+    throw new EmptyPlaylistException();
+  }
 
   if (allTracksList.filter((song) => !song.playedBefore).length === 0) {
     allTracksList = resetTrackListPlayedBeforeStatus(allTracksList);
@@ -156,6 +160,10 @@ async function sortPlaylistResponse(
     const trackItems: PlaylistTrackObject[] = response.tracks.items;
     const sortedSongs: FirebaseTrack[] = [];
 
+    if (trackItems.length === 0) {
+      throw new EmptyPlaylistException();
+    }
+
     trackItems.forEach(async (trackItem: PlaylistTrackObject) => {
       const track: TrackObject = trackItem.track;
       const title = track.name;
@@ -165,7 +173,7 @@ async function sortPlaylistResponse(
       });
       const externalUrl = track.external_urls.spotify;
       const trackPreview = track.preview_url;
-      const albumCover = track.album.images[0].url;
+      const albumCover = track.album.images[0]?.url || "/album-placeholder.svg";
       const spotifyUri = track.id;
       const playedBefore = checkIfInGameTracks(externalUrl, pastGameTracks);
       const document: FirebaseTrack = {
