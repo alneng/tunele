@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { useSearchParams } from "react-router-dom";
 import Modal from "react-modal";
-import useFetchCustomPlaylist from "../hooks/useFetchCustomPlaylist";
-import useFirstTimeUser from "../hooks/useFirstTimeUser";
-import useLoadUserData from "../hooks/useLoadUserData";
-
+import { useFetchCustomPlaylist } from "../hooks/game.hooks";
+import { useFirstTimeUser, useLoadUserData } from "../hooks/user.hooks";
+import {
+  calculateBarHeights,
+  calculateStatsBottom,
+  NumberToNumberMapping,
+} from "../utils/stats.utils";
+import { fetchSavedData, mergeGameData } from "../utils/data.utils";
+import { postCustomGameStats } from "../api/game";
+import { GameResult, TrackGuess } from "../types";
 import NavBar from "../components/Navbar";
 import Game from "../components/Game";
 import GameConclusion from "../components/GameConclusion";
@@ -16,29 +21,16 @@ import UserAccountModal from "../components/UserAccountModal";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 
-import {
-  calculateBarHeights,
-  calculateStatsBottom,
-} from "../utils/stats.utils";
-import { fetchSavedData, mergeGameData } from "../utils/saved-data.utils";
-
-import GameResult from "../types/GameResult";
-import TrackGuessFormat from "../types/TrackGuessFormat";
-
-interface StatsBarHeightsState {
-  [key: number]: number;
-}
-
-const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
-  const [userGuesses, setUserGuesses] = useState<TrackGuessFormat[]>([]);
+const CustomGame: React.FC = () => {
+  const [userGuesses, setUserGuesses] = useState<TrackGuess[]>([]);
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const { main, custom } = useLoadUserData(userGuesses);
   const existingGameId = useRef<number>();
 
-  const location = useLocation();
-  const { loading, data, error } = useFetchCustomPlaylist(
-    apiOrigin,
-    location.search
+  const [params] = useSearchParams();
+  const { data, isLoading, error } = useFetchCustomPlaylist(
+    params.get("playlist"),
+    params.get("r")
   );
   const {
     validPlaylist,
@@ -49,14 +41,14 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     trackPreview,
     albumCover,
     externalUrl,
-    songsInDb,
+    tracklist,
   } = data;
 
   const [isUserAccountModalOpen, setUserAccountModalState] =
     useState<boolean>(false);
   const [isHelpModalOpen, setHelpModalState] = useState<boolean>(false);
   const [isStatsModalOpen, setStatsModalState] = useState<boolean>(false);
-  const [statsBarHeights, setStatsBarHeights] = useState<StatsBarHeightsState>(
+  const [statsBarHeights, setStatsBarHeights] = useState<NumberToNumberMapping>(
     {}
   );
   const [statsCorrectString, setStatsCorrectString] = useState<string>("0/0");
@@ -102,7 +94,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
     }
   }, [isStatsModalOpen, playlistId, gameFinished, custom]);
 
-  const handleUserGuessesUpdate = (newGuesses: TrackGuessFormat[]) => {
+  const handleUserGuessesUpdate = (newGuesses: TrackGuess[]) => {
     setUserGuesses(newGuesses);
 
     const isGameFinished =
@@ -114,18 +106,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
 
     if (isGameFinished) {
       setGameFinished(true);
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const playlistId = queryString.parse(location.search).playlist;
-      fetch(`${apiOrigin}/api/playlist/${playlistId}/stats`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          score: score,
-          timeZone: timezone,
-        }),
-      });
+      postCustomGameStats(playlistId, score);
     }
 
     const todaysDataObject: GameResult = {
@@ -165,9 +146,9 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         setStatsModal={setStatsModalState}
         setUAModel={setUserAccountModalState}
       />
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       {error && <ErrorMessage message={error} />}
-      {!error && !loading && !validPlaylist && <PlaylistSearch />}
+      {!error && !isLoading && !validPlaylist && <PlaylistSearch />}
       {!error && !gameFinished && trackPreview && validPlaylist && (
         <div id="game">
           <Game
@@ -176,7 +157,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
             trackPreview={trackPreview}
             userGuesses={userGuesses}
             setUserGuesses={handleUserGuessesUpdate}
-            allSongs={songsInDb}
+            allSongs={tracklist}
           />
         </div>
       )}
@@ -201,9 +182,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         overlayClassName="overlay"
         ariaHideApp={false}
       >
-        <HelpModal
-          onRequestCloseHelpModal={() => setHelpModalState(false)}
-        ></HelpModal>
+        <HelpModal onRequestCloseHelpModal={() => setHelpModalState(false)} />
       </Modal>
       <Modal
         isOpen={isStatsModalOpen}
@@ -213,10 +192,11 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         ariaHideApp={false}
       >
         <StatsModal
+          playlistId={playlistId}
           statsBarHeights={statsBarHeights}
           statsCorrectString={statsCorrectString}
           statsCorrectPercentageString={statsCorrectPercentageString}
-        ></StatsModal>
+        />
       </Modal>
       <Modal
         isOpen={isUserAccountModalOpen}
@@ -225,7 +205,7 @@ const CustomGame: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
         overlayClassName="overlay"
         ariaHideApp={false}
       >
-        <UserAccountModal apiOrigin={apiOrigin}></UserAccountModal>
+        <UserAccountModal />
       </Modal>
     </div>
   );

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import useCountdown from "../hooks/useCountdown";
+import { useCountdown } from "../hooks/game.hooks";
+import { TrackGuess } from "../types";
 import "./Countdown.css";
-
-import TrackGuessFormat from "../types/TrackGuessFormat";
 
 interface GameConclusionProps {
   song: string;
   artists: string[];
-  userGuesses: TrackGuessFormat[];
+  userGuesses: TrackGuess[];
   id: number;
   albumCover: string;
   externalUrl: string;

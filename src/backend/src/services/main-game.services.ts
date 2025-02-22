@@ -2,15 +2,16 @@ import { DateTime } from "luxon";
 import { HttpException } from "../utils/errors.utils";
 import db from "../utils/firebase.utils";
 import {
-  clientAllTracksTransformer,
-  clientGameTrackTransformer,
+  tracksTransformer,
+  gameTrackTransformer,
 } from "../transformers/track.transformers";
-
-import ClientGameTrack from "../types/ClientGameTrack";
-import GameTrackSchema from "../types/GameTrackSchema";
-import MainPlaylistSchema from "../types/MainPlaylistSchema";
-import TrackSchema from "../types/TrackSchema";
-import ClientAllTracks from "../types/ClientAllTracks";
+import {
+  FirebaseGameTrack,
+  FirebaseMainPlaylist,
+  FirebaseTrack,
+  GameTrack,
+  Track,
+} from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
 
 export default class MainGameService {
@@ -20,8 +21,8 @@ export default class MainGameService {
    * @param timeZone the user's time zone
    * @returns the daily song
    */
-  static async getDailySong(localDate: string): Promise<ClientGameTrack> {
-    const dailyGameTrack: GameTrackSchema | null = await db.getDocument(
+  static async getDailySong(localDate: string): Promise<GameTrack> {
+    const dailyGameTrack: FirebaseGameTrack | null = await db.getDocument(
       "gameTracks",
       localDate
     );
@@ -37,9 +38,9 @@ export default class MainGameService {
       };
     }
 
-    let mostRecentTracksSnapshot: { id: string; data: MainPlaylistSchema } =
+    let mostRecentTracksSnapshot: { id: string; data: FirebaseMainPlaylist } =
       await db.getLastDocument("allTracks");
-    let mostRecentTracksTracklist: TrackSchema[] =
+    let mostRecentTracksTracklist: FirebaseTrack[] =
       mostRecentTracksSnapshot.data.tracklist;
 
     // If all tracks have been played, reset all tracks
@@ -63,7 +64,7 @@ export default class MainGameService {
     );
     mostRecentTracksTracklist[chosenTrackIndex].playedBefore = true;
 
-    const previousRecentGameTrack: { id: string; data: GameTrackSchema } =
+    const previousRecentGameTrack: { id: string; data: FirebaseGameTrack } =
       await db.getLastDocument("gameTracks");
     const gameId = previousRecentGameTrack
       ? previousRecentGameTrack.data.id + 1
@@ -72,7 +73,7 @@ export default class MainGameService {
       .setZone("America/New_York")
       .toFormat("yyyy-MM-dd HH:mm:ss");
 
-    const newGameTrack: GameTrackSchema = {
+    const newGameTrack: FirebaseGameTrack = {
       albumCover: chosenTrack.albumCover,
       artists: chosenTrack.artists,
       createdAt: date,
@@ -94,7 +95,7 @@ export default class MainGameService {
     };
     await db.createDocument("gameTracks", localDate, newGameTrack);
 
-    const updatedDoc: MainPlaylistSchema = {
+    const updatedDoc: FirebaseMainPlaylist = {
       createdAt: mostRecentTracksSnapshot.id,
       snapshotId: mostRecentTracksSnapshot.data.snapshotId,
       tracklist: mostRecentTracksTracklist,
@@ -105,7 +106,7 @@ export default class MainGameService {
       updatedDoc
     );
 
-    return clientGameTrackTransformer(newGameTrack);
+    return gameTrackTransformer(newGameTrack);
   }
 
   /**
@@ -113,12 +114,12 @@ export default class MainGameService {
    *
    * @returns List of song objects {song: String, artists: String[]}
    */
-  static async getAllSongs(): Promise<ClientAllTracks[]> {
-    const allTracks: { id: string; data: MainPlaylistSchema } =
+  static async getAllSongs(): Promise<Track[]> {
+    const allTracks: { id: string; data: FirebaseMainPlaylist } =
       await db.getLastDocument("allTracks");
 
     if (!allTracks) return [];
-    return clientAllTracksTransformer(allTracks.data.tracklist);
+    return tracksTransformer(allTracks.data.tracklist);
   }
 
   /**
@@ -131,7 +132,7 @@ export default class MainGameService {
    */
   static async postStats(localDate: string, score: number) {
     try {
-      const todaysGameTrack: GameTrackSchema | null = await db.getDocument(
+      const todaysGameTrack: FirebaseGameTrack | null = await db.getDocument(
         "gameTracks",
         localDate
       );

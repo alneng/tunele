@@ -1,5 +1,5 @@
 import axios from "axios";
-import querystring from "querystring";
+import qs from "qs";
 import {
   doesAccessIdTokenExist,
   getIdTokenAuthStatus,
@@ -34,7 +34,7 @@ export default class AuthService {
     try {
       const response = await axios.post(
         "https://oauth2.googleapis.com/token",
-        querystring.stringify(data),
+        qs.stringify(data),
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
       const auth = response.data;
@@ -47,6 +47,7 @@ export default class AuthService {
         expiresIn: auth.expires_in,
       };
     } catch (error) {
+      console.log(error);
       throw new HttpException(401, "Bad token request");
     }
   }
@@ -68,7 +69,7 @@ export default class AuthService {
     try {
       const response = await axios.post(
         "https://oauth2.googleapis.com/token",
-        querystring.stringify(data),
+        qs.stringify(data),
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
       const auth = response.data;

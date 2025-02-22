@@ -1,176 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React from "react";
+import { useUser } from "../hooks/user.hooks";
 
-import { mergeGameData } from "../utils/saved-data.utils";
-
-import SavedGameData from "../types/SavedGameData";
-
-const googleSsoParams = {
-  redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
-  client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
-};
-
-const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
-  const [successfulLogin, setSuccessfulLogin] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>("");
-  const [id, setId] = useState<string>("");
-
-  useEffect(() => {
-    let response: Response;
-    fetch(`${apiOrigin}/api/auth/vat`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => {
-        response = res;
-        return res.json();
-      })
-      .then((data) => {
-        switch (response.status) {
-          case 200:
-            setUserName(data.given_name);
-            setId(data.id);
-            setSuccessfulLogin(true);
-            break;
-          case 500:
-            if (data?.retry) refreshTokens();
-            break;
-          case 401:
-            if (data?.retry) refreshTokens();
-            break;
-          default:
-            console.log("Unable to validate or generate a new access token");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successfulLogin]);
-
-  const refreshTokens = () => {
-    fetch(`${apiOrigin}/api/auth/refresh-token`, {
-      method: "POST",
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 200) setSuccessfulLogin(true);
-        else if (response.status === 500) resetUserSession();
-        else if (response.status === 401) resetUserSession();
-        else {
-          console.error("Handled unexpected error");
-          resetUserSession();
-        }
-      })
-      .catch(() => {
-        resetUserSession();
-      });
-  };
-
-  const resetUserSession = async () => {
-    await fetch(`${apiOrigin}/api/auth/logout`, {
-      method: "get",
-      credentials: "include",
-    });
-    setSuccessfulLogin(false);
-  };
-
-  const handleGoogleSSO = () => {
-    const baseUrl = "https://accounts.google.com";
-    const endpoint = "/o/oauth2/v2/auth";
-    const queryParams = {
-      ...googleSsoParams,
-      prompt: "consent",
-      response_type: "code",
-      scope: "email profile",
-      access_type: "offline",
-    };
-
-    const url = new URL(endpoint, baseUrl);
-    url.search = new URLSearchParams(queryParams).toString();
-    window.location.href = url.href;
-  };
-
-  const updateLocalData = () => {
-    fetch(`${apiOrigin}/api/user/${id}/fetch-data`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data: SavedGameData) => {
-        const clientData: SavedGameData = JSON.parse(
-          localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-        );
-        const dataToMerge: SavedGameData = mergeGameData(clientData, data);
-        localStorage.setItem("userData", JSON.stringify(dataToMerge));
-        toast.success("Successfully updated local data! Reloading page...", {
-          position: toast.POSITION.BOTTOM_CENTER,
-          pauseOnFocusLoss: false,
-          hideProgressBar: true,
-          autoClose: 2500,
-          theme: "dark",
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2500);
-      })
-      .catch(() => {
-        toast.error("There was an error pulling your cloud data", {
-          position: toast.POSITION.BOTTOM_CENTER,
-          pauseOnFocusLoss: false,
-          hideProgressBar: true,
-          autoClose: 2500,
-          theme: "dark",
-        });
-      });
-  };
-
-  const saveDataToCloud = () => {
-    fetch(`${apiOrigin}/api/user/${id}/post-data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: localStorage.getItem("userData"),
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 200 || response.status === 201) {
-          toast.success("Successfully saved data to cloud!", {
-            position: toast.POSITION.BOTTOM_CENTER,
-            pauseOnFocusLoss: false,
-            hideProgressBar: true,
-            autoClose: 2500,
-            theme: "dark",
-          });
-        } else {
-          toast.error("There was an error saving your data", {
-            position: toast.POSITION.BOTTOM_CENTER,
-            pauseOnFocusLoss: false,
-            hideProgressBar: true,
-            autoClose: 2500,
-            theme: "dark",
-          });
-        }
-      })
-      .catch(() => {
-        toast.error("There was an error saving your data", {
-          position: toast.POSITION.BOTTOM_CENTER,
-          pauseOnFocusLoss: false,
-          hideProgressBar: true,
-          autoClose: 2500,
-          theme: "dark",
-        });
-      });
-  };
+const UserAccountModal: React.FC = () => {
+  const {
+    signedIn,
+    username,
+    id,
+    handleGoogleLogin,
+    handleLogout,
+    updateLocalData,
+    syncDataToRemote,
+  } = useUser();
 
   return (
     <>
       <div className="flex flex-col items-center mb-4">
         <h1 className="text-2xl font-bold">User Profile</h1>
       </div>
-      {!successfulLogin && (
+      {!signedIn && (
         <div>
           <p>
             Sign in with one of our account providers to save your progress to
@@ -178,7 +25,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           </p>
           <div className="my-4">
             <button
-              onClick={handleGoogleSSO}
+              onClick={handleGoogleLogin}
               type="button"
               className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
             >
@@ -202,20 +49,14 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           </div>
         </div>
       )}
-      {successfulLogin && (
+      {signedIn && (
         <div>
           <div className="my-2">
-            <p>
-              Welcome back, <span>{userName}</span>
-            </p>
-            <p>
-              ID: <span>{id}</span>
-            </p>
-            <p>
-              <button className="underline" onClick={resetUserSession}>
-                Logout
-              </button>
-            </p>
+            <p>Welcome back, {username}</p>
+            <p>ID: {id}</p>
+            <button className="underline" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
           <div className="p-4">
             <div className="my-2">
@@ -245,7 +86,7 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
             </div>
             <div className="my-2">
               <button
-                onClick={saveDataToCloud}
+                onClick={syncDataToRemote}
                 type="button"
                 className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
               >
@@ -278,7 +119,6 @@ const UserAccountModal: React.FC<{ apiOrigin: string }> = ({ apiOrigin }) => {
           Privacy Policy
         </a>
       </p>
-      <ToastContainer />
     </>
   );
 };

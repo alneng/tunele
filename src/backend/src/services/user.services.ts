@@ -6,7 +6,7 @@ import {
 } from "../utils/auth.utils";
 import db from "../utils/firebase.utils";
 import { mergeGameData } from "../utils/user.utils";
-import SavedGameData from "../types/ClientSavedGameData";
+import { SavedGameData } from "../types";
 
 export default class UserService {
   /**

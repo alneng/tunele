@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-
-import TrackGuessFormat from "../types/TrackGuessFormat";
-import TrackFormat from "../types/TrackFormat";
-import FormattedPossibleAnswer from "../types/FormattedPossibleAnswer";
+import { FormattedTrack, Track, TrackGuess } from "../types";
 
 interface SearchBarProps {
-  userGuesses: TrackGuessFormat[];
-  onUpdateGuesses: (newGuesses: TrackGuessFormat[]) => void;
+  userGuesses: TrackGuess[];
+  onUpdateGuesses: (newGuesses: TrackGuess[]) => void;
   song: string;
   artists: string[];
-  allSongs: TrackFormat[];
+  allSongs: Track[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,14 +16,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   artists,
   allSongs,
 }) => {
-  const [inputValue, setInputValue] = useState<FormattedPossibleAnswer>({
+  const [inputValue, setInputValue] = useState<FormattedTrack>({
     formattedString: "",
     song: "",
     artists: [],
   });
-  const [possibleAnswers, setPossibleAnswers] = useState<
-    FormattedPossibleAnswer[]
-  >([]);
+  const [possibleAnswers, setPossibleAnswers] = useState<FormattedTrack[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
   const handleInputChange = async (
@@ -41,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setIsButtonDisabled(true);
 
     if (event.target.value.length >= 2) {
-      const matchingAnswers: FormattedPossibleAnswer[] = [];
+      const matchingAnswers: FormattedTrack[] = [];
       const inputValueLowercase = event.target.value.toLowerCase();
       const addedToAnswersMap: { [key: string]: boolean } = {};
 

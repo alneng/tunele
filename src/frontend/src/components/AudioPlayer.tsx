@@ -1,15 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-
-import FormattedPossibleAnswer from "../types/FormattedPossibleAnswer";
+import { TrackGuess } from "../types";
 
 interface AudioPlayerProps {
   audioSrc: string;
-  userGuesses: {
-    answer: FormattedPossibleAnswer;
-    isCorrect: boolean;
-    isSkipped: boolean;
-    isArtist: boolean;
-  }[];
+  userGuesses: TrackGuess[];
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {

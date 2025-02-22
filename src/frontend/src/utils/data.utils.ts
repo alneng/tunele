@@ -1,5 +1,4 @@
-import GameResult from "../types/GameResult";
-import SavedGameData from "../types/SavedGameData";
+import { GameResult, SavedGameData } from "../types";
 
 /**
  * Merges two data sources, giving priority to existing data
@@ -46,6 +45,11 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
   return sorted_array;
 }
 
+/**
+ * Fetches saved data from local storage.
+ *
+ * @returns the saved data
+ */
 export function fetchSavedData(): SavedGameData {
   return JSON.parse(
     localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'

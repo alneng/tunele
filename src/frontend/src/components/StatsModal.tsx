@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from "react";
-import queryString from "query-string";
 import Tooltip from "@mui/material/Tooltip";
-import { countScores } from "../utils/stats.utils";
-import useLoadUserData from "../hooks/useLoadUserData";
-
-interface StatsBarHeightsState {
-  [key: number]: number;
-}
+import { countScores, NumberToNumberMapping } from "../utils/stats.utils";
+import { useLoadUserData } from "../hooks/user.hooks";
 
 interface StatsModalProps {
-  statsBarHeights: StatsBarHeightsState;
+  playlistId?: string;
+  statsBarHeights: NumberToNumberMapping;
   statsCorrectString: string;
   statsCorrectPercentageString: string;
 }
 
 const StatsModal: React.FC<StatsModalProps> = ({
+  playlistId,
   statsBarHeights,
   statsCorrectString,
   statsCorrectPercentageString,
 }) => {
-  const [scores, setScores] = useState<{ [key: number]: number }>({});
-
+  const [scores, setScores] = useState<NumberToNumberMapping>({});
   const { main, custom } = useLoadUserData();
 
   useEffect(() => {
-    const queryParams = queryString.parse(location.search);
-    const playlistId = queryParams.playlist;
     const scores = playlistId
-      ? countScores(custom[playlistId as string])
+      ? countScores(custom[playlistId])
       : countScores(main);
     setScores(scores);
-  }, [custom, main]);
+  }, [custom, main, playlistId]);
 
   return (
     <div className="flex flex-col items-center">
