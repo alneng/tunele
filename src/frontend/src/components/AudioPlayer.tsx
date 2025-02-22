@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TrackGuess } from "../types";
+import { CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
 interface AudioPlayerProps {
   audioSrc: string;
@@ -82,41 +83,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
           className="text-white my-4"
           title="Play"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="56"
-            height="56"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="feather feather-play-circle"
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <polygon points="10 8 16 12 10 16 10 8"></polygon>
-          </svg>
+          <CirclePlayIcon size={56} strokeWidth={1} />
         </button>
       )}
       {audioRef.current && !audioRef.current.paused && (
         <button onClick={handlePause} className="text-white my-4" title="Pause">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="56"
-            height="56"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="feather feather-pause-circle"
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="10" y1="15" x2="10" y2="9"></line>
-            <line x1="14" y1="15" x2="14" y2="9"></line>
-          </svg>
+          <CirclePauseIcon size={56} strokeWidth={1} />
         </button>
       )}
     </div>

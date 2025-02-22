@@ -1,5 +1,6 @@
 import React from "react";
 import { useUser } from "../hooks/user.hooks";
+import { CloudDownloadIcon, CloudUploadIcon } from "lucide-react";
 
 const UserAccountModal: React.FC = () => {
   const {
@@ -65,22 +66,7 @@ const UserAccountModal: React.FC = () => {
                 type="button"
                 className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-download-cloud"
-                >
-                  <polyline points="8 17 12 21 16 17"></polyline>
-                  <line x1="12" y1="12" x2="12" y2="21"></line>
-                  <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path>
-                </svg>
+                <CloudDownloadIcon />
                 <span className="ml-2">Pull saved data</span>
               </button>
             </div>
@@ -90,23 +76,7 @@ const UserAccountModal: React.FC = () => {
                 type="button"
                 className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-upload-cloud"
-                >
-                  <polyline points="16 16 12 12 8 16"></polyline>
-                  <line x1="12" y1="12" x2="12" y2="21"></line>
-                  <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
-                  <polyline points="16 16 12 12 8 16"></polyline>
-                </svg>
+                <CloudUploadIcon />
                 <span className="ml-2">Save data to cloud</span>
               </button>
             </div>

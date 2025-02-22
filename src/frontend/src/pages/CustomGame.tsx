@@ -147,7 +147,7 @@ const CustomGame: React.FC = () => {
         setUAModel={setUserAccountModalState}
       />
       {isLoading && <Loader />}
-      {error && <ErrorMessage message={error} />}
+      {error && <ErrorMessage error={error} />}
       {!error && !isLoading && !validPlaylist && <PlaylistSearch />}
       {!error && !gameFinished && trackPreview && validPlaylist && (
         <div id="game">

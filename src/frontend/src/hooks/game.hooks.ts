@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { GameData } from "../types";
+import { AxiosApiError, GameChoices, GameData, GameTrack } from "../types";
 import { useEffect, useState } from "react";
 import {
   fetchCustomGame,
@@ -23,9 +23,10 @@ export const useFetchMainPlaylist = () => {
     tracklist: [],
   });
 
-  const mainGameQuery = useQuery({
+  const mainGameQuery = useQuery<GameTrack, AxiosApiError>({
     queryKey: ["main", "track"],
     queryFn: fetchMainGame,
+    retryDelay: 500,
   });
 
   /**
@@ -49,7 +50,7 @@ export const useFetchMainPlaylist = () => {
     }
   }, [mainGameQuery.data, setData]);
 
-  const mainGameChoicesQuery = useQuery({
+  const mainGameChoicesQuery = useQuery<GameChoices, AxiosApiError>({
     queryKey: ["main", "choices"],
     queryFn: fetchMainGameChoices,
   });
@@ -98,9 +99,10 @@ export const useFetchCustomPlaylist = (
     tracklist: [],
   });
 
-  const customGameQuery = useQuery({
+  const customGameQuery = useQuery<GameTrack | null, AxiosApiError>({
     queryKey: ["custom", "playlist", playlist, "track"],
     queryFn: async () => fetchCustomGame({ playlist, r: r === "1" }),
+    retryDelay: 500,
   });
 
   /**
@@ -126,7 +128,7 @@ export const useFetchCustomPlaylist = (
     }
   }, [customGameQuery.data, playlist, setData]);
 
-  const customGameChoicesQuery = useQuery({
+  const customGameChoicesQuery = useQuery<GameChoices | null, AxiosApiError>({
     queryKey: ["custom", "playlist", playlist, "choices"],
     queryFn: async () => fetchCustomGameChoices(playlist),
   });

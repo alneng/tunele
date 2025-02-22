@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FormattedTrack, Track, TrackGuess } from "../types";
+import { SearchIcon, XIcon } from "lucide-react";
 
 interface SearchBarProps {
   userGuesses: TrackGuess[];
@@ -16,36 +17,36 @@ const SearchBar: React.FC<SearchBarProps> = ({
   artists,
   allSongs,
 }) => {
-  const [inputValue, setInputValue] = useState<FormattedTrack>({
+  const [answer, setAnswer] = useState<FormattedTrack>({
     formattedString: "",
     song: "",
     artists: [],
   });
   const [possibleAnswers, setPossibleAnswers] = useState<FormattedTrack[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setInputValue({
+    setAnswer({
       formattedString: event.target.value,
       song: "",
       artists: [],
     });
     setPossibleAnswers([]);
-    setIsButtonDisabled(true);
+    setIsSubmitDisabled(true);
 
     if (event.target.value.length >= 2) {
       const matchingAnswers: FormattedTrack[] = [];
-      const inputValueLowercase = event.target.value.toLowerCase();
+      const answer = event.target.value.toLowerCase();
       const addedToAnswersMap: { [key: string]: boolean } = {};
 
       for (const element of allSongs) {
         const answerString = `${element.song} - ${element.artists.join(", ")}`;
         for (const artist of element.artists) {
           if (
-            (artist.toLowerCase().includes(inputValueLowercase) ||
-              element.song.toLowerCase().includes(inputValueLowercase)) &&
+            (artist.toLowerCase().includes(answer) ||
+              element.song.toLowerCase().includes(answer)) &&
             !addedToAnswersMap[answerString]
           ) {
             addedToAnswersMap[answerString] = true;
@@ -63,35 +64,34 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleClearAnswer = () => {
-    setInputValue({
+    setAnswer({
       formattedString: "",
       song: "",
       artists: [],
     });
     setPossibleAnswers([]);
-    setIsButtonDisabled(true);
+    setIsSubmitDisabled(true);
   };
 
   const handleListClick = (index: number) => {
-    setInputValue({
+    setAnswer({
       formattedString: possibleAnswers[index].formattedString,
       song: possibleAnswers[index].song,
       artists: possibleAnswers[index].artists,
     });
     setPossibleAnswers([]);
-    setIsButtonDisabled(false);
+    setIsSubmitDisabled(false);
   };
 
   const handleAddGuess = () => {
-    setIsButtonDisabled(true);
+    setIsSubmitDisabled(true);
     const isCorrectArtist = artists.some((correctArtist) =>
-      inputValue.artists.includes(correctArtist)
+      answer.artists.includes(correctArtist)
     );
 
     const guess = {
-      answer: inputValue,
-      isCorrect:
-        inputValue.formattedString === `${song} - ${artists.join(", ")}`,
+      answer,
+      isCorrect: answer.formattedString === `${song} - ${artists.join(", ")}`,
       isSkipped: false,
       isArtist: isCorrectArtist,
     };
@@ -99,7 +99,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const newGuesses = [...userGuesses, guess];
     onUpdateGuesses(newGuesses);
 
-    setInputValue({
+    setAnswer({
       formattedString: "",
       song: "",
       artists: [],
@@ -107,7 +107,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleSkip = () => {
-    setIsButtonDisabled(true);
+    setIsSubmitDisabled(true);
     const guess = {
       answer: {
         formattedString: "",
@@ -120,7 +120,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     };
     const newGuesses = [...userGuesses, guess];
     onUpdateGuesses(newGuesses);
-    setInputValue({
+    setAnswer({
       formattedString: "",
       song: "",
       artists: [],
@@ -130,43 +130,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className="relative w-full flex flex-col items-center justify-center">
       <div className="relative flex items-center md:w-612px w-4/5">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="absolute left-3 text-gray-500"
-        >
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        {inputValue.formattedString && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        {answer.formattedString && (
+          <XIcon
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
             onClick={handleClearAnswer}
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          />
         )}
         <input
           className="w-full p-2 pl-10 bg-[#131213] border-2 border-gray-800 text-white rounded-none focus:outline-none"
           type="text"
-          value={inputValue.formattedString}
+          value={answer.formattedString}
           onChange={handleInputChange}
           placeholder="Enter a song title or artist..."
         />
@@ -195,11 +169,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </button>
         <button
           className={`w-28 p-4 rounded-full text-center text-black py-2 focus:outline-none ${
-            isButtonDisabled
+            isSubmitDisabled
               ? "bg-[#18b853]"
               : "bg-[#1fd660] hover:bg-[#18b853]"
           }`}
-          disabled={isButtonDisabled}
+          disabled={isSubmitDisabled}
           onClick={handleAddGuess}
           title="Submit"
         >

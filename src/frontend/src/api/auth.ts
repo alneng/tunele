@@ -20,7 +20,7 @@ export const refreshUserSession = async () => {
   await api.post("/auth/refresh-token");
 };
 
-type AccessTokenResponse = {
+export type AccessTokenResponse = {
   id: string;
   given_name: string;
 };

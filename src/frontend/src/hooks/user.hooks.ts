@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { logout, verifyAccessToken } from "../api/auth";
+import { AccessTokenResponse, logout, verifyAccessToken } from "../api/auth";
 import { toastError, toastSuccess } from "../utils/toast.utils";
 import { fetchUserData, syncUserData } from "../api/user";
 import { fetchSavedData, mergeGameData } from "../utils/data.utils";
 import { useQuery } from "@tanstack/react-query";
-import { SavedGameData } from "../types";
+import { AxiosApiError, SavedGameData } from "../types";
 
 const googleSsoParams = {
   redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
@@ -21,7 +21,7 @@ export const useUser = () => {
   const [username, setUsername] = useState<string>("");
   const [id, setId] = useState<string>("");
 
-  const userQuery = useQuery({
+  const userQuery = useQuery<AccessTokenResponse, AxiosApiError>({
     queryKey: ["user", id],
     queryFn: verifyAccessToken,
   });

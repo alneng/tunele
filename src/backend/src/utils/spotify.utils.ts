@@ -55,13 +55,9 @@ export async function fetchSongsFromPlaylist(
     return data;
   } catch (error) {
     const errorData = error.response.data;
-    if (
-      errorData.error.status === 404 &&
-      errorData.error.message === "Not found."
-    ) {
+    if (errorData.error.status === 404) {
       throw new HttpException(404, "Playlist not found");
     }
-
     throw new HttpException(500, "Failed to fetch playlist tracks");
   }
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { logout, refreshUserSession } from "../api/auth";
+import { AxiosApiError } from "../types";
 
 export const API_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
@@ -14,7 +15,7 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (error) => {
+  async (error: AxiosApiError) => {
     if (error.response) {
       const { status, data } = error.response;
       if ((status === 401 || status === 500) && data?.retry) {

@@ -130,7 +130,7 @@ const BaseGame: React.FC = () => {
         setUAModel={setUserAccountModalState}
       />
       {isLoading && <Loader />}
-      {error && <ErrorMessage message={error} />}
+      {error && <ErrorMessage error={error} />}
       {!error && !gameFinished && trackPreview && (
         <div id="game">
           <Game
