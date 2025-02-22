@@ -24,6 +24,7 @@ export const useUser = () => {
   const userQuery = useQuery<AccessTokenResponse, AxiosApiError>({
     queryKey: ["user", id],
     queryFn: verifyAccessToken,
+    retry: false,
   });
 
   /**
@@ -61,7 +62,7 @@ export const useUser = () => {
    */
   const handleLogout = async () => {
     await logout();
-    setSignedIn(false);
+    window.location.reload();
   };
 
   /**
