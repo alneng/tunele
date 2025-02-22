@@ -1,6 +1,7 @@
 services:
-  tunele:
+  tunele-api:
     container_name: tunele
+    image: tunele-api
     env_file: ".env"
     build:
       context: ../../
