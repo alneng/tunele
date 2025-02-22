@@ -1,13 +1,15 @@
 import express from "express";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import apiRouter from "./api";
 import { errorHandler } from "./utils/errors.utils";
 import { CORS_OPTIONS, PORT } from "./config";
+import apiRouter from "./api";
 
 const app = express();
 
 // Middlewares
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
