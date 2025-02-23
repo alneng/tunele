@@ -110,7 +110,7 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             # Change to project directory
-            cd ~/${{ env.IMAGE_NAME }}
+            cd /home/${{ secrets.SERVER_USER }}/${{ env.IMAGE_NAME }}
 
             # Set log directory based on environment
             if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
