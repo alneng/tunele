@@ -1,3 +1,5 @@
+export const NODE_ENV = process.env.NODE_ENV || "development";
+
 // Throw if any required environment variables are missing
 if (!process.env.CORS_OPTIONS)
   throw new Error("Missing environment variable: CORS_OPTIONS");

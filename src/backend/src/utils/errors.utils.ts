@@ -21,6 +21,12 @@ export class HttpException extends Error {
   }
 }
 
+export class RateLimitException extends HttpException {
+  constructor() {
+    super(429, "Too many requests, please try again later");
+  }
+}
+
 export class EmptyPlaylistException extends HttpException {
   constructor() {
     super(
