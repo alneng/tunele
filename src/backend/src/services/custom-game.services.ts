@@ -6,13 +6,11 @@ import {
   chooseNewGameTrack,
 } from "../utils/custom-game.utils";
 import {
-  clientAllTracksTransformer,
-  clientGameTrackTransformer,
+  tracksTransformer,
+  gameTrackTransformer,
 } from "../transformers/track.transformers";
-
-import CustomPlaylistSchema from "../types/CustomPlaylistSchema";
-import ClientGameTrack from "../types/ClientGameTrack";
-import ClientAllTracks from "../types/ClientAllTracks";
+import { FirebaseCustomPlaylist, GameTrack, Track } from "../types";
+import { log } from "../utils/logger.utils";
 
 export default class CustomGameService {
   /**
@@ -27,8 +25,8 @@ export default class CustomGameService {
     playlistId: string,
     localDate: string,
     refreshFlag: boolean
-  ): Promise<ClientGameTrack> {
-    let playlistObject: CustomPlaylistSchema | null = await db.getDocument(
+  ): Promise<GameTrack> {
+    let playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
       "customPlaylists",
       playlistId
     );
@@ -60,7 +58,7 @@ export default class CustomGameService {
       localDate
     );
 
-    return clientGameTrackTransformer(newGameTrack);
+    return gameTrackTransformer(newGameTrack);
   }
 
   /**
@@ -69,14 +67,14 @@ export default class CustomGameService {
    * @param playlistId the id of the custom playlist
    * @returns List of song objects {song: String, artists: String[]}
    */
-  static async getAllSongs(playlistId: string): Promise<ClientAllTracks[]> {
-    const allTracks: CustomPlaylistSchema | null = await db.getDocument(
+  static async getAllSongs(playlistId: string): Promise<Track[]> {
+    const allTracks: FirebaseCustomPlaylist | null = await db.getDocument(
       "customPlaylists",
       playlistId
     );
 
     if (!allTracks) return [];
-    return clientAllTracksTransformer(allTracks.tracklist);
+    return tracksTransformer(allTracks.tracklist);
   }
 
   /**
@@ -89,12 +87,13 @@ export default class CustomGameService {
    * @returns status of post
    */
   static async postStats(playlistId: string, localDate: string, score: number) {
-    try {
-      const playlistObject: CustomPlaylistSchema | null = await db.getDocument(
-        "customPlaylists",
-        playlistId
-      );
+    const playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
+      "customPlaylists",
+      playlistId
+    );
+    if (!playlistObject) throw Error();
 
+    try {
       let foundTrack = false;
       for (const track of playlistObject.gameTracks) {
         if (track.date === localDate) {
@@ -112,6 +111,14 @@ export default class CustomGameService {
       }
       if (!foundTrack) throw Error();
     } catch (error) {
+      log.error("Failed to post stats", {
+        meta: {
+          error,
+          stack: error instanceof Error ? error.stack : undefined,
+          method: CustomGameService.postStats.name,
+          data: { playlistId, localDate, score, playlistObject },
+        },
+      });
       throw new HttpException(400, "Failed to post stats");
     }
   }

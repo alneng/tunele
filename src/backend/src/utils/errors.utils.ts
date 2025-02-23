@@ -1,4 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
+import { log } from "./logger.utils";
 
 /**
  * Custom Error type that has a status code and a message.
@@ -18,6 +19,21 @@ export class HttpException extends Error {
   constructor(status: number, message: string) {
     super(message);
     this.status = status;
+  }
+}
+
+export class RateLimitException extends HttpException {
+  constructor() {
+    super(429, "Too many requests, please try again later");
+  }
+}
+
+export class EmptyPlaylistException extends HttpException {
+  constructor() {
+    super(
+      400,
+      "Failed to use playlist: Playlist is empty or has no usable songs"
+    );
   }
 }
 
@@ -49,7 +65,7 @@ export class AccessDeniedException extends HttpException {
  */
 export const errorHandler: ErrorRequestHandler = (
   error,
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -66,6 +82,14 @@ export const errorHandler: ErrorRequestHandler = (
       .status(error.status)
       .json({ ...additionalErrorInfo, message: error.message });
   } else {
+    log.error("errorHandler encountered unexpected error", {
+      meta: {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        path: req.path,
+        method: req.method,
+      },
+    });
     res.status(500).json({ message: JSON.stringify(error) });
     throw error;
   }

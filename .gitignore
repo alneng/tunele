@@ -3,9 +3,11 @@ node_modules/
 
 # production
 dist/
+logs/
 
 # misc
 tools/
 .env
 .env.*
+!.env.example
 .DS_Store

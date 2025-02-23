@@ -1,9 +1,8 @@
 import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
-import { AccessDeniedException } from "../utils/errors.utils";
-
-const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
-const OAUTH2_CLIENT = new OAuth2Client(OAUTH_CLIENT_ID);
+import { AccessDeniedException, HttpException } from "../utils/errors.utils";
+import { GOOGLE_OAUTH_CONFIG } from "../config";
+import { log } from "./logger.utils";
 
 /**
  * Verifies an access token
@@ -36,18 +35,27 @@ export async function verifyAccessToken(accessToken: string) {
  * @throws AccessDeniedException if bad id token
  */
 export async function verifyIdToken(idToken: string) {
+  const OAUTH2_CLIENT = new OAuth2Client(GOOGLE_OAUTH_CONFIG.client_id);
   try {
     const ticket = await OAUTH2_CLIENT.verifyIdToken({
       idToken: idToken,
-      audience: OAUTH_CLIENT_ID,
+      audience: GOOGLE_OAUTH_CONFIG.client_id,
     });
     const payload = ticket.getPayload();
 
-    if (payload.aud !== OAUTH_CLIENT_ID)
+    if (!payload || payload.aud !== GOOGLE_OAUTH_CONFIG.client_id)
       throw new AccessDeniedException(401, "Bad ID token", true);
   } catch (error) {
-    if (error?.status == 401)
-      throw new AccessDeniedException(401, "Bad ID token", true);
+    if (error instanceof HttpException && error.status == 401) throw error; // rethrow if it's a 401 error
+
+    log.error("Failed to verify id token", {
+      meta: {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        method: verifyIdToken.name,
+        data: { idToken },
+      },
+    });
     throw new AccessDeniedException(500, "Could not verify id token", true);
   }
 }

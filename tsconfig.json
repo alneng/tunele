@@ -1,9 +1,6 @@
 {
   "files": [],
-  "references": [
-    { "path": "./src/backend" },
-    { "path": "./src/client" }
-  ],
+  "references": [{ "path": "./src/backend" }, { "path": "./src/frontend" }],
   "compilerOptions": {
     "skipLibCheck": true,
     "noEmit": true

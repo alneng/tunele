@@ -1,6 +1,7 @@
 services:
-  tunele:
+  tunele-api:
     container_name: tunele
+    image: tunele-api
     env_file: ".env"
     build:
       context: ../../
@@ -8,3 +9,11 @@ services:
     ports:
       - "7600:7600"
     restart: unless-stopped
+    networks:
+      - tunele-network
+    volumes:
+      - ./logs:/app/logs
+
+networks:
+  tunele-network:
+    driver: bridge

@@ -1,26 +1,29 @@
-import express, { Request, Response, NextFunction } from "express";
-import bodyParser from "body-parser";
+import express from "express";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import apiRouter from "./api";
+import { createRateLimiter } from "./utils/middleware";
+import { httpRequestLogger, log } from "./utils/logger.utils";
 import { errorHandler } from "./utils/errors.utils";
+import { CORS_OPTIONS, PORT } from "./config";
+import apiRouter from "./api";
 
 const app = express();
-const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
 
-app.use(bodyParser.json());
+// Middlewares
+app.use(helmet());
+app.use(express.json());
 app.use(cookieParser());
+app.use(cors(CORS_OPTIONS));
+app.use(createRateLimiter());
+app.use(httpRequestLogger);
 
-app.use(cors(JSON.parse(process.env.CORS_OPTIONS)));
-
+// Routes
 app.use("/api", apiRouter);
 
-app.get("/monitor", (_req: Request, res: Response, _next: NextFunction) => {
-  return res.status(200).json({ success: "API is up and running" });
-});
-
+// Error handler
 app.use(errorHandler);
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`API running at http://localhost:${PORT}`);
+  log.info(`API running at http://localhost:${PORT}`);
 });

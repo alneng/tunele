@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { verifyAccessToken, verifyIdToken } from "./tokens.utils";
-
-const COOKIE_SETTINGS = JSON.parse(process.env.COOKIE_SETTINGS);
+import { COOKIE_SETTINGS } from "../config";
 
 /**
  * Creates a cookie
