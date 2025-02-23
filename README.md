@@ -41,3 +41,28 @@ These services are **required** for Tunele to work properly.
 2. Download dependencies - `yarn install`
 3. Start the frontend and backend - `yarn start`
 4. Access the frontend - http://localhost:5173
+
+### Starting Tunele backend with Docker
+
+Building the image
+
+```bash
+cd src/backend
+docker compose build # Creates image tunele-api:latest
+```
+
+Running the image
+
+```bash
+# With Docker Compose
+
+cd src/backend
+docker compose up # Has the correct context (log directory, env file)
+
+# or Manually run the image - configure log directory and env file as fit
+
+# Mac/Unix
+docker run -v $(pwd)/logs:/app/logs --env-file .env -p 7600:7600 --name tunele tunele-api:latest
+# Windows
+docker run -v ${pwd}/logs:/app/logs --env-file .env -p 7600:7600 --name tunele tunele-api:latest
+```
