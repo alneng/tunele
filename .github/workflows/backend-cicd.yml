@@ -21,6 +21,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-api
+  CONTAINER_NAME: tunele-api
 
 jobs:
   build:
@@ -87,20 +88,20 @@ jobs:
         id: deploy-vars
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            echo "container_name=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+            echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
             echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
             echo "image_tag=latest" >> $GITHUB_OUTPUT
           # elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-          #   echo "container_name=${{ env.IMAGE_NAME }}-preview" >> $GITHUB_OUTPUT
+          #   echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
           #   echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
           #   echo "image_tag=preview" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             if [[ "${{ inputs.environment }}" == "production" ]]; then
-              echo "container_name=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+              echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
               echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
               echo "image_tag=latest" >> $GITHUB_OUTPUT
             else
-              echo "container_name=${{ env.IMAGE_NAME }}-preview" >> $GITHUB_OUTPUT
+              echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
               echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
               echo "image_tag=preview" >> $GITHUB_OUTPUT
             fi
@@ -110,7 +111,7 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             # Change to project directory
-            PROJECT_DIR="/home/${{ secrets.SERVER_USER }}/tunele-api"
+            PROJECT_DIR="/home/${{ secrets.SERVER_USER }}/${{ env.CONTAINER_NAME }}"
             cd "$PROJECT_DIR"
 
             # Set log directory based on environment
