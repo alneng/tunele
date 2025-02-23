@@ -51,7 +51,7 @@ export default class AuthService {
       log.error("Failed to get auth with code", {
         meta: {
           error,
-          stack: error.stack,
+          stack: error instanceof Error ? error.stack : undefined,
           method: AuthService.getAuthWithCode.name,
           data: { code, scope },
         },
@@ -92,7 +92,7 @@ export default class AuthService {
       log.error("Failed to get auth with refresh token", {
         meta: {
           error,
-          stack: error.stack,
+          stack: error instanceof Error ? error.stack : undefined,
           method: AuthService.getAuthWithRefreshToken.name,
           data: { refreshToken },
         },

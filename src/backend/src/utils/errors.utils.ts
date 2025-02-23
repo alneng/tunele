@@ -85,7 +85,7 @@ export const errorHandler: ErrorRequestHandler = (
     log.error("errorHandler encountered unexpected error", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         path: req.path,
         method: req.method,
       },

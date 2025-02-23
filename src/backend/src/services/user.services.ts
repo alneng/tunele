@@ -69,7 +69,7 @@ export default class UserService {
 
     const savedData: { email: string; data: SavedGameData } | null =
       await db.getDocument("users", id);
-    let gameData: SavedGameData = savedData?.data;
+    let gameData: SavedGameData | undefined = savedData?.data;
     if (!gameData) {
       gameData = { main: [], custom: {} };
       await db.createDocument("users", id, {

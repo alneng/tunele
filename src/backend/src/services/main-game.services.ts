@@ -10,9 +10,11 @@ import {
   FirebaseMainPlaylist,
   FirebaseTrack,
   GameTrack,
+  MainGameSnapshot,
   Track,
 } from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
+import { log } from "../utils/logger.utils";
 
 export default class MainGameService {
   /**
@@ -38,8 +40,21 @@ export default class MainGameService {
       };
     }
 
-    let mostRecentTracksSnapshot: { id: string; data: FirebaseMainPlaylist } =
+    let mostRecentTracksSnapshot: MainGameSnapshot | null =
       await db.getLastDocument("allTracks");
+
+    if (!mostRecentTracksSnapshot) {
+      log.info("Could not find a game snapshot", {
+        meta: {
+          detail:
+            "mostRecentTracksSnapshot is null. Has the database been seeded?",
+          method: MainGameService.getDailySong.name,
+          data: { localDate },
+        },
+      });
+      throw new HttpException(404, "Could not find a game snapshot");
+    }
+
     let mostRecentTracksTracklist: FirebaseTrack[] =
       mostRecentTracksSnapshot.data.tracklist;
 
@@ -49,7 +64,9 @@ export default class MainGameService {
     );
     if (unplayedTracks.length === 0) {
       await resetAllMainGameTracks();
-      mostRecentTracksSnapshot = await db.getLastDocument("allTracks");
+      mostRecentTracksSnapshot = (await db.getLastDocument(
+        "allTracks"
+      )) as MainGameSnapshot;
       mostRecentTracksTracklist = mostRecentTracksSnapshot.data.tracklist;
       unplayedTracks = mostRecentTracksSnapshot.data.tracklist;
     }
@@ -64,8 +81,10 @@ export default class MainGameService {
     );
     mostRecentTracksTracklist[chosenTrackIndex].playedBefore = true;
 
-    const previousRecentGameTrack: { id: string; data: FirebaseGameTrack } =
-      await db.getLastDocument("gameTracks");
+    const previousRecentGameTrack: {
+      id: string;
+      data: FirebaseGameTrack;
+    } | null = await db.getLastDocument("gameTracks");
     const gameId = previousRecentGameTrack
       ? previousRecentGameTrack.data.id + 1
       : 1;
@@ -115,11 +134,20 @@ export default class MainGameService {
    * @returns List of song objects {song: String, artists: String[]}
    */
   static async getAllSongs(): Promise<Track[]> {
-    const allTracks: { id: string; data: FirebaseMainPlaylist } =
-      await db.getLastDocument("allTracks");
+    const snapshot: MainGameSnapshot | null = await db.getLastDocument(
+      "allTracks"
+    );
 
-    if (!allTracks) return [];
-    return tracksTransformer(allTracks.data.tracklist);
+    if (!snapshot) {
+      log.info("Could not find a game snapshot", {
+        meta: {
+          detail: "snapshot is null. Has the database been seeded?",
+          method: MainGameService.getDailySong.name,
+        },
+      });
+      return [];
+    }
+    return tracksTransformer(snapshot.data.tracklist);
   }
 
   /**
@@ -142,7 +170,15 @@ export default class MainGameService {
         await db.updateDocument("gameTracks", localDate, todaysGameTrack);
         return { success: true };
       } else throw Error();
-    } catch (err) {
+    } catch (error) {
+      log.error("Failed to post stats", {
+        meta: {
+          error,
+          stack: error instanceof Error ? error.stack : undefined,
+          method: MainGameService.postStats.name,
+          data: { localDate, score },
+        },
+      });
       throw new HttpException(400, "Failed to post stats");
     }
   }

@@ -30,7 +30,7 @@ async function fetchAccessToken(): Promise<string> {
     log.error("Failed to fetch access token", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         method: fetchAccessToken.name,
       },
     });
@@ -66,15 +66,16 @@ export async function fetchSongsFromPlaylist(
     }
     return data;
   } catch (error) {
-    const errorData = error.response.data;
-    if (errorData.error.status === 404) {
-      throw new HttpException(404, "Playlist not found");
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data;
+      if (errorData.error?.status === 404)
+        throw new HttpException(404, "Playlist not found");
     }
 
     log.error("Failed to fetch songs from playlist", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         method: fetchSongsFromPlaylist.name,
         data: { playlistId },
       },
@@ -112,7 +113,7 @@ async function fetchTracks(
     log.error("Failed to fetch tracks", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         method: fetchTracks.name,
         data: { nextUrl },
       },

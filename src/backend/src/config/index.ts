@@ -8,6 +8,10 @@ if (NODE_ENV !== "test") {
     throw new Error("Missing environment variable: COOKIE_SETTINGS");
   if (!process.env.SPOTIFY_CLIENT_KEY)
     throw new Error("Missing environment variable: SPOTIFY_CLIENT_KEY");
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
+    throw new Error(
+      "Missing environment variable: FIREBASE_SERVICE_ACCOUNT_KEY"
+    );
 }
 
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
@@ -17,6 +21,9 @@ export const COOKIE_SETTINGS = JSON.parse(process.env.COOKIE_SETTINGS || "{}");
 
 export const SPOTIFY_CLIENT_KEY = process.env.SPOTIFY_CLIENT_KEY;
 
+/**
+ * Must be defined if NODE_ENV is not "test"
+ */
 export const FIREBASE_SERVICE_ACCOUNT_KEY =
   process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 

@@ -1,16 +1,17 @@
 import { DateTime } from "luxon";
 import crypto from "crypto";
 import db from "./firebase.utils";
-import { FirebaseMainPlaylist } from "../types";
+import { MainGameSnapshot } from "../types";
 
 /**
  * Resets all of the tracks in the main game to unplayed.
+ * If there is no snapshot, it does nothing.
  */
 export const resetAllMainGameTracks = async () => {
-  const playlistObject: {
-    id: string;
-    data: FirebaseMainPlaylist;
-  } = await db.getLastDocument("allTracks");
+  const playlistObject: MainGameSnapshot | null = await db.getLastDocument(
+    "allTracks"
+  );
+  if (!playlistObject) return;
 
   const oldSongs = playlistObject.data.tracklist;
   const oldSongsReset = oldSongs.map((song) => {

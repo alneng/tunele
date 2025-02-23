@@ -1,15 +1,15 @@
 import admin from "firebase-admin";
-import { FIREBASE_SERVICE_ACCOUNT_KEY } from "../config";
+import { FIREBASE_SERVICE_ACCOUNT_KEY, NODE_ENV } from "../config";
 
 class FirestoreSDK {
-  private db: admin.firestore.Firestore;
+  private db!: admin.firestore.Firestore;
 
   constructor() {
     // For running tests, if there are no credentials, skip creating the firestore instance, as it will be mocked by jest
-    if (FIREBASE_SERVICE_ACCOUNT_KEY) {
+    if (NODE_ENV !== "test") {
       admin.initializeApp({
         credential: admin.credential.cert(
-          JSON.parse(FIREBASE_SERVICE_ACCOUNT_KEY)
+          JSON.parse(FIREBASE_SERVICE_ACCOUNT_KEY!)
         ),
       });
       this.db = admin.firestore();

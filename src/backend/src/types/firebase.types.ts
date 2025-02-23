@@ -29,3 +29,5 @@ export type FirebaseCustomPlaylist = {
   updatedAt: string;
   gameTracks: FirebaseGameTrack[];
 } & FirebaseMainPlaylist;
+
+export type MainGameSnapshot = { id: string; data: FirebaseMainPlaylist };

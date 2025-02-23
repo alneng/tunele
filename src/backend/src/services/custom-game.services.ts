@@ -10,6 +10,7 @@ import {
   gameTrackTransformer,
 } from "../transformers/track.transformers";
 import { FirebaseCustomPlaylist, GameTrack, Track } from "../types";
+import { log } from "../utils/logger.utils";
 
 export default class CustomGameService {
   /**
@@ -86,10 +87,13 @@ export default class CustomGameService {
    * @returns status of post
    */
   static async postStats(playlistId: string, localDate: string, score: number) {
-    try {
-      const playlistObject: FirebaseCustomPlaylist | null =
-        await db.getDocument("customPlaylists", playlistId);
+    const playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
+      "customPlaylists",
+      playlistId
+    );
+    if (!playlistObject) throw Error();
 
+    try {
       let foundTrack = false;
       for (const track of playlistObject.gameTracks) {
         if (track.date === localDate) {
@@ -107,6 +111,14 @@ export default class CustomGameService {
       }
       if (!foundTrack) throw Error();
     } catch (error) {
+      log.error("Failed to post stats", {
+        meta: {
+          error,
+          stack: error instanceof Error ? error.stack : undefined,
+          method: CustomGameService.postStats.name,
+          data: { playlistId, localDate, score, playlistObject },
+        },
+      });
       throw new HttpException(400, "Failed to post stats");
     }
   }

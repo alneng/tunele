@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import { randomBytes } from "crypto";
 import { DateTime } from "luxon";
 import db from "./firebase.utils";
 import { fetchSongsFromPlaylist } from "./spotify.utils";
@@ -23,7 +23,7 @@ import { log } from "./logger.utils";
  */
 export async function refreshPlaylist(
   playlistId: string,
-  playlistObject: FirebaseCustomPlaylist,
+  playlistObject: FirebaseCustomPlaylist | null,
   refreshFlag: boolean
 ): Promise<FirebaseCustomPlaylist> {
   const response = await fetchSongsFromPlaylist(playlistId);
@@ -36,7 +36,7 @@ export async function refreshPlaylist(
     createdAt: DateTime.now()
       .setZone("America/New_York")
       .toFormat("yyyy-MM-dd HH:mm:ss"),
-    snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
+    snapshotId: `snapshot-${randomBytes(4).toString("hex")}`,
     tracklist: sortedSongs,
     updatedAt: "",
     gameTracks: [],
@@ -61,7 +61,10 @@ export async function refreshPlaylist(
     );
   }
 
-  return await db.getDocument("customPlaylists", playlistId);
+  return (await db.getDocument(
+    "customPlaylists",
+    playlistId
+  )) as FirebaseCustomPlaylist;
 }
 
 /**
@@ -148,7 +151,7 @@ export async function chooseNewGameTrack(
     log.error("Failed to choose new game track", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         method: chooseNewGameTrack.name,
         data: { playlistId, playlistObject, localDate },
       },
@@ -167,7 +170,7 @@ export async function chooseNewGameTrack(
  */
 async function sortPlaylistResponse(
   response: SpotifyPlaylistObject,
-  pastGameTracks?: FirebaseGameTrack[]
+  pastGameTracks: FirebaseGameTrack[] = []
 ): Promise<FirebaseTrack[]> {
   try {
     return new Promise((resolve, _reject) => {
@@ -209,7 +212,7 @@ async function sortPlaylistResponse(
     log.error("Failed to sort playlist response", {
       meta: {
         error,
-        stack: error.stack,
+        stack: error instanceof Error ? error.stack : undefined,
         method: sortPlaylistResponse.name,
         data: { response, pastGameTracks },
       },
@@ -229,7 +232,6 @@ function checkIfInGameTracks(
   externalUrl: string,
   gameTracks: FirebaseGameTrack[]
 ) {
-  if (!gameTracks) return false;
   for (const track of gameTracks) {
     if (track.externalUrl === externalUrl) return true;
   }
