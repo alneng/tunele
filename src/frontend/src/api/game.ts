@@ -1,5 +1,5 @@
-import { GameChoices, GameTrack } from "../types";
-import api from "../utils/axios";
+import { GameChoices, GameTrack } from "@/types";
+import api from "@/utils/axios";
 
 /**
  * Fetch the main game track.

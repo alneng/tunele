@@ -1,4 +1,4 @@
-import api from "../utils/axios";
+import api from "@/utils/axios";
 
 /**
  * Exchanges an OAuth code for an access token.

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormattedTrack, Track, TrackGuess } from "../types";
+import { FormattedTrack, Track, TrackGuess } from "@/types";
 import { SearchIcon, XIcon } from "lucide-react";
 
 interface SearchBarProps {

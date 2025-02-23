@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
-import { useFetchMainPlaylist } from "../hooks/game.hooks";
-import { useFirstTimeUser, useLoadUserData } from "../hooks/user.hooks";
+import { useFetchMainPlaylist } from "@/hooks/game.hooks";
+import { useFirstTimeUser, useLoadUserData } from "@/hooks/user.hooks";
 import {
   calculateBarHeights,
   calculateStatsBottom,
   NumberToNumberMapping,
-} from "../utils/stats.utils";
-import { fetchSavedData, mergeGameData } from "../utils/data.utils";
-import { postMainGameStats } from "../api/game";
-import { GameResult, TrackGuess } from "../types";
-import NavBar from "../components/Navbar";
-import Game from "../components/Game";
-import GameConclusion from "../components/GameConclusion";
-import HelpModal from "../components/HelpModal";
-import StatsModal from "../components/StatsModal";
-import UserAccountModal from "../components/UserAccountModal";
-import Loader from "../components/Loader";
-import ErrorMessage from "../components/ErrorMessage";
+} from "@/utils/stats.utils";
+import { fetchSavedData, mergeGameData } from "@/utils/data.utils";
+import { postMainGameStats } from "@/api/game";
+import { GameResult, TrackGuess } from "@/types";
+import NavBar from "@/components/Navbar";
+import Game from "@/components/Game";
+import GameConclusion from "@/components/GameConclusion";
+import HelpModal from "@/components/HelpModal";
+import StatsModal from "@/components/StatsModal";
+import UserAccountModal from "@/components/UserAccountModal";
+import Loader from "@/components/Loader";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const BaseGame: React.FC = () => {
   const [userGuesses, setUserGuesses] = useState<TrackGuess[]>([]);

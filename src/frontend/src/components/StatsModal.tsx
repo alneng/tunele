@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { countScores, NumberToNumberMapping } from "../utils/stats.utils";
-import { useLoadUserData } from "../hooks/user.hooks";
+import { countScores, NumberToNumberMapping } from "@/utils/stats.utils";
+import { useLoadUserData } from "@/hooks/user.hooks";
 
 interface StatsModalProps {
   playlistId?: string;

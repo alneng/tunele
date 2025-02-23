@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AxiosApiError } from "../types";
+import { AxiosApiError } from "@/types";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface ErrorMessageProps {

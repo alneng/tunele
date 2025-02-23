@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useCountdown } from "../hooks/game.hooks";
-import { TrackGuess } from "../types";
+import { useCountdown } from "@/hooks/game.hooks";
+import { TrackGuess } from "@/types";
 import "./Countdown.css";
 
 interface GameConclusionProps {

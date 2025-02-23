@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TrackGuess } from "../types";
+import { TrackGuess } from "@/types";
 
 interface ListGroupProps {
   userGuesses: TrackGuess[];

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuthCallback } from "../hooks/auth.hooks";
+import { useAuthCallback } from "@/hooks/auth.hooks";
 
 const OAuthCallback: React.FC = () => {
   useAuthCallback();

@@ -1,5 +1,5 @@
 import React from "react";
-import { useUser } from "../hooks/user.hooks";
+import { useUser } from "@/hooks/user.hooks";
 import { CloudDownloadIcon, CloudUploadIcon } from "lucide-react";
 
 const UserAccountModal: React.FC = () => {

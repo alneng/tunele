@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getAuthWithCode } from "../api/auth";
+import { getAuthWithCode } from "@/api/auth";
 
 /**
  * Custom hook to handle OAuth callback

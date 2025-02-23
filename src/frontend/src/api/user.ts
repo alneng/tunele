@@ -1,5 +1,5 @@
-import { SavedGameData } from "../types";
-import api from "../utils/axios";
+import { SavedGameData } from "@/types";
+import api from "@/utils/axios";
 
 /**
  * Fetches user data from the API.

@@ -1,4 +1,4 @@
-import { GameResult, SavedGameData } from "../types";
+import { GameResult, SavedGameData } from "@/types";
 
 /**
  * Merges two data sources, giving priority to existing data

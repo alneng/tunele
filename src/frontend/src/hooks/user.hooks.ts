@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { AccessTokenResponse, logout, verifyAccessToken } from "../api/auth";
-import { toastError, toastSuccess } from "../utils/toast.utils";
-import { fetchUserData, syncUserData } from "../api/user";
-import { fetchSavedData, mergeGameData } from "../utils/data.utils";
+import { AccessTokenResponse, logout, verifyAccessToken } from "@/api/auth";
+import { toastError, toastSuccess } from "@/utils/toast.utils";
+import { fetchUserData, syncUserData } from "@/api/user";
+import { fetchSavedData, mergeGameData } from "@/utils/data.utils";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosApiError, SavedGameData } from "../types";
+import { AxiosApiError, SavedGameData } from "@/types";
 
 const googleSsoParams = {
   redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,

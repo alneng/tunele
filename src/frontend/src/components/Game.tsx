@@ -2,7 +2,7 @@ import React from "react";
 import ListGroup from "./ListGroup";
 import AudioPlayer from "./AudioPlayer";
 import SearchBar from "./SearchBar";
-import { Track, TrackGuess } from "../types";
+import { Track, TrackGuess } from "@/types";
 
 interface GameProps {
   song: string;

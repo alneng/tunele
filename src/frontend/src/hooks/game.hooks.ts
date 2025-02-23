@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { AxiosApiError, GameChoices, GameData, GameTrack } from "../types";
+import { AxiosApiError, GameChoices, GameData, GameTrack } from "@/types";
 import { useEffect, useState } from "react";
 import {
   fetchCustomGame,
   fetchCustomGameChoices,
   fetchMainGame,
   fetchMainGameChoices,
-} from "../api/game";
-import { initializeGameStorage } from "../utils/user.utils";
+} from "@/api/game";
+import { initializeGameStorage } from "@/utils/user.utils";
 
 /**
  * Fetch the main game track and choices.

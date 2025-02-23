@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { TrackGuess } from "../types";
+import { TrackGuess } from "@/types";
 import { CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
 interface AudioPlayerProps {
