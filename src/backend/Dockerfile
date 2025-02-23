@@ -2,7 +2,7 @@
 
 ##################### BUILD #####################
 
-FROM node:18 AS build
+FROM node:20-alpine AS build
 
 # Set the working directory
 WORKDIR /app
@@ -21,7 +21,7 @@ RUN yarn build
 
 ##################### PROD #####################
 
-FROM node:18
+FROM node:20-alpine AS prod
 
 # Set the working directory
 WORKDIR /app

@@ -1,12 +1,8 @@
 import axios from "axios";
-import querystring from "querystring";
-
+import qs from "qs";
 import { HttpException } from "./errors.utils";
-
-import {
-  SpotifyPlaylistObject,
-  PlaylistTrackObject,
-} from "../types/spotify-types";
+import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
+import { SPOTIFY_CLIENT_KEY } from "../config";
 
 /**
  * Produces a Spotify access token
@@ -20,10 +16,10 @@ async function fetchAccessToken(): Promise<string> {
   const options = {
     method: "POST",
     headers: {
-      Authorization: `Basic ${process.env.SPOTIFY_CLIENT_KEY}`,
+      Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    data: querystring.stringify(data),
+    data: qs.stringify(data),
     url: "https://accounts.spotify.com/api/token",
   };
   const response = await axios(options);
@@ -59,13 +55,9 @@ export async function fetchSongsFromPlaylist(
     return data;
   } catch (error) {
     const errorData = error.response.data;
-    if (
-      errorData.error.status === 404 &&
-      errorData.error.message === "Not found."
-    ) {
+    if (errorData.error.status === 404) {
       throw new HttpException(404, "Playlist not found");
     }
-
     throw new HttpException(500, "Failed to fetch playlist tracks");
   }
 }

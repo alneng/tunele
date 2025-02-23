@@ -1,11 +1,8 @@
-import ClientAllTracks from "../types/ClientAllTracks";
-import ClientGameTrack from "../types/ClientGameTrack";
-import GameTrackSchema from "../types/GameTrackSchema";
-import TrackSchema from "../types/TrackSchema";
+import { FirebaseGameTrack, FirebaseTrack, GameTrack, Track } from "../types";
 
-export const clientGameTrackTransformer = (
-  gameTrack: GameTrackSchema
-): ClientGameTrack => {
+export const gameTrackTransformer = (
+  gameTrack: FirebaseGameTrack
+): GameTrack => {
   return {
     song: gameTrack.song,
     artists: gameTrack.artists,
@@ -16,10 +13,8 @@ export const clientGameTrackTransformer = (
   };
 };
 
-export const clientAllTracksTransformer = (
-  tracks: TrackSchema[]
-): ClientAllTracks[] => {
-  const tracklist: ClientAllTracks[] = tracks.map(({ song, artists }) => ({
+export const tracksTransformer = (tracks: FirebaseTrack[]): Track[] => {
+  const tracklist: Track[] = tracks.map(({ song, artists }) => ({
     song,
     artists,
   }));

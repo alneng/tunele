@@ -1,0 +1,67 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - "src/backend/**"
+  workflow_dispatch: # Allows manual execution of the workflow
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - preview
+          - production
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}-api
+
+jobs:
+  backend-cicd:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Pushes to master are tagged as: latest, {sha}
+      # [Disabled] Pushes to develop are tagged as: preview, preview-{sha}
+      # Pushes from workflow_dispatch are tagged based on the environment selected
+      - name: Set image tags
+        id: tags
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+          # elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          #   echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:preview,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:preview-${{ github.sha }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ inputs.environment }}" == "production" ]]; then
+              echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+            else
+              echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:preview,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:preview-${{ github.sha }}" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./src/backend/Dockerfile
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}

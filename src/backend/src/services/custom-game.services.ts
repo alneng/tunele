@@ -6,13 +6,10 @@ import {
   chooseNewGameTrack,
 } from "../utils/custom-game.utils";
 import {
-  clientAllTracksTransformer,
-  clientGameTrackTransformer,
+  tracksTransformer,
+  gameTrackTransformer,
 } from "../transformers/track.transformers";
-
-import CustomPlaylistSchema from "../types/CustomPlaylistSchema";
-import ClientGameTrack from "../types/ClientGameTrack";
-import ClientAllTracks from "../types/ClientAllTracks";
+import { FirebaseCustomPlaylist, GameTrack, Track } from "../types";
 
 export default class CustomGameService {
   /**
@@ -27,8 +24,8 @@ export default class CustomGameService {
     playlistId: string,
     localDate: string,
     refreshFlag: boolean
-  ): Promise<ClientGameTrack> {
-    let playlistObject: CustomPlaylistSchema | null = await db.getDocument(
+  ): Promise<GameTrack> {
+    let playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
       "customPlaylists",
       playlistId
     );
@@ -60,7 +57,7 @@ export default class CustomGameService {
       localDate
     );
 
-    return clientGameTrackTransformer(newGameTrack);
+    return gameTrackTransformer(newGameTrack);
   }
 
   /**
@@ -69,14 +66,14 @@ export default class CustomGameService {
    * @param playlistId the id of the custom playlist
    * @returns List of song objects {song: String, artists: String[]}
    */
-  static async getAllSongs(playlistId: string): Promise<ClientAllTracks[]> {
-    const allTracks: CustomPlaylistSchema | null = await db.getDocument(
+  static async getAllSongs(playlistId: string): Promise<Track[]> {
+    const allTracks: FirebaseCustomPlaylist | null = await db.getDocument(
       "customPlaylists",
       playlistId
     );
 
     if (!allTracks) return [];
-    return clientAllTracksTransformer(allTracks.tracklist);
+    return tracksTransformer(allTracks.tracklist);
   }
 
   /**
@@ -90,10 +87,8 @@ export default class CustomGameService {
    */
   static async postStats(playlistId: string, localDate: string, score: number) {
     try {
-      const playlistObject: CustomPlaylistSchema | null = await db.getDocument(
-        "customPlaylists",
-        playlistId
-      );
+      const playlistObject: FirebaseCustomPlaylist | null =
+        await db.getDocument("customPlaylists", playlistId);
 
       let foundTrack = false;
       for (const track of playlistObject.gameTracks) {

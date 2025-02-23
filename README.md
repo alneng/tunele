@@ -15,56 +15,29 @@ These services are **required** for Tunele to work properly.
 ### Required Developer Tools
 
 1. Git - https://git-scm.com/downloads
-2. Node.js 18.x - https://nodejs.org/en/about/previous-releases
+2. Node.js 18+ - https://nodejs.org/en/about/previous-releases
 3. Yarn - `npm i -g yarn` (must be done after Node.js is installed)
+
+### Required Config Files for Running Tunele
+
+1. `src/backend/.env`
+
+   - Copy `src/backend/.env.example` to `src/backend/.env` and fill in the fields
+   - Values
+     - `SPOTIFY_CLIENT_KEY` - <base64 encoded `client_id:client_secret`>
+       - e.g. if your client_id is `abc` and client_secret is `123`, base64 encode the string `abc:123` and that is your key
+     - `FIREBASE_SERVICE_ACCOUNT_KEY` - JSON of Service Key with read/write access to Firebase project's Firestore Database (should be inline like the example)
+     - `GOOGLE_OAUTH_CLIENT_ID` - Google Cloud OAuth 2.0 client ID
+     - `GOOGLE_OAUTH_CLIENT_SECRET` - Google Cloud OAuth 2.0 client secret
+     - `REDIRECT_URI` - Google OAuth 2.0 redirect_uri
+
+2. `src/frontend/.env`
+
+   - Copy `src/frontend/.env.example` to `src/frontend/.env` and fill in the fields (`VITE_OAUTH_CLIENT_ID` for local development, same value as `GOOGLE_OAUTH_CLIENT_ID`)
 
 ### Starting Tunele Locally
 
 1. Clone the repository to the directory of your choice - `git clone https://github.com/alneng/tunele.git`
 2. Download dependencies - `yarn install`
-3. \*Start the client and backend - `yarn start`
-4. Access the client - http://localhost:5173
-
-\* Important files must be setup first; see below
-
-## Understanding the Project Structure
-
-### Frontend
-
-`src/client/` - Vite React-TS app
-
-`src/client/src/components/App.tsx` - Main App component of React app (route handler)
-
-### Backend
-
-`src/backend/src/` - Where the express app is located
-
-`src/backend/src/index.js` - Main server entryway
-
-`src/backend/src/api.js` - Where the API is located
-
-### Important Files for Running Tunele
-
-1. `src/client/src/components/modules/UserAccountModal.tsx`
-
-   - Edit `googleSsoParams` to your redirect_uri and ClientId
-
-2. `src/backend/.env.development` - Should contain the following environment variables, or `src/backend/.env` for production environments
-
-   - SPOTIFY_CLIENT_KEY - <base64 encoded `client_id:client_secret`>
-   - FIREBASE_SERVICE_ACCOUNT_KEY - JSON of Service Key with read/write access to Firebase project's Firestore Database
-   - GOOGLE_OAUTH_CLIENT_ID - Google Cloud OAuth 2.0 client ID
-   - GOOGLE_OAUTH_CLIENT_SECRET - Google Cloud OAuth 2.0 client secret
-   - REDIRECT_URI - Google OAuth 2.0 redirect_uri
-   - CORS_OPTIONS - Replace { origin } with the origin of the client app
-   - COOKIE_SETTINGS - Replace { "secure": false, "sameSite": "lax"} for local development / non HTTPS connections
-
-   ```env
-   SPOTIFY_CLIENT_KEY=""
-   FIREBASE_SERVICE_ACCOUNT_KEY='{}'
-   GOOGLE_OAUTH_CLIENT_ID=""
-   GOOGLE_OAUTH_CLIENT_SECRET=""
-   REDIRECT_URI="https://yourdomain.com/auth/callback"
-   CORS_OPTIONS='{"origin":"https://yourdomain.com","credentials":true,"methods":"GET,POST,OPTIONS"}'
-   COOKIE_SETTINGS='{"httpOnly":true,"secure":true,"sameSite":"none","path":"/"}'
-   ```
+3. Start the frontend and backend - `yarn start`
+4. Access the frontend - http://localhost:5173

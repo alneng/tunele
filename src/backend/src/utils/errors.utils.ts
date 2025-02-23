@@ -21,6 +21,21 @@ export class HttpException extends Error {
   }
 }
 
+export class RateLimitException extends HttpException {
+  constructor() {
+    super(429, "Too many requests, please try again later");
+  }
+}
+
+export class EmptyPlaylistException extends HttpException {
+  constructor() {
+    super(
+      400,
+      "Failed to use playlist: Playlist is empty or has no usable songs"
+    );
+  }
+}
+
 /**
  * Custom Error type that has a status code, message, and whether to retry request.
  * Extends HttpException

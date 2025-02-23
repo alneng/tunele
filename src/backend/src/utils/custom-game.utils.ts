@@ -2,15 +2,15 @@ import crypto from "crypto";
 import { DateTime } from "luxon";
 import db from "./firebase.utils";
 import { fetchSongsFromPlaylist } from "./spotify.utils";
-
-import CustomPlaylistSchema from "../types/CustomPlaylistSchema";
-import GameTrackSchema from "../types/GameTrackSchema";
 import {
   SpotifyPlaylistObject,
   PlaylistTrackObject,
   TrackObject,
-} from "../types/spotify-types";
-import TrackSchema from "../types/TrackSchema";
+  FirebaseTrack,
+  FirebaseCustomPlaylist,
+  FirebaseGameTrack,
+} from "../types";
+import { EmptyPlaylistException } from "./errors.utils";
 
 /**
  * Generates or refreshes a custom game playlist object
@@ -22,16 +22,16 @@ import TrackSchema from "../types/TrackSchema";
  */
 export async function refreshPlaylist(
   playlistId: string,
-  playlistObject: CustomPlaylistSchema,
+  playlistObject: FirebaseCustomPlaylist,
   refreshFlag: boolean
-): Promise<CustomPlaylistSchema> {
+): Promise<FirebaseCustomPlaylist> {
   const response = await fetchSongsFromPlaylist(playlistId);
-  const sortedSongs: TrackSchema[] =
+  const sortedSongs: FirebaseTrack[] =
     refreshFlag && playlistObject
       ? await sortPlaylistResponse(response, playlistObject.gameTracks)
       : await sortPlaylistResponse(response);
 
-  const updatedPlaylistObject: CustomPlaylistSchema = {
+  const updatedPlaylistObject: FirebaseCustomPlaylist = {
     createdAt: DateTime.now()
       .setZone("America/New_York")
       .toFormat("yyyy-MM-dd HH:mm:ss"),
@@ -71,9 +71,9 @@ export async function refreshPlaylist(
  * @returns an existing game track, or null if it does not exist
  */
 export function getExistingGameTrack(
-  playlistObject: CustomPlaylistSchema,
+  playlistObject: FirebaseCustomPlaylist,
   localDate: string
-): GameTrackSchema | null {
+): FirebaseGameTrack | null {
   const filteredGameTracks = playlistObject.gameTracks.filter(
     (track) => track.date === localDate
   );
@@ -90,16 +90,19 @@ export function getExistingGameTrack(
  */
 export async function chooseNewGameTrack(
   playlistId: string,
-  playlistObject: CustomPlaylistSchema,
+  playlistObject: FirebaseCustomPlaylist,
   localDate: string
-): Promise<GameTrackSchema> {
-  let allTracksList: TrackSchema[] = playlistObject.tracklist;
+): Promise<FirebaseGameTrack> {
+  let allTracksList: FirebaseTrack[] = playlistObject.tracklist;
+  if (!allTracksList || allTracksList.length === 0) {
+    throw new EmptyPlaylistException();
+  }
 
   if (allTracksList.filter((song) => !song.playedBefore).length === 0) {
     allTracksList = resetTrackListPlayedBeforeStatus(allTracksList);
   }
 
-  let randomTrackIndex: number, chosenTrack: TrackSchema;
+  let randomTrackIndex: number, chosenTrack: FirebaseTrack;
   do {
     randomTrackIndex = Math.floor(Math.random() * allTracksList.length);
     chosenTrack = allTracksList[randomTrackIndex];
@@ -110,7 +113,7 @@ export async function chooseNewGameTrack(
       ? playlistObject.gameTracks[playlistObject.gameTracks.length - 1].id + 1
       : 1;
 
-  const newGameTrack: GameTrackSchema = {
+  const newGameTrack: FirebaseGameTrack = {
     albumCover: chosenTrack.albumCover,
     artists: chosenTrack.artists,
     date: localDate,
@@ -151,11 +154,15 @@ export async function chooseNewGameTrack(
  */
 async function sortPlaylistResponse(
   response: SpotifyPlaylistObject,
-  pastGameTracks?: GameTrackSchema[]
-): Promise<TrackSchema[]> {
+  pastGameTracks?: FirebaseGameTrack[]
+): Promise<FirebaseTrack[]> {
   return new Promise((resolve, _reject) => {
     const trackItems: PlaylistTrackObject[] = response.tracks.items;
-    const sortedSongs: TrackSchema[] = [];
+    const sortedSongs: FirebaseTrack[] = [];
+
+    if (trackItems.length === 0) {
+      throw new EmptyPlaylistException();
+    }
 
     trackItems.forEach(async (trackItem: PlaylistTrackObject) => {
       const track: TrackObject = trackItem.track;
@@ -166,10 +173,10 @@ async function sortPlaylistResponse(
       });
       const externalUrl = track.external_urls.spotify;
       const trackPreview = track.preview_url;
-      const albumCover = track.album.images[0].url;
+      const albumCover = track.album.images[0]?.url || "/album-placeholder.svg";
       const spotifyUri = track.id;
       const playedBefore = checkIfInGameTracks(externalUrl, pastGameTracks);
-      const document: TrackSchema = {
+      const document: FirebaseTrack = {
         song: title,
         artists: artists,
         spotifyUri: spotifyUri,
@@ -194,7 +201,7 @@ async function sortPlaylistResponse(
  */
 function checkIfInGameTracks(
   externalUrl: string,
-  gameTracks: GameTrackSchema[]
+  gameTracks: FirebaseGameTrack[]
 ) {
   if (!gameTracks) return false;
   for (const track of gameTracks) {
@@ -211,9 +218,9 @@ function checkIfInGameTracks(
  * @returns the new track list of reset statuses
  */
 function resetTrackListPlayedBeforeStatus(
-  trackList: TrackSchema[]
-): TrackSchema[] {
-  return trackList.map((track: TrackSchema) => ({
+  trackList: FirebaseTrack[]
+): FirebaseTrack[] {
+  return trackList.map((track: FirebaseTrack) => ({
     ...track,
     playedBefore: false,
   }));

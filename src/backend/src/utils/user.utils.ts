@@ -1,5 +1,4 @@
-import GameResult from "../types/ClientGameResult";
-import SavedGameData from "../types/ClientSavedGameData";
+import { GameResult, SavedGameData } from "../types";
 
 /**
  * Merges user data stored in the server with incoming data from the client.

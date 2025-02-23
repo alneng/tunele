@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import crypto from "crypto";
 import db from "./firebase.utils";
-import MainPlaylistSchema from "../types/MainPlaylistSchema";
+import { FirebaseMainPlaylist } from "../types";
 
 /**
  * Resets all of the tracks in the main game to unplayed.
@@ -9,7 +9,7 @@ import MainPlaylistSchema from "../types/MainPlaylistSchema";
 export const resetAllMainGameTracks = async () => {
   const playlistObject: {
     id: string;
-    data: MainPlaylistSchema;
+    data: FirebaseMainPlaylist;
   } = await db.getLastDocument("allTracks");
 
   const oldSongs = playlistObject.data.tracklist;
