@@ -23,7 +23,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}-api
 
 jobs:
-  backend-cicd:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,3 +65,108 @@ jobs:
           file: ./src/backend/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
+
+  deploy:
+    needs: build # This ensures deploy only runs after successful build
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Set deployment variables
+        id: deploy-vars
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "container_name=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+            echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
+            echo "image_tag=latest" >> $GITHUB_OUTPUT
+          # elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          #   echo "container_name=${{ env.IMAGE_NAME }}-preview" >> $GITHUB_OUTPUT
+          #   echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
+          #   echo "image_tag=preview" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ inputs.environment }}" == "production" ]]; then
+              echo "container_name=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+              echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
+              echo "image_tag=latest" >> $GITHUB_OUTPUT
+            else
+              echo "container_name=${{ env.IMAGE_NAME }}-preview" >> $GITHUB_OUTPUT
+              echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
+              echo "image_tag=preview" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+            # Change to project directory
+            cd ~/${{ env.IMAGE_NAME }}
+
+            # Set log directory based on environment
+            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
+              LOG_DIR="$(pwd)/logs/preview"
+            else
+              LOG_DIR="$(pwd)/logs/prod"
+            fi
+            
+            # Ensure log directory exists
+            mkdir -p "$LOG_DIR"
+
+            # Pull the new image
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }}
+            
+            # Stop and rename existing container if it exists
+            if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }})" ]; then
+              echo "Stopping and renaming existing container..."
+              docker stop ${{ steps.deploy-vars.outputs.container_name }}
+              docker rename ${{ steps.deploy-vars.outputs.container_name }} ${{ steps.deploy-vars.outputs.container_name }}-old
+            fi
+            
+            # Start new container and capture its ID
+            echo "Starting new container..."
+            NEW_CONTAINER_ID=$(docker run -d --restart unless-stopped \
+              --name ${{ steps.deploy-vars.outputs.container_name }} \
+              -v "$LOG_DIR":/app/logs \
+              --env-file .env \
+              -p ${{ steps.deploy-vars.outputs.port_mapping }} \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }})
+            
+            # Wait a few seconds and check if container is running
+            echo "Waiting to verify container health..."
+            sleep 5
+            
+            if [ "$(docker ps -q -f id=$NEW_CONTAINER_ID)" ]; then
+              echo "New container is running successfully"
+              # Remove old container if exists
+              if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }}-old)" ]; then
+                echo "Removing old container..."
+                docker rm -f ${{ steps.deploy-vars.outputs.container_name }}-old
+              fi
+            else
+              echo "New container failed to start. Rolling back..."
+              # Remove failed container
+              docker rm -f ${{ steps.deploy-vars.outputs.container_name }}
+              
+              # Restore old container
+              if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }}-old)" ]; then
+                docker rename ${{ steps.deploy-vars.outputs.container_name }}-old ${{ steps.deploy-vars.outputs.container_name }}
+                docker start ${{ steps.deploy-vars.outputs.container_name }}
+                echo "Rollback complete - old container restored"
+              else
+                echo "ERROR: Could not rollback - old container not found"
+                exit 1
+              fi
+              
+              echo "ERROR: Deployment failed - failed to deploy new container"
+              exit 1
+            fi
+          ENDSSH
