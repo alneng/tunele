@@ -110,13 +110,14 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             # Change to project directory
-            cd /home/${{ secrets.SERVER_USER }}/${{ env.IMAGE_NAME }}
+            PROJECT_DIR="/home/${{ secrets.SERVER_USER }}/tunele-api"
+            cd "$PROJECT_DIR"
 
             # Set log directory based on environment
             if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
-              LOG_DIR="$(pwd)/logs/preview"
+              LOG_DIR="logs/preview"
             else
-              LOG_DIR="$(pwd)/logs/prod"
+              LOG_DIR="logs/prod"
             fi
             
             # Ensure log directory exists
