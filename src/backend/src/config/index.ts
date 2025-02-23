@@ -25,3 +25,8 @@ export const GOOGLE_OAUTH_CONFIG = {
   client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
   redirect_uri: process.env.REDIRECT_URI,
 };
+
+export const loggerConfig = {
+  enableHttpLogPrinting: false, // Whether to print HTTP logs to console
+  logLevel: "info" as const, // Default log level
+};

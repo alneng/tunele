@@ -25,7 +25,9 @@
     "helmet": "^8.0.0",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
-    "qs": "^6.14.0"
+    "morgan": "^1.10.0",
+    "qs": "^6.14.0",
+    "winston": "^3.17.0"
   },
   "engines": {
     "node": "18.x || 20.x || 22.x"
@@ -37,6 +39,7 @@
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
     "@types/luxon": "^3.4.2",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",

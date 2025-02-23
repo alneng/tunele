@@ -1,4 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
+import { log } from "./logger.utils";
 
 /**
  * Custom Error type that has a status code and a message.
@@ -64,7 +65,7 @@ export class AccessDeniedException extends HttpException {
  */
 export const errorHandler: ErrorRequestHandler = (
   error,
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -81,6 +82,14 @@ export const errorHandler: ErrorRequestHandler = (
       .status(error.status)
       .json({ ...additionalErrorInfo, message: error.message });
   } else {
+    log.error("errorHandler encountered unexpected error", {
+      meta: {
+        error: error.message,
+        stack: error.stack,
+        path: req.path,
+        method: req.method,
+      },
+    });
     res.status(500).json({ message: JSON.stringify(error) });
     throw error;
   }
