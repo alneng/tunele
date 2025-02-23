@@ -7,6 +7,7 @@ import {
 } from "../utils/auth.utils";
 import { HttpException } from "../utils/errors.utils";
 import { GOOGLE_OAUTH_CONFIG } from "../config";
+import { log } from "../utils/logger.utils";
 
 export default class AuthService {
   static authClientCredentials = {
@@ -47,7 +48,14 @@ export default class AuthService {
         expiresIn: auth.expires_in,
       };
     } catch (error) {
-      console.log(error);
+      log.error("Failed to get auth with code", {
+        meta: {
+          error,
+          stack: error.stack,
+          method: AuthService.getAuthWithCode.name,
+          data: { code, scope },
+        },
+      });
       throw new HttpException(401, "Bad token request");
     }
   }
@@ -81,6 +89,14 @@ export default class AuthService {
         expiresIn: auth.expires_in,
       };
     } catch (error) {
+      log.error("Failed to get auth with refresh token", {
+        meta: {
+          error,
+          stack: error.stack,
+          method: AuthService.getAuthWithRefreshToken.name,
+          data: { refreshToken },
+        },
+      });
       throw new HttpException(401, "Bad token request");
     }
   }

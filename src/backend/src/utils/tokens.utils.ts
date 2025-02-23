@@ -2,6 +2,7 @@ import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { GOOGLE_OAUTH_CONFIG } from "../config";
+import { log } from "./logger.utils";
 
 /**
  * Verifies an access token
@@ -47,6 +48,15 @@ export async function verifyIdToken(idToken: string) {
   } catch (error) {
     if (error?.status == 401)
       throw new AccessDeniedException(401, "Bad ID token", true);
+
+    log.error("Failed to verify id token", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: verifyIdToken.name,
+        data: { idToken },
+      },
+    });
     throw new AccessDeniedException(500, "Could not verify id token", true);
   }
 }

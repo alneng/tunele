@@ -1,4 +1,6 @@
 import { GameResult, SavedGameData } from "../types";
+import { log } from "./logger.utils";
+import { HttpException } from "./errors.utils";
 
 /**
  * Merges user data stored in the server with incoming data from the client.
@@ -12,23 +14,35 @@ export function mergeGameData(
   existingData: SavedGameData,
   newData: SavedGameData
 ): SavedGameData {
-  existingData.main = mergeArrays(existingData.main, newData.main);
+  try {
+    existingData.main = mergeArrays(existingData.main, newData.main);
 
-  if (!existingData.custom) {
-    existingData.custom = newData.custom;
-  } else {
-    for (const key in newData.custom) {
-      if (!existingData.custom[key]) {
-        existingData.custom[key] = newData.custom[key];
-      } else {
-        existingData.custom[key] = mergeArrays(
-          existingData.custom[key],
-          newData.custom[key]
-        );
+    if (!existingData.custom) {
+      existingData.custom = newData.custom;
+    } else {
+      for (const key in newData.custom) {
+        if (!existingData.custom[key]) {
+          existingData.custom[key] = newData.custom[key];
+        } else {
+          existingData.custom[key] = mergeArrays(
+            existingData.custom[key],
+            newData.custom[key]
+          );
+        }
       }
     }
+    return existingData;
+  } catch (error) {
+    log.error("Failed to merge game data", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: mergeArrays.name,
+        data: { existingData, newData },
+      },
+    });
+    throw new HttpException(500, "Failed to merge game data");
   }
-  return existingData;
 }
 
 /**
@@ -40,16 +54,28 @@ export function mergeGameData(
  * @returns the new merged data
  */
 function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
-  if (!newArray) return existingArray;
+  try {
+    if (!newArray) return existingArray;
 
-  const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
-  const newData = newArray.filter(
-    (game: GameResult) => !uniqueIds.has(game.id)
-  );
+    const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
+    const newData = newArray.filter(
+      (game: GameResult) => !uniqueIds.has(game.id)
+    );
 
-  const concat_array = existingArray.concat(newData);
-  const sorted_array = concat_array.sort(
-    (a: GameResult, b: GameResult) => a.id - b.id
-  );
-  return sorted_array;
+    const concat_array = existingArray.concat(newData);
+    const sorted_array = concat_array.sort(
+      (a: GameResult, b: GameResult) => a.id - b.id
+    );
+    return sorted_array;
+  } catch (error) {
+    log.error("Failed to merge game arrays", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: mergeArrays.name,
+        data: { existingArray, newArray },
+      },
+    });
+    throw new HttpException(500, "Failed to merge game arrays");
+  }
 }
