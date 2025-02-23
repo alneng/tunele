@@ -138,7 +138,7 @@ jobs:
             echo "Starting new container..."
             NEW_CONTAINER_ID=$(docker run -d --restart unless-stopped \
               --name ${{ steps.deploy-vars.outputs.container_name }} \
-              -v "$LOG_DIR":/app/logs \
+              -v "$PROJECT_DIR/$LOG_DIR":/app/logs \
               --env-file .env \
               -p ${{ steps.deploy-vars.outputs.port_mapping }} \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }})
