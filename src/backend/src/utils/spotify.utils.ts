@@ -3,6 +3,7 @@ import qs from "qs";
 import { HttpException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
 import { SPOTIFY_CLIENT_KEY } from "../config";
+import { log } from "./logger.utils";
 
 /**
  * Produces a Spotify access token
@@ -10,20 +11,31 @@ import { SPOTIFY_CLIENT_KEY } from "../config";
  * @returns a Spotify access token
  */
 async function fetchAccessToken(): Promise<string> {
-  const data = {
-    grant_type: "client_credentials",
-  };
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    data: qs.stringify(data),
-    url: "https://accounts.spotify.com/api/token",
-  };
-  const response = await axios(options);
-  return response.data.access_token;
+  try {
+    const data = {
+      grant_type: "client_credentials",
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: qs.stringify(data),
+      url: "https://accounts.spotify.com/api/token",
+    };
+    const response = await axios(options);
+    return response.data.access_token;
+  } catch (error) {
+    log.error("Failed to fetch access token", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: fetchAccessToken.name,
+      },
+    });
+    throw new HttpException(500, "Failed to fetch server access token");
+  }
 }
 
 /**
@@ -58,6 +70,15 @@ export async function fetchSongsFromPlaylist(
     if (errorData.error.status === 404) {
       throw new HttpException(404, "Playlist not found");
     }
+
+    log.error("Failed to fetch songs from playlist", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: fetchSongsFromPlaylist.name,
+        data: { playlistId },
+      },
+    });
     throw new HttpException(500, "Failed to fetch playlist tracks");
   }
 }
@@ -88,6 +109,14 @@ async function fetchTracks(
     }
     return items;
   } catch (error) {
+    log.error("Failed to fetch tracks", {
+      meta: {
+        error,
+        stack: error.stack,
+        method: fetchTracks.name,
+        data: { nextUrl },
+      },
+    });
     return [];
   }
 }
