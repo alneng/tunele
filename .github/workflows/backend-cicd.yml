@@ -69,6 +69,7 @@ jobs:
   deploy:
     needs: build # This ensures deploy only runs after successful build
     runs-on: ubuntu-latest
+    environment: prod
     if: success()
 
     steps:
