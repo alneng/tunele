@@ -1,9 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 import { DateTime } from "luxon";
 import CustomGameService from "../services/custom-game.services";
+import { HttpException } from "../utils/errors.utils";
 
 export default class CustomGameController {
   static async getDailySong(req: Request, res: Response, next: NextFunction) {
+    next(
+      new HttpException(
+        400,
+        `Custom playlists have been disabled until further notice due to changes in Spotify's Web API.
+        See https://github.com/alneng/tunele/issues/65 for more information.`
+      )
+    );
+    return;
+
     try {
       const playlistId = req.params.playlistId;
       const timeZone = req.query.timeZone;
@@ -23,6 +33,15 @@ export default class CustomGameController {
   }
 
   static async getAllSongs(req: Request, res: Response, next: NextFunction) {
+    next(
+      new HttpException(
+        400,
+        `Custom playlists have been disabled until further notice due to changes in Spotify's Web API.
+        See https://github.com/alneng/tunele/issues/65 for more information.`
+      )
+    );
+    return;
+
     try {
       const playlistId = req.params.playlistId;
 
@@ -34,6 +53,15 @@ export default class CustomGameController {
   }
 
   static async postStats(req: Request, res: Response, next: NextFunction) {
+    next(
+      new HttpException(
+        400,
+        `Custom playlists have been disabled until further notice due to changes in Spotify's Web API.
+        See https://github.com/alneng/tunele/issues/65 for more information.`
+      )
+    );
+    return;
+
     try {
       const playlistId = req.params.playlistId;
       const timeZone = req.query.timeZone;

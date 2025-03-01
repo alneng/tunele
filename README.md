@@ -2,6 +2,10 @@
 
 A Heardle clone after the game shut down on May 5th, 2023
 
+> [!WARNING]  
+> On November 27, 2024, [Spotify made changes to the Spotify Web API](https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api) that deprecated many of their endpoints, including the 30-second preview URLs that Tunele was using.
+> This means that until further notice, Tunele will **no longer** support custom playlists and any requests made to any of the custom playlist endpoints will result in an error.
+
 ## How to use this repository
 
 ### Required Services
