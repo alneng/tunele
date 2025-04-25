@@ -10,6 +10,9 @@ import apiRouter from "./api";
 
 const app = express();
 
+// Configure Express for reverse proxy support
+app.set("trust proxy", true);
+
 // Middlewares
 app.use(helmet());
 app.use(express.json());
