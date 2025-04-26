@@ -120,6 +120,13 @@ jobs:
             else
               LOG_DIR="logs/prod"
             fi
+
+            # Set env vars based on environment
+            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
+              ENV_DIR=".env.preview"
+            else
+              ENV_DIR=".env"
+            fi
             
             # Ensure log directory exists
             mkdir -p "$LOG_DIR"
@@ -139,7 +146,7 @@ jobs:
             NEW_CONTAINER_ID=$(docker run -d --restart unless-stopped \
               --name ${{ steps.deploy-vars.outputs.container_name }} \
               -v "$PROJECT_DIR/$LOG_DIR":/app/logs \
-              --env-file .env \
+              --env-file "$ENV_DIR" \
               -p ${{ steps.deploy-vars.outputs.port_mapping }} \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }})
             
