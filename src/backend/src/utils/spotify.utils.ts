@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import { HttpException } from "./errors.utils";
+import { HttpException, PlaylistNotFoundException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
 import { SPOTIFY_CLIENT_KEY } from "../config";
 import { log } from "./logger.utils";
@@ -39,13 +39,16 @@ async function fetchAccessToken(): Promise<string> {
 }
 
 /**
- * Fetches all of the songs in a Spotify playlist
+ * Fetches a Spotify playlist.
  *
  * @param playlistId the id of the playlist
- * @returns all of the songs in a Spotify playlist, in Spotify object track format
+ * @param options options for fetching the playlist
+ * @param options.fetchAllTracks whether to fetch all tracks in the playlist
+ * @returns the Spotify playlist object
  */
-export async function fetchSongsFromPlaylist(
-  playlistId: string
+export async function fetchPlaylist(
+  playlistId: string,
+  options: { fetchAllTracks: boolean } = { fetchAllTracks: false }
 ): Promise<SpotifyPlaylistObject> {
   const token = await fetchAccessToken();
   try {
@@ -59,7 +62,7 @@ export async function fetchSongsFromPlaylist(
     });
 
     const data = response.data;
-    if (data.tracks.next) {
+    if (options.fetchAllTracks && data.tracks.next) {
       data.tracks.items = data.tracks.items.concat(
         await fetchTracks(data.tracks.next, token)
       );
@@ -69,18 +72,18 @@ export async function fetchSongsFromPlaylist(
     if (axios.isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data;
       if (errorData.error?.status === 404)
-        throw new HttpException(404, "Playlist not found");
+        throw new PlaylistNotFoundException();
     }
 
-    log.error("Failed to fetch songs from playlist", {
+    log.error("Failed to fetch playlist", {
       meta: {
         error,
         stack: error instanceof Error ? error.stack : undefined,
-        method: fetchSongsFromPlaylist.name,
+        method: fetchPlaylist.name,
         data: { playlistId },
       },
     });
-    throw new HttpException(500, "Failed to fetch playlist tracks");
+    throw new HttpException(500, "Failed to fetch playlist");
   }
 }
 

@@ -37,6 +37,15 @@ export class EmptyPlaylistException extends HttpException {
   }
 }
 
+export class PlaylistNotFoundException extends HttpException {
+  constructor() {
+    super(
+      404,
+      "Failed to use playlist: Playlist not found or is private. Please check the playlist is public and not a Spotify created playlist and try again."
+    );
+  }
+}
+
 /**
  * Custom Error type that has a status code, message, and whether to retry request.
  * Extends HttpException
