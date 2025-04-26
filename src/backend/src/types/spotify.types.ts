@@ -30,14 +30,14 @@ export interface SpotifyPlaylistObject {
     uri: string;
     display_name: string;
   };
-  public: false;
+  public: boolean;
   snapshot_id: string;
   tracks: {
     href: string;
     limit: number;
-    next: string;
+    next: string | null;
     offset: number;
-    previous: string;
+    previous: string | null;
     total: number;
     items: PlaylistTrackObject[];
     type: string;

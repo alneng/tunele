@@ -10,7 +10,7 @@ const PlaylistSearch: React.FC = () => {
   const handlePlaylistSearch = () => {
     const playlistId = inputValue.split("/")[4].split("?")[0];
     if (inputValue.length !== 0)
-      window.location.href = `/custom?playlist=${playlistId}&r=1`;
+      window.location.href = `/custom?playlist=${playlistId}`;
   };
 
   return (
@@ -29,7 +29,8 @@ const PlaylistSearch: React.FC = () => {
       />
       <button
         onClick={handlePlaylistSearch}
-        className="mt-5 px-6 py-3 rounded-full bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none">
+        className="mt-5 px-6 py-3 rounded-full bg-[#1fd660] text-black hover:bg-[#18b853] focus:outline-none"
+      >
         Start Custom Game
       </button>
     </div>

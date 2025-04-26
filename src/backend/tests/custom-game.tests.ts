@@ -7,8 +7,11 @@ import {
   TalkThatTalk,
   allTracks,
 } from "./test-data/songs.test-data";
+import * as spotifyUtils from "../src/utils/spotify.utils";
+import { mockSpotifyPlaylist } from "./test-data/spotify.test-data";
 
 jest.mock("../src/utils/firebase.utils");
+jest.mock("../src/utils/spotify.utils");
 
 describe("Custom Game Tests", () => {
   beforeEach(() => {
@@ -19,9 +22,11 @@ describe("Custom Game Tests", () => {
     test("getDailySong returns a song if one already exists", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
+      jest
+        .spyOn(spotifyUtils, "fetchPlaylist")
+        .mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
@@ -34,9 +39,11 @@ describe("Custom Game Tests", () => {
     test("getDailySong returns a new song if one doesn't exist", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
+      jest
+        .spyOn(spotifyUtils, "fetchPlaylist")
+        .mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
@@ -51,9 +58,11 @@ describe("Custom Game Tests", () => {
       singleTrackPlaylist.tracklist.pop();
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...singleTrackPlaylist,
-        updatedAt: "",
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
+      jest
+        .spyOn(spotifyUtils, "fetchPlaylist")
+        .mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
@@ -68,7 +77,6 @@ describe("Custom Game Tests", () => {
     test("allSongs returns all songs in a custom game tracklist", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
         gameTracks: [],
       });
 
@@ -88,7 +96,6 @@ describe("Custom Game Tests", () => {
     test("postStats adds stats data correctly to the game track", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
         gameTracks: [{ ...TalkThatTalk, ...gameTrackDocumentExtras }],
       });
 
@@ -103,8 +110,6 @@ describe("Custom Game Tests", () => {
     test("postStats fails if there are no game tracks", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
-        gameTracks: [],
       });
 
       await expect(
@@ -115,7 +120,6 @@ describe("Custom Game Tests", () => {
     test("postStats fails if a game track with that date does not exist", async () => {
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
-        updatedAt: "",
         gameTracks: [{ ...TalkThatTalk, ...gameTrackDocumentExtras }],
       });
 
