@@ -8,7 +8,6 @@ import {
   FirebaseTrack,
   FirebaseCustomPlaylist,
   FirebaseGameTrack,
-  PlaylistResetStatus,
 } from "../types";
 import { EmptyPlaylistException, HttpException } from "./errors.utils";
 import { log } from "./logger.utils";
@@ -30,11 +29,7 @@ export async function refreshPlaylist(
   refreshFlag: boolean
 ): Promise<FirebaseCustomPlaylist> {
   const response = await fetchPlaylist(playlistId, { fetchAllTracks: true });
-  const sortedSongs = sortPlaylistResponse(
-    response,
-    playlist?.gameTracks,
-    playlist?.resetHistory
-  );
+  const sortedSongs = sortPlaylistResponse(response, playlist);
 
   const now = currentDateTimeString();
 
@@ -237,14 +232,17 @@ async function createAndSaveGameTrack(
  * current "reset history window".
  *
  * @param response songs from a Spotify playlist, in Spotify object track format
- * @param pastGameTracks existing game tracks, if any
+ * @param playlist existing playlist data
  * @returns a list of tracks for the playlist
  */
 function sortPlaylistResponse(
   response: SpotifyPlaylistObject,
-  pastGameTracks: FirebaseGameTrack[] = [],
-  resetHistory: PlaylistResetStatus[] = []
+  playlist: FirebaseCustomPlaylist | null
 ): FirebaseTrack[] {
+  const tracklist = playlist?.tracklist || [];
+  const pastGameTracks = playlist?.gameTracks || [];
+  const resetHistory = playlist?.resetHistory || [];
+
   try {
     const trackItems: PlaylistTrackObject[] = response.tracks.items;
 
@@ -252,13 +250,17 @@ function sortPlaylistResponse(
       throw new EmptyPlaylistException();
     }
 
-    // Pre-process past tracks into a map
-    const pastTracksMap = new Map<string, FirebaseGameTrack[]>();
+    // Pre-process past tracks and game tracks into a map
+    const pastTracksMap = new Map<string, FirebaseTrack>();
+    tracklist.forEach((track) => {
+      pastTracksMap.set(track.externalUrl, track);
+    });
+    const gameTracksMap = new Map<string, FirebaseGameTrack[]>();
     pastGameTracks.forEach((track) => {
-      if (!pastTracksMap.has(track.externalUrl)) {
-        pastTracksMap.set(track.externalUrl, []);
+      if (!gameTracksMap.has(track.externalUrl)) {
+        gameTracksMap.set(track.externalUrl, []);
       }
-      pastTracksMap.get(track.externalUrl)!.push(track);
+      gameTracksMap.get(track.externalUrl)!.push(track);
     });
 
     const recentResetDate =
@@ -272,23 +274,23 @@ function sortPlaylistResponse(
       if (!track || track.is_local) continue; // Skip local tracks
 
       const externalUrl = track.external_urls.spotify;
-      const existingTracks = pastTracksMap.get(externalUrl) || [];
+      const trackData = pastTracksMap.get(externalUrl);
+      const gameTracks = gameTracksMap.get(externalUrl) || [];
       const playedBefore = recentResetDate
-        ? existingTracks.some(
+        ? gameTracks.some(
             (t) => DateTime.fromFormat(t.date, "yyyy-MM-dd") >= recentResetDate
           )
-        : existingTracks.length > 0;
+        : gameTracks.length > 0;
 
       result.push({
         song: track.name,
         artists: track.artists.map((artist) => artist.name),
         spotifyUri: track.id,
-        trackPreview:
-          existingTracks[0]?.trackPreview || track.preview_url || null,
+        trackPreview: trackData?.trackPreview || track.preview_url || null,
         albumCover: track.album.images[0]?.url || "/album-placeholder.svg",
         externalUrl,
         playedBefore,
-        nullPreview: existingTracks[0]?.nullPreview,
+        nullPreview: trackData?.nullPreview,
       });
     }
 
