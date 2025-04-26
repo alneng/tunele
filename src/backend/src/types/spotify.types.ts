@@ -30,7 +30,7 @@ export interface SpotifyPlaylistObject {
     uri: string;
     display_name: string;
   };
-  public: false;
+  public: boolean;
   snapshot_id: string;
   tracks: {
     href: string;

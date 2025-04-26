@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { HttpException } from "../utils/errors.utils";
 import db from "../utils/firebase.utils";
 import {
@@ -15,6 +14,7 @@ import {
 } from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
 import { log } from "../utils/logger.utils";
+import { currentDateTimeString } from "../utils/utils";
 
 export default class MainGameService {
   /**
@@ -88,14 +88,11 @@ export default class MainGameService {
     const gameId = previousRecentGameTrack
       ? previousRecentGameTrack.data.id + 1
       : 1;
-    const date = DateTime.now()
-      .setZone("America/New_York")
-      .toFormat("yyyy-MM-dd HH:mm:ss");
 
     const newGameTrack: FirebaseGameTrack = {
       albumCover: chosenTrack.albumCover,
       artists: chosenTrack.artists,
-      createdAt: date,
+      createdAt: currentDateTimeString(),
       date: localDate,
       externalUrl: chosenTrack.externalUrl,
       id: gameId,
@@ -118,6 +115,7 @@ export default class MainGameService {
       createdAt: mostRecentTracksSnapshot.id,
       snapshotId: mostRecentTracksSnapshot.data.snapshotId,
       tracklist: mostRecentTracksTracklist,
+      resetHistory: [], // resetHistory is not used in the main game
     };
     await db.updateDocument(
       "allTracks",

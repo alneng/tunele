@@ -13,6 +13,7 @@ class FirestoreSDK {
         ),
       });
       this.db = admin.firestore();
+      this.db.settings({ ignoreUndefinedProperties: true });
     }
   }
 
@@ -22,15 +23,18 @@ class FirestoreSDK {
    * @param collection the collection to add the document to
    * @param id the id of the document to be created
    * @param document the document
+   * @returns the created document
    */
-  async createDocument(
+  async createDocument<T = object>(
     collection: string,
     id: string,
-    document: object
-  ): Promise<void> {
+    document: T
+  ): Promise<T> {
     const docRef = this.db.collection(collection).doc(id);
 
-    await docRef.set(document);
+    await docRef.set(document as object);
+    const createdDoc = await docRef.get();
+    return createdDoc.data() as T;
   }
 
   /**
@@ -60,15 +64,18 @@ class FirestoreSDK {
    * @param collection the collection of the document to update
    * @param id the id of the document to update
    * @param newDocument the new document
+   * @returns the updated document
    */
-  async updateDocument(
+  async updateDocument<T = object>(
     collection: string,
     id: string,
-    newDocument: object
-  ): Promise<void> {
+    newDocument: T
+  ): Promise<T> {
     const docRef = this.db.collection(collection).doc(id);
 
-    await docRef.update(newDocument);
+    await docRef.update(newDocument as object);
+    const updatedDoc = await docRef.get();
+    return updatedDoc.data() as T;
   }
 
   /**

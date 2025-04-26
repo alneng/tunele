@@ -26,7 +26,8 @@ export const useFetchMainPlaylist = () => {
   const mainGameQuery = useQuery<GameTrack, AxiosApiError>({
     queryKey: ["main", "track"],
     queryFn: fetchMainGame,
-    retryDelay: 500,
+    retry: 1,
+    retryDelay: 1000,
   });
 
   /**
@@ -102,11 +103,12 @@ export const useFetchCustomPlaylist = (
   const customGameQuery = useQuery<GameTrack | null, AxiosApiError>({
     queryKey: ["custom", "playlist", playlist, "track"],
     queryFn: async () => fetchCustomGame({ playlist, r: r === "1" }),
-    retryDelay: 500,
+    retry: 1,
+    retryDelay: 1000,
   });
 
   /**
-   * Fetch the main game track and update local state.
+   * Fetch the game track and update local state.
    */
   useEffect(() => {
     if (customGameQuery.data) {
@@ -131,10 +133,11 @@ export const useFetchCustomPlaylist = (
   const customGameChoicesQuery = useQuery<GameChoices | null, AxiosApiError>({
     queryKey: ["custom", "playlist", playlist, "choices"],
     queryFn: async () => fetchCustomGameChoices(playlist),
+    enabled: !!customGameQuery.data && customGameQuery.isSuccess,
   });
 
   /**
-   * Fetch the main game choices and update local state.
+   * Fetch the game choices and update local state.
    */
   useEffect(() => {
     if (customGameChoicesQuery.data) {

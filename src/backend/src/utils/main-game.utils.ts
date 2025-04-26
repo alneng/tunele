@@ -1,14 +1,14 @@
-import { DateTime } from "luxon";
 import crypto from "crypto";
 import db from "./firebase.utils";
-import { MainGameSnapshot } from "../types";
+import { FirebaseMainPlaylist, MainGameSnapshot } from "../types";
+import { currentDateTimeString } from "./utils";
 
 /**
  * Resets all of the tracks in the main game to unplayed.
  * If there is no snapshot, it does nothing.
  */
 export const resetAllMainGameTracks = async () => {
-  const playlistObject: MainGameSnapshot | null = await db.getLastDocument(
+  const playlistObject = await db.getLastDocument<MainGameSnapshot>(
     "allTracks"
   );
   if (!playlistObject) return;
@@ -21,14 +21,17 @@ export const resetAllMainGameTracks = async () => {
     };
   });
 
-  const currentDateTime = DateTime.now()
-    .setZone("America/New_York")
-    .toFormat("yyyy-MM-dd HH:mm:ss");
+  const currentDateTime = currentDateTimeString();
   const songsToAdd = {
     tracklist: oldSongsReset,
     snapshotId: `snapshot-${crypto.randomBytes(4).toString("hex")}`,
     createdAt: currentDateTime,
+    resetHistory: [], // resetHistory is not used in the main game
   };
 
-  await db.createDocument("allTracks", currentDateTime, songsToAdd);
+  await db.createDocument<FirebaseMainPlaylist>(
+    "allTracks",
+    currentDateTime,
+    songsToAdd
+  );
 };

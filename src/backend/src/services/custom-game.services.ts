@@ -26,38 +26,25 @@ export default class CustomGameService {
     localDate: string,
     refreshFlag: boolean
   ): Promise<GameTrack> {
-    let playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
+    let playlist = await db.getDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
       playlistId
     );
 
-    if (!playlistObject || refreshFlag) {
-      playlistObject = await refreshPlaylist(
-        playlistId,
-        playlistObject,
-        refreshFlag
-      );
+    if (!playlist || refreshFlag) {
+      playlist = await refreshPlaylist(playlistId, playlist, refreshFlag);
     }
 
-    const selectedGameTrack = getExistingGameTrack(playlistObject, localDate);
-
-    if (selectedGameTrack) {
-      return {
-        song: selectedGameTrack.song,
-        artists: selectedGameTrack.artists,
-        id: selectedGameTrack.id,
-        trackPreview: selectedGameTrack.trackPreview,
-        albumCover: selectedGameTrack.albumCover,
-        externalUrl: selectedGameTrack.externalUrl,
-      };
+    const gameTrack = getExistingGameTrack(playlist, localDate);
+    if (gameTrack) {
+      return gameTrackTransformer(gameTrack);
     }
 
     const newGameTrack = await chooseNewGameTrack(
       playlistId,
-      playlistObject,
+      playlist,
       localDate
     );
-
     return gameTrackTransformer(newGameTrack);
   }
 
@@ -68,7 +55,7 @@ export default class CustomGameService {
    * @returns List of song objects {song: String, artists: String[]}
    */
   static async getAllSongs(playlistId: string): Promise<Track[]> {
-    const allTracks: FirebaseCustomPlaylist | null = await db.getDocument(
+    const allTracks = await db.getDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
       playlistId
     );
