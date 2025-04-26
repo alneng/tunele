@@ -37,6 +37,8 @@ export const TalkThatTalk = {
 export const allTracks = {
   createdAt: "2024-01-26 23:27:00",
   snapshotId: "snapshot-2e1e16c0",
+  spotifySnapshotId: "1234567890",
+  resetHistory: [],
   tracklist: [
     {
       ...NeverGonna,
