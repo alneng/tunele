@@ -11,6 +11,7 @@ import {
 } from "../transformers/track.transformers";
 import { FirebaseCustomPlaylist, GameTrack, Track } from "../types";
 import { log } from "../utils/logger.utils";
+import { fetchPlaylist } from "../utils/spotify.utils";
 
 export default class CustomGameService {
   /**
@@ -30,8 +31,13 @@ export default class CustomGameService {
       "customPlaylists",
       playlistId
     );
+    const spotifyPlaylist = await fetchPlaylist(playlistId);
 
-    if (!playlist || refreshFlag) {
+    if (
+      !playlist ||
+      refreshFlag ||
+      spotifyPlaylist.snapshot_id !== playlist.spotifySnapshotId
+    ) {
       playlist = await refreshPlaylist(playlistId, playlist, refreshFlag);
     }
 

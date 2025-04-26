@@ -1,3 +1,5 @@
+import { FirebaseCustomPlaylist } from "../../src/types";
+
 export const gameTrackDocumentExtras = {
   date: "2024-01-27",
   stats: {
@@ -34,8 +36,9 @@ export const TalkThatTalk = {
   externalUrl: "https://open.spotify.com/track/0RDqNCRBGrSegk16Avfzuq",
 };
 
-export const allTracks = {
+export const allTracks: FirebaseCustomPlaylist = {
   createdAt: "2024-01-26 23:27:00",
+  updatedAt: "",
   snapshotId: "snapshot-2e1e16c0",
   spotifySnapshotId: "1234567890",
   resetHistory: [],
@@ -51,4 +54,5 @@ export const allTracks = {
       spotifyUri: "0RDqNCRBGrSegk16Avfzuq",
     },
   ],
+  gameTracks: [],
 };

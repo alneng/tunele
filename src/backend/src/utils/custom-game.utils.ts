@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import db from "./firebase.utils";
-import { fetchSongsFromPlaylist } from "./spotify.utils";
+import { fetchPlaylist } from "./spotify.utils";
 import {
   SpotifyPlaylistObject,
   PlaylistTrackObject,
@@ -29,7 +29,7 @@ export async function refreshPlaylist(
   playlist: FirebaseCustomPlaylist | null,
   refreshFlag: boolean
 ): Promise<FirebaseCustomPlaylist> {
-  const response = await fetchSongsFromPlaylist(playlistId);
+  const response = await fetchPlaylist(playlistId, { fetchAllTracks: true });
   const sortedSongs = sortPlaylistResponse(
     response,
     playlist?.gameTracks,
