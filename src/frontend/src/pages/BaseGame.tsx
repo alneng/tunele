@@ -164,7 +164,7 @@ const BaseGame = () => {
         overlayClassName="overlay"
         ariaHideApp={false}
       >
-        <HelpModal onRequestCloseHelpModal={() => setHelpModalState(false)} />
+        <HelpModal close={() => setHelpModalState(false)} />
       </Modal>
       <Modal
         isOpen={isStatsModalOpen}
