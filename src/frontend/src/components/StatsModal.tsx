@@ -10,6 +10,30 @@ interface StatsModalProps {
   statsCorrectPercentageString: string;
 }
 
+const StatBar = ({
+  label,
+  count,
+  height,
+  isFailure = false,
+}: {
+  label: string;
+  count: number;
+  height: number;
+  isFailure?: boolean;
+}) => (
+  <div className="relative">
+    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
+      <div className="absolute top-0 -mt-8 text-center w-full">{label}</div>
+    </div>
+    <Tooltip title={count} placement="bottom" arrow>
+      <div
+        className={`${isFailure ? "bg-red" : "bg-green"} w-4`}
+        style={{ height: `${height}px` }}
+      />
+    </Tooltip>
+  </div>
+);
+
 const StatsModal: React.FC<StatsModalProps> = ({
   playlistId,
   statsBarHeights,
@@ -26,88 +50,31 @@ const StatsModal: React.FC<StatsModalProps> = ({
     setScores(scores);
   }, [custom, main, playlistId]);
 
+  const scoreCategories = [
+    { label: "1°", score: 1 },
+    { label: "2°", score: 2 },
+    { label: "3°", score: 3 },
+    { label: "4°", score: 4 },
+    { label: "5°", score: 5 },
+    { label: "6°", score: 6 },
+    { label: "X", score: 0, isFailure: true },
+  ];
+
   return (
     <div className="flex flex-col items-center">
       <p className="text-2xl font-semibold mb-4">Stats</p>
 
-      <div className="flex pt-8 pb-4" style={{ height: "150px" }}>
-        <div className="relative">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">1°</div>
+      <div className="flex pt-8 pb-4 space-x-6" style={{ height: "150px" }}>
+        {scoreCategories.map((category) => (
+          <div key={category.score}>
+            <StatBar
+              label={category.label}
+              count={scores[category.score] || 0}
+              height={statsBarHeights[category.score] || 0}
+              isFailure={category.isFailure}
+            />
           </div>
-          <Tooltip title={scores[1]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[1]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">2°</div>
-          </div>
-          <Tooltip title={scores[2]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[2]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">3°</div>
-          </div>
-          <Tooltip title={scores[3]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[3]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">4°</div>
-          </div>
-          <Tooltip title={scores[4]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[4]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">5°</div>
-          </div>
-          <Tooltip title={scores[5]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[5]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">6°</div>
-          </div>
-          <Tooltip title={scores[6]} placement="bottom" arrow>
-            <div
-              className={`bg-green w-4`}
-              style={{ height: `${statsBarHeights[6]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
-        <div className="relative ml-6">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full flex items-center justify-center text-gray-300">
-            <div className="absolute top-0 -mt-8 text-center w-full">X</div>
-          </div>
-          <Tooltip title={scores[0]} placement="bottom" arrow>
-            <div
-              className={`bg-red w-4`}
-              style={{ height: `${statsBarHeights[0]}px` }}
-            ></div>
-          </Tooltip>
-        </div>
+        ))}
       </div>
 
       <p className="text-gray-300">Your score distribution</p>
