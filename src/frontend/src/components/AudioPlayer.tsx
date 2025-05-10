@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { TrackGuess } from "@/types";
 import { CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
@@ -8,17 +8,13 @@ interface AudioPlayerProps {
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState<number>(0);
-  const [currentLevel, setCurrentLevel] = useState<number>(0);
+  const currentLevel = useMemo(() => userGuesses.length, [userGuesses]);
   const [audioPlayerTimeout, setAudioPlayerTimeout] =
     useState<NodeJS.Timeout>();
 
   const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
-
-  useEffect(() => {
-    setCurrentLevel(userGuesses.length);
-  }, [userGuesses]);
 
   const handlePlayback = () => {
     if (audioRef.current) {
@@ -42,6 +38,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     }
   };
 
+  const togglePlayback = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) handlePlayback();
+      else handlePause();
+    }
+  };
+
   const handleProgress = () => {
     if (audioRef.current) {
       const { currentTime } = audioRef.current;
@@ -57,7 +60,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
         ref={audioRef}
         onTimeUpdate={handleProgress}
         onLoadedData={handleProgress}
-      ></audio>
+      />
+
       <div className="relative md:w-612px w-4/5 h-6 bg-gray-800">
         {songLimits.map((interval, index) => (
           <div
@@ -67,7 +71,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
               left: `${(interval / 16000) * 100}%`,
               width: "2px",
             }}
-          ></div>
+          />
         ))}
         <div
           className="h-full bg-[#1fd660]"
@@ -75,22 +79,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
             width: `${progress}%`,
             transition: "width 0.3s linear",
           }}
-        ></div>
+        />
       </div>
-      {audioRef.current && audioRef.current.paused && (
-        <button
-          onClick={handlePlayback}
-          className="text-white my-4"
-          title="Play"
-        >
-          <CirclePlayIcon size={56} strokeWidth={1} />
-        </button>
-      )}
-      {audioRef.current && !audioRef.current.paused && (
-        <button onClick={handlePause} className="text-white my-4" title="Pause">
+
+      <button onClick={togglePlayback} className="text-white my-4">
+        {!audioRef.current?.paused ? (
           <CirclePauseIcon size={56} strokeWidth={1} />
-        </button>
-      )}
+        ) : (
+          <CirclePlayIcon size={56} strokeWidth={1} />
+        )}
+      </button>
     </div>
   );
 };
