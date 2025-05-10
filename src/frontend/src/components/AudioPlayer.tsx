@@ -83,10 +83,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
       </div>
 
       <button onClick={togglePlayback} className="text-white my-4">
-        {!audioRef.current?.paused ? (
-          <CirclePauseIcon size={56} strokeWidth={1} />
-        ) : (
+        {!audioRef || audioRef.current?.paused ? (
           <CirclePlayIcon size={56} strokeWidth={1} />
+        ) : (
+          <CirclePauseIcon size={56} strokeWidth={1} />
         )}
       </button>
     </div>
