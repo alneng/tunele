@@ -1,6 +1,4 @@
-import React from "react";
-
-const NotFound: React.FC = () => {
+const NotFound = () => {
   return (
     <div className="font-sf-pro flex justify-center items-center h-screen bg-[#131213] text-center text-white">
       <div className="bg-gray-800 rounded-lg p-24">

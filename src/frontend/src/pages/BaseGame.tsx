@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { useFetchMainPlaylist } from "@/hooks/game.hooks";
 import { useFirstTimeUser, useLoadUserData } from "@/hooks/user.hooks";
@@ -19,7 +19,7 @@ import UserAccountModal from "@/components/UserAccountModal";
 import Loader from "@/components/Loader";
 import ErrorMessage from "@/components/ErrorMessage";
 
-const BaseGame: React.FC = () => {
+const BaseGame = () => {
   const [userGuesses, setUserGuesses] = useState<TrackGuess[]>([]);
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const { main, custom } = useLoadUserData(userGuesses);

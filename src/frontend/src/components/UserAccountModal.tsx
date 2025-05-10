@@ -1,8 +1,7 @@
-import React from "react";
 import { useUser } from "@/hooks/user.hooks";
 import { CloudDownloadIcon, CloudUploadIcon } from "lucide-react";
 
-const UserAccountModal: React.FC = () => {
+const UserAccountModal = () => {
   const {
     signedIn,
     username,

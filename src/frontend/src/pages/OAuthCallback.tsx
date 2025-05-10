@@ -1,7 +1,6 @@
-import React from "react";
 import { useAuthCallback } from "@/hooks/auth.hooks";
 
-const OAuthCallback: React.FC = () => {
+const OAuthCallback = () => {
   useAuthCallback();
 
   return (

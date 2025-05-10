@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PlaylistSearch: React.FC = () => {
+const PlaylistSearch = () => {
   const [inputValue, setInputValue] = useState<string>("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
