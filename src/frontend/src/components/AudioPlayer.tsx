@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { TrackGuess } from "@/types";
 import { CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
@@ -10,22 +10,50 @@ interface AudioPlayerProps {
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const currentLevel = useMemo(() => userGuesses.length, [userGuesses]);
   const [audioPlayerTimeout, setAudioPlayerTimeout] =
     useState<NodeJS.Timeout>();
 
   const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+
+    if (audio) {
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("pause", handlePause);
+      audio.addEventListener("ended", handleEnded);
+    }
+
+    return () => {
+      if (audio) {
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("pause", handlePause);
+        audio.removeEventListener("ended", handleEnded);
+      }
+      if (audioPlayerTimeout) clearTimeout(audioPlayerTimeout);
+    };
+  }, [audioPlayerTimeout]);
+
   const handlePlayback = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       const timeoutDuration = songLimits[currentLevel];
 
-      audioRef.current.volume = 0.3;
+      audioRef.current.volume = 0.2;
       audioRef.current.play();
+      setIsPlaying(true);
 
       const timeout = setTimeout(() => {
-        audioRef.current?.pause();
+        if (audioRef.current) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
       }, timeoutDuration + 100);
       setAudioPlayerTimeout(timeout);
     }
@@ -35,6 +63,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     if (audioRef.current && !audioRef.current.paused) {
       clearTimeout(audioPlayerTimeout);
       audioRef.current.pause();
+      setIsPlaying(false);
     }
   };
 
@@ -83,7 +112,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
       </div>
 
       <button onClick={togglePlayback} className="text-white my-4">
-        {!audioRef || audioRef.current?.paused ? (
+        {!isPlaying ? (
           <CirclePlayIcon size={56} strokeWidth={1} />
         ) : (
           <CirclePauseIcon size={56} strokeWidth={1} />
