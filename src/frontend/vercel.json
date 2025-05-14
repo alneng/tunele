@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    {
+      "source": "/va/:match*",
+      "destination": "https://www.tunele.app/_vercel/insights/:match*"
+    },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }

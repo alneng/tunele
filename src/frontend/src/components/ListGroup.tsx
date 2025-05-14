@@ -1,43 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TrackGuess } from "@/types";
+import clsx from "clsx";
 
 interface ListGroupProps {
   userGuesses: TrackGuess[];
 }
 
 const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
-  const [emptyGuesses, setEmptyGuesses] = useState<string[]>([]);
-
-  useEffect(() => {
-    const numberOfEmptyGuesses = Math.max(0, 6 - userGuesses.length);
-    setEmptyGuesses(Array(numberOfEmptyGuesses).fill(""));
-  }, [userGuesses]);
+  const guessSlots = Array(6)
+    .fill(null)
+    .map((_, index) => {
+      return index < userGuesses.length ? userGuesses[index] : null;
+    });
 
   return (
     <div className="w-full flex flex-col items-center">
-      {userGuesses.map((item, index) => (
+      {guessSlots.map((guess, index) => (
         <div
           key={index}
-          className={`md:w-612px w-4/5 px-4 py-1.5 m-1 bg-gray-800 ${
-            item.isCorrect
-              ? "text-green border-2 border-green"
-              : item.isSkipped
-              ? "text-white border-2 border-white"
-              : item.isArtist
-              ? "text-yellow border-2 border-yellow"
-              : "text-red border-2 border-red"
-          }`}
+          className={clsx("md:w-612px w-4/5 px-4 py-1.5 m-1 bg-gray-800", {
+            "h-10": !guess,
+            "text-green border-2 border-green": guess?.isCorrect,
+            "text-white border-2 border-white": guess?.isSkipped,
+            "text-yellow border-2 border-yellow":
+              guess?.isArtist && !guess?.isCorrect && !guess?.isSkipped,
+            "text-red border-2 border-red":
+              guess && !guess.isCorrect && !guess.isSkipped && !guess.isArtist,
+          })}
         >
-          {item.isSkipped && <p>Skipped</p>}
-          {!item.isSkipped && <p>{item.answer.formattedString}</p>}
-        </div>
-      ))}
-      {emptyGuesses.map((_, index) => (
-        <div
-          key={index}
-          className="md:w-612px w-4/5 h-10 px-4 m-1 text-black bg-gray-800"
-        >
-          <p></p>
+          <p>
+            {guess &&
+              (guess.isSkipped ? "Skipped" : guess.answer.formattedString)}
+          </p>
         </div>
       ))}
     </div>

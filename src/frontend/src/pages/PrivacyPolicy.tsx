@@ -1,6 +1,4 @@
-import React from "react";
-
-const PrivacyPolicy: React.FC = () => {
+const PrivacyPolicy = () => {
   return (
     <div className="bg-gray-100 py-8 overflow-y-auto h-full">
       <div className="container mx-auto px-4">
