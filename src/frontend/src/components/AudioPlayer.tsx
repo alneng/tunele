@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { TrackGuess } from "@/types";
 import { CirclePauseIcon, CirclePlayIcon } from "lucide-react";
 
@@ -8,28 +8,52 @@ interface AudioPlayerProps {
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState<number>(0);
-  const [currentLevel, setCurrentLevel] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const currentLevel = useMemo(() => userGuesses.length, [userGuesses]);
   const [audioPlayerTimeout, setAudioPlayerTimeout] =
     useState<NodeJS.Timeout>();
 
   const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 
   useEffect(() => {
-    setCurrentLevel(userGuesses.length);
-  }, [userGuesses]);
+    const audio = audioRef.current;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+
+    if (audio) {
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("pause", handlePause);
+      audio.addEventListener("ended", handleEnded);
+    }
+
+    return () => {
+      if (audio) {
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("pause", handlePause);
+        audio.removeEventListener("ended", handleEnded);
+      }
+      if (audioPlayerTimeout) clearTimeout(audioPlayerTimeout);
+    };
+  }, [audioPlayerTimeout]);
 
   const handlePlayback = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       const timeoutDuration = songLimits[currentLevel];
 
-      audioRef.current.volume = 0.3;
+      audioRef.current.volume = 0.2;
       audioRef.current.play();
+      setIsPlaying(true);
 
       const timeout = setTimeout(() => {
-        audioRef.current?.pause();
+        if (audioRef.current) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
       }, timeoutDuration + 100);
       setAudioPlayerTimeout(timeout);
     }
@@ -39,6 +63,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
     if (audioRef.current && !audioRef.current.paused) {
       clearTimeout(audioPlayerTimeout);
       audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const togglePlayback = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) handlePlayback();
+      else handlePause();
     }
   };
 
@@ -57,7 +89,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
         ref={audioRef}
         onTimeUpdate={handleProgress}
         onLoadedData={handleProgress}
-      ></audio>
+      />
+
       <div className="relative md:w-612px w-4/5 h-6 bg-gray-800">
         {songLimits.map((interval, index) => (
           <div
@@ -67,7 +100,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
               left: `${(interval / 16000) * 100}%`,
               width: "2px",
             }}
-          ></div>
+          />
         ))}
         <div
           className="h-full bg-[#1fd660]"
@@ -75,22 +108,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
             width: `${progress}%`,
             transition: "width 0.3s linear",
           }}
-        ></div>
+        />
       </div>
-      {audioRef.current && audioRef.current.paused && (
-        <button
-          onClick={handlePlayback}
-          className="text-white my-4"
-          title="Play"
-        >
+
+      <button onClick={togglePlayback} className="text-white my-4">
+        {!isPlaying ? (
           <CirclePlayIcon size={56} strokeWidth={1} />
-        </button>
-      )}
-      {audioRef.current && !audioRef.current.paused && (
-        <button onClick={handlePause} className="text-white my-4" title="Pause">
+        ) : (
           <CirclePauseIcon size={56} strokeWidth={1} />
-        </button>
-      )}
+        )}
+      </button>
     </div>
   );
 };
