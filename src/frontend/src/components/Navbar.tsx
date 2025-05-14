@@ -3,6 +3,7 @@ import {
   ChartNoAxesColumnIcon,
   CircleHelpIcon,
   GithubIcon,
+  LockIcon,
   PenLineIcon,
   UserIcon,
 } from "lucide-react";
@@ -64,6 +65,13 @@ const Navbar: React.FC<NavbarProps> = ({
             <item.icon size={24} />
           </button>
         ))}
+        <button
+          className="p-2 focus:outline-none invisible"
+          onClick={() => (window.location.href = "/privacy")}
+          title="Privacy Policy"
+        >
+          <LockIcon size={24} />
+        </button>
       </div>
       <a href="/">
         <img
