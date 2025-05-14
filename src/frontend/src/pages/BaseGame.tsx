@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import { useFirstTimeUser } from "@/hooks/user.hooks";
 import { useGameStore } from "@/store/game.store";
 import Navbar from "@/components/Navbar";
@@ -10,6 +9,7 @@ import StatsModal from "@/components/StatsModal";
 import UserAccountModal from "@/components/UserAccountModal";
 import Loader from "@/components/Loader";
 import ErrorMessage from "@/components/ErrorMessage";
+import TuneleModal from "@/components/TuneleModal";
 
 const BaseGame = () => {
   const { mainGame, loadMainGame, updateMainGameGuesses, savedData } =
@@ -80,33 +80,24 @@ const BaseGame = () => {
       )}
 
       {/* modals */}
-      <Modal
+      <TuneleModal
         isOpen={isHelpModalOpen}
         onRequestClose={() => setHelpModalState(false)}
-        className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
-        overlayClassName="overlay"
-        ariaHideApp={false}
       >
         <HelpModal close={() => setHelpModalState(false)} />
-      </Modal>
-      <Modal
+      </TuneleModal>
+      <TuneleModal
         isOpen={isStatsModalOpen}
         onRequestClose={() => setStatsModalState(false)}
-        className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
-        overlayClassName="overlay"
-        ariaHideApp={false}
       >
         <StatsModal gameData={savedData.main} />
-      </Modal>
-      <Modal
+      </TuneleModal>
+      <TuneleModal
         isOpen={isUserAccountModalOpen}
         onRequestClose={() => setUserAccountModalState(false)}
-        className="bg-[#131213] text-white border-gray-800 border-2 p-10 mx-auto max-w-xs md:max-w-lg text-center"
-        overlayClassName="overlay"
-        ariaHideApp={false}
       >
         <UserAccountModal />
-      </Modal>
+      </TuneleModal>
     </div>
   );
 };
