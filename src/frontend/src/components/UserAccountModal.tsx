@@ -1,23 +1,60 @@
-import { useUser } from "@/hooks/user.hooks";
+import { useEffect } from "react";
+import { useUserStore } from "@/store/user.store";
 import { CloudDownloadIcon, CloudUploadIcon } from "lucide-react";
+import { toastError, toastSuccess } from "@/utils/toast.utils";
 
 const UserAccountModal = () => {
   const {
     signedIn,
     username,
     id,
-    handleGoogleLogin,
-    handleLogout,
-    updateLocalData,
-    syncDataToRemote,
-  } = useUser();
+    isLoading,
+    checkAuth,
+    init,
+    login,
+    logout,
+    syncDataFromServer,
+    syncDataToServer,
+  } = useUserStore();
+
+  // Check authentication status when component mounts
+  useEffect(() => {
+    if (!init) checkAuth();
+  }, [checkAuth, init]);
+
+  // Handle pulling data from server
+  const handlePullData = async () => {
+    try {
+      await syncDataFromServer();
+      toastSuccess("Successfully updated local data!");
+    } catch {
+      toastError("There was an error pulling your cloud data");
+    }
+  };
+
+  // Handle pushing data to server
+  const handleSaveToCloud = async () => {
+    try {
+      await syncDataToServer();
+      toastSuccess("Successfully saved data to cloud!");
+    } catch {
+      toastError("There was an error saving your data");
+    }
+  };
 
   return (
     <>
       <div className="flex flex-col items-center mb-4">
         <h1 className="text-2xl font-bold">User Profile</h1>
       </div>
-      {!signedIn && (
+
+      {isLoading && (
+        <div className="flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
+        </div>
+      )}
+
+      {!isLoading && !signedIn && (
         <div>
           <p>
             Sign in with one of our account providers to save your progress to
@@ -25,7 +62,7 @@ const UserAccountModal = () => {
           </p>
           <div className="my-4">
             <button
-              onClick={handleGoogleLogin}
+              onClick={login}
               type="button"
               className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
             >
@@ -49,21 +86,23 @@ const UserAccountModal = () => {
           </div>
         </div>
       )}
-      {signedIn && (
+
+      {!isLoading && signedIn && (
         <div>
           <div className="my-2">
             <p>Welcome back, {username}</p>
             <p>ID: {id}</p>
-            <button className="underline" onClick={handleLogout}>
+            <button className="underline" onClick={logout}>
               Logout
             </button>
           </div>
           <div className="p-4">
             <div className="my-2">
               <button
-                onClick={updateLocalData}
+                onClick={handlePullData}
+                disabled={isLoading}
                 type="button"
-                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
+                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 disabled:opacity-50"
               >
                 <CloudDownloadIcon />
                 <span className="ml-2">Pull saved data</span>
@@ -71,9 +110,10 @@ const UserAccountModal = () => {
             </div>
             <div className="my-2">
               <button
-                onClick={syncDataToRemote}
+                onClick={handleSaveToCloud}
+                disabled={isLoading}
                 type="button"
-                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
+                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 disabled:opacity-50"
               >
                 <CloudUploadIcon />
                 <span className="ml-2">Save data to cloud</span>
@@ -82,6 +122,7 @@ const UserAccountModal = () => {
           </div>
         </div>
       )}
+
       <p className="mt-10 text-gray-300">
         Tunele's{" "}
         <a href="/privacy" target="_blank" className="underline">

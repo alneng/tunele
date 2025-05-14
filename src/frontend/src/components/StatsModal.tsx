@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { countScores, NumberToNumberMapping } from "@/utils/stats.utils";
-import { useLoadUserData } from "@/hooks/user.hooks";
-
-interface StatsModalProps {
-  playlistId?: string;
-  statsBarHeights: NumberToNumberMapping;
-  statsCorrectString: string;
-  statsCorrectPercentageString: string;
-}
+import {
+  calculateBarHeights,
+  calculateStatsBottom,
+  countScores,
+} from "@/utils/stats.utils";
+import { GameResult } from "@/types";
 
 const StatBar = ({
   label,
@@ -34,21 +31,24 @@ const StatBar = ({
   </div>
 );
 
-const StatsModal: React.FC<StatsModalProps> = ({
-  playlistId,
-  statsBarHeights,
-  statsCorrectString,
-  statsCorrectPercentageString,
-}) => {
-  const [scores, setScores] = useState<NumberToNumberMapping>({});
-  const { main, custom } = useLoadUserData();
+interface StatsModalProps {
+  gameData: GameResult[];
+}
 
-  useEffect(() => {
-    const scores = playlistId
-      ? countScores(custom[playlistId])
-      : countScores(main);
-    setScores(scores);
-  }, [custom, main, playlistId]);
+const StatsModal: React.FC<StatsModalProps> = ({ gameData }) => {
+  // State for scores and stats
+  const scores = useMemo(() => countScores(gameData), [gameData]);
+  const statsBarHeights = useMemo(
+    () => (gameData ? calculateBarHeights(gameData) : Array(7).fill(0)),
+    [gameData]
+  );
+  const { statsCorrectString, statsCorrectPercentageString } = useMemo(() => {
+    if (gameData) return calculateStatsBottom(gameData);
+    return {
+      statsCorrectString: "0/0",
+      statsCorrectPercentageString: "0.0",
+    };
+  }, [gameData]);
 
   const scoreCategories = [
     { label: "1°", score: 1 },

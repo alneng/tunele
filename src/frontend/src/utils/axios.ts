@@ -1,6 +1,7 @@
 import axios from "axios";
 import { logout, refreshUserSession } from "@/api/auth";
 import { AxiosApiError } from "@/types";
+import { useUserStore } from "@/store/user.store";
 
 export const API_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
@@ -21,6 +22,7 @@ api.interceptors.response.use(
       if ((status === 401 || status === 500) && data?.retry) {
         try {
           await refreshUserSession();
+          await useUserStore.getState().checkAuth();
         } catch (error) {
           console.error(error);
           await logout();

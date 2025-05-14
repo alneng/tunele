@@ -1,3 +1,4 @@
+import { GameState } from "@/store/game.store";
 import { GameResult, SavedGameData } from "@/types";
 
 /**
@@ -7,30 +8,34 @@ import { GameResult, SavedGameData } from "@/types";
  * @param newData data coming from the server
  * @returns the new merged data
  */
-export function mergeGameData(
+export const mergeGameData = (
   existingData: SavedGameData,
   newData: SavedGameData
-): SavedGameData {
-  existingData.main = mergeArrays(existingData.main, newData.main);
+): SavedGameData => {
+  const result = { ...existingData };
+
+  result.main = mergeArrays(existingData.main, newData.main);
 
   if (!existingData.custom) {
-    existingData.custom = newData.custom;
+    result.custom = { ...newData.custom };
   } else {
+    result.custom = { ...existingData.custom };
     for (const key in newData.custom) {
-      if (!existingData.custom[key]) {
-        existingData.custom[key] = newData.custom[key];
+      if (!result.custom[key]) {
+        result.custom[key] = newData.custom[key];
       } else {
-        existingData.custom[key] = mergeArrays(
-          existingData.custom[key],
+        result.custom[key] = mergeArrays(
+          result.custom[key],
           newData.custom[key]
         );
       }
     }
   }
-  return existingData;
-}
+  return result;
+};
 
-function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
+// Helper function to merge arrays of GameResult, giving priority to existing data
+const mergeArrays = (existingArray: GameResult[], newArray: GameResult[]) => {
   if (!newArray) return existingArray;
 
   const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
@@ -39,19 +44,34 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
   );
 
   const concat_array = existingArray.concat(newData);
-  const sorted_array = concat_array.sort(
-    (a: GameResult, b: GameResult) => a.id - b.id
-  );
-  return sorted_array;
-}
+  return concat_array.sort((a: GameResult, b: GameResult) => a.id - b.id);
+};
 
 /**
- * Fetches saved data from local storage.
+ * Migrates data from the old storage format (v0) to the new one (v1). If the old storage
+ * does not exist, it returns the current state's saved data.
  *
- * @returns the saved data
+ * @param state the current store state
+ * @returns the new saved data
  */
-export function fetchSavedData(): SavedGameData {
-  return JSON.parse(
-    localStorage.getItem("userData") ?? '{ "main": [], "custom": {} }'
-  );
-}
+export const migrateFromOldStorage = (state: GameState) => {
+  const originalStore = window.localStorage.getItem("userData");
+
+  if (originalStore) {
+    console.log("Attempting to migrate data from v0 to v1");
+
+    console.debug("Backing up original store");
+    window.localStorage.setItem("userDataBackup", originalStore);
+
+    try {
+      const originalStoreData = JSON.parse(originalStore) as SavedGameData;
+      console.log("Successfully migrated data from v0 to v1");
+      window.localStorage.removeItem("userData");
+      return mergeGameData(originalStoreData, state.savedData);
+    } catch (error) {
+      console.log("An error happened during migration from v0 to v1", error);
+    }
+  }
+
+  return state.savedData;
+};

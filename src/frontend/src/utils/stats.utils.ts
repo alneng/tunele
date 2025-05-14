@@ -10,31 +10,24 @@ export interface NumberToNumberMapping {
  * @param array the array of GameResult
  * @returns the count of each score
  */
-export function countScores(array: GameResult[]): NumberToNumberMapping {
-  const scoreCounts: NumberToNumberMapping = {};
-  for (let i = 0; i <= 6; i++) scoreCounts[i] = 0;
-  if (!array) return scoreCounts;
-
-  for (const item of array) {
-    const score = item.score;
-    scoreCounts[score] += 1;
-  }
-
+export function countScores(array: GameResult[] = []): NumberToNumberMapping {
+  const scoreCounts: NumberToNumberMapping = Object.fromEntries(
+    Array.from({ length: 7 }, (_, i) => [i, 0])
+  );
+  array.forEach((item) => {
+    scoreCounts[item.score]++;
+  });
   return scoreCounts;
 }
 
 /**
- * Gets the highest occurence of a single score
+ * Gets the highest occurrence of a single score.
  *
  * @param scores the scores to find the highest of
  * @returns the highest value of a single score
  */
 function getHighestScore(scores: NumberToNumberMapping): number {
-  let maxIndex = 0;
-  for (let i = 0; i <= 6; i++) {
-    if (scores[i] > scores[maxIndex]) maxIndex = i;
-  }
-  return scores[maxIndex];
+  return Math.max(...Object.values(scores));
 }
 
 /**
@@ -50,8 +43,7 @@ export function calculateBarHeights(
   const max: number = getHighestScore(scores);
   if (max === 0) return Array(7).fill(0);
   for (let i = 0; i <= 6; i++) {
-    const previousValue = scores[i];
-    scores[i] = (previousValue / max) * 100;
+    scores[i] = (scores[i] / max) * 100;
   }
   return scores;
 }
@@ -63,21 +55,18 @@ export function calculateBarHeights(
  * @returns the stats information
  */
 export function calculateStatsBottom(localData: GameResult[]): {
-  statsNumCorrectString: string;
+  statsCorrectString: string;
   statsCorrectPercentageString: string;
 } {
-  const totalLength = localData.length;
-  let numCorrect = 0;
-  for (const game of localData) {
-    if (game.score > 0) numCorrect++;
-  }
-  const formattedString = `${numCorrect}/${totalLength}`;
-  const formattedPercentageString = `${(
-    (numCorrect / totalLength) *
-    100
-  ).toFixed(1)}`;
+  const correct = localData.reduce(
+    (acc, game) => acc + (game.score > 0 ? 1 : 0),
+    0
+  );
+
   return {
-    statsNumCorrectString: formattedString,
-    statsCorrectPercentageString: formattedPercentageString,
+    statsCorrectString: `${correct}/${localData.length}`,
+    statsCorrectPercentageString: localData.length
+      ? `${((correct / localData.length) * 100).toFixed(1)}`
+      : "0.0",
   };
 }
