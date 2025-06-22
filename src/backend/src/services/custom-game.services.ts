@@ -1,5 +1,5 @@
 import { HttpException } from "../utils/errors.utils";
-import db from "../utils/firebase.utils";
+import db from "../lib/firebase";
 import {
   refreshPlaylist,
   getExistingGameTrack,

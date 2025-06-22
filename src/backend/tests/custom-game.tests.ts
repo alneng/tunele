@@ -1,5 +1,5 @@
 import CustomGameService from "../src/services/custom-game.services";
-import db from "../src/utils/firebase.utils";
+import db from "../src/lib/firebase";
 import { HttpException } from "../src/utils/errors.utils";
 import {
   gameTrackDocumentExtras,
@@ -12,7 +12,7 @@ import { mockSpotifyPlaylist } from "./test-data/spotify.test-data";
 import { RedisService } from "../src/lib/redis.service";
 
 jest.mock("../src/lib/redis.service");
-jest.mock("../src/utils/firebase.utils");
+jest.mock("../src/lib/firebase");
 jest.mock("../src/utils/spotify.utils");
 
 describe("Custom Game Tests", () => {
