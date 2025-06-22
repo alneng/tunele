@@ -117,7 +117,7 @@ jobs:
             cd "$PROJECT_DIR"
 
             # Set compose file and project name based on environment
-            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
+            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview"* ]]; then
               COMPOSE_FILE="docker-compose.preview.yml"
               ENV_FILE=".env.preview"
               export COMPOSE_PROJECT_NAME="${{ github.repository }}-preview"
@@ -129,9 +129,26 @@ jobs:
               HEALTH_URL="http://localhost:7600/api/health"
             fi
 
-            # Backup current compose file for rollback
+            # Download latest configuration files from repository
+            echo "Downloading latest configuration files from repository..."
+            
+            # GitHub raw file URLs - using commit SHA for exact version
+            REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+            
+            # Download docker-compose files
+            echo "Downloading docker-compose file..."
+            curl -f -o "$COMPOSE_FILE.new" "$REPO_URL/src/backend/docker/$COMPOSE_FILE" || {
+              echo "ERROR: Failed to download $COMPOSE_FILE"
+              exit 1
+            }
+            
+            # Backup existing files and replace with new ones
+            echo "Updating configuration files..."
+            
+            # Backup and replace docker-compose files
             cp "$COMPOSE_FILE" "$COMPOSE_FILE.backup"
-
+            mv "$COMPOSE_FILE.new" "$COMPOSE_FILE"
+            
             # Update the image in the compose file
             sed -i "s|image: ghcr.io/.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }}|" "$COMPOSE_FILE"
 
@@ -162,13 +179,25 @@ jobs:
             # Function to rollback
             rollback() {
               echo "Rolling back to previous version..."
-              mv "$COMPOSE_FILE.backup" "$COMPOSE_FILE"
-              docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --remove-orphans
               
-              if check_health; then
-                echo "Rollback successful!"
+              # Restore original compose file if backup exists
+              if [[ -f "$COMPOSE_FILE.backup" ]]; then
+                echo "Restoring original $COMPOSE_FILE..."
+                cp "$COMPOSE_FILE.backup" "$COMPOSE_FILE"
+                
+                # Start containers with original file
+                docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --remove-orphans
+                
+                if check_health; then
+                  echo "Rollback successful!"
+                  # Clean up failed deployment files
+                  rm -f "$COMPOSE_FILE.backup"
+                else
+                  echo "ERROR: Rollback failed! Manual intervention required."
+                  exit 1
+                fi
               else
-                echo "ERROR: Rollback failed! Manual intervention required."
+                echo "ERROR: No backup file found for rollback!"
                 exit 1
               fi
             }
@@ -184,14 +213,16 @@ jobs:
             
             # Check if new deployment is healthy
             if check_health; then
-              echo "New deployment is healthy, stopping old containers..."
+              echo "New deployment is healthy, recreating containers with new config..."
               
-              # Now recreate containers to ensure clean state
+              # Now recreate containers with new config to ensure clean state
               docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate --remove-orphans
               
               # Final health check after recreation
               if check_health; then
-                echo "Deployment successful!"
+                echo "Deployment successful! Replacing original compose file..."
+                
+                # Clean up backup files
                 rm -f "$COMPOSE_FILE.backup"
                 
                 # Clean up old images
