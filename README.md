@@ -39,8 +39,25 @@ These services are **required** for Tunele to work properly.
 
 1. Clone the repository to the directory of your choice - `git clone https://github.com/alneng/tunele.git`
 2. Download dependencies - `yarn install`
-3. Start the frontend and backend - `yarn start`
-4. Access the frontend - http://localhost:5173
+3. Start Redis - `yarn redis`
+4. Start the frontend and backend - `yarn start`
+5. Access the frontend - http://localhost:5173
+
+### Running Tunele with Redis Locally
+
+**Start Redis with Docker**
+
+Yarn Script (deletes container after close)
+
+```bash
+yarn redis
+```
+
+Docker command
+
+```bash
+docker run --name redis -p 6379:6379 redis:8-alpine
+```
 
 ### Starting Tunele backend with Docker
 
@@ -48,7 +65,7 @@ Building the image
 
 ```bash
 cd src/backend
-docker compose build # Creates image tunele-api:latest
+docker compose -f "./docker/docker-compose.local.yml" build # Creates image tunele-api:latest
 ```
 
 Running the image
@@ -57,7 +74,7 @@ Running the image
 # With Docker Compose
 
 cd src/backend
-docker compose up # Has the correct context (log directory, env file)
+docker compose -f "./docker/docker-compose.local.yml" up # Has the correct context (log directory, env file)
 
 # or Manually run the image - configure log directory and env file as fit
 

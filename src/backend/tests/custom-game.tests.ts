@@ -9,7 +9,9 @@ import {
 } from "./test-data/songs.test-data";
 import * as spotifyUtils from "../src/utils/spotify.utils";
 import { mockSpotifyPlaylist } from "./test-data/spotify.test-data";
+import { RedisService } from "../src/lib/redis.service";
 
+jest.mock("../src/lib/redis.service");
 jest.mock("../src/utils/firebase.utils");
 jest.mock("../src/utils/spotify.utils");
 
@@ -20,6 +22,7 @@ describe("Custom Game Tests", () => {
 
   describe("/dailySong endpoint", () => {
     test("getDailySong returns a song if one already exists", async () => {
+      jest.spyOn(RedisService, "getJSON").mockResolvedValue(null);
       jest.spyOn(db, "getDocument").mockResolvedValue({
         ...allTracks,
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],

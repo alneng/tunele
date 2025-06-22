@@ -63,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/backend/Dockerfile
+          file: ./src/backend/docker/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
 
@@ -90,93 +90,122 @@ jobs:
           if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
             echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
             echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
-            echo "image_tag=latest" >> $GITHUB_OUTPUT
+            echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
           # elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
           #   echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
           #   echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
-          #   echo "image_tag=preview" >> $GITHUB_OUTPUT
+          #   echo "image_tag=preview-${{ github.sha }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             if [[ "${{ inputs.environment }}" == "production" ]]; then
               echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
               echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
-              echo "image_tag=latest" >> $GITHUB_OUTPUT
+              echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
             else
               echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
               echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
-              echo "image_tag=preview" >> $GITHUB_OUTPUT
+              echo "image_tag=preview-${{ github.sha }}" >> $GITHUB_OUTPUT
             fi
           fi
 
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+            set -e # Exit on any error
+            
             # Change to project directory
             PROJECT_DIR="/home/${{ secrets.SERVER_USER }}/${{ env.CONTAINER_NAME }}"
             cd "$PROJECT_DIR"
 
-            # Set log directory based on environment
+            # Set compose file and project name based on environment
             if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
-              LOG_DIR="logs/preview"
+              COMPOSE_FILE="docker-compose.preview.yml"
+              ENV_FILE=".env.preview"
+              export COMPOSE_PROJECT_NAME="${{ github.repository }}-preview"
+              HEALTH_URL="http://localhost:7601/api/health"
             else
-              LOG_DIR="logs/prod"
+              COMPOSE_FILE="docker-compose.prod.yml"
+              ENV_FILE=".env"
+              export COMPOSE_PROJECT_NAME="${{ github.repository }}-prod"
+              HEALTH_URL="http://localhost:7600/api/health"
             fi
 
-            # Set env vars based on environment
-            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview" ]]; then
-              ENV_DIR=".env.preview"
-            else
-              ENV_DIR=".env"
-            fi
-            
-            # Ensure log directory exists
-            mkdir -p "$LOG_DIR"
+            # Backup current compose file for rollback
+            cp "$COMPOSE_FILE" "$COMPOSE_FILE.backup"
 
-            # Pull the new image
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }}
-            
-            # Stop and rename existing container if it exists
-            if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }})" ]; then
-              echo "Stopping and renaming existing container..."
-              docker stop ${{ steps.deploy-vars.outputs.container_name }}
-              docker rename ${{ steps.deploy-vars.outputs.container_name }} ${{ steps.deploy-vars.outputs.container_name }}-old
-            fi
-            
-            # Start new container and capture its ID
-            echo "Starting new container..."
-            NEW_CONTAINER_ID=$(docker run -d --restart unless-stopped \
-              --name ${{ steps.deploy-vars.outputs.container_name }} \
-              -v "$PROJECT_DIR/$LOG_DIR":/app/logs \
-              --env-file "$ENV_DIR" \
-              -p ${{ steps.deploy-vars.outputs.port_mapping }} \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }})
-            
-            # Wait a few seconds and check if container is running
-            echo "Waiting to verify container health..."
-            sleep 5
-            
-            if [ "$(docker ps -q -f id=$NEW_CONTAINER_ID)" ]; then
-              echo "New container is running successfully"
-              # Remove old container if exists
-              if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }}-old)" ]; then
-                echo "Removing old container..."
-                docker rm -f ${{ steps.deploy-vars.outputs.container_name }}-old
-              fi
-            else
-              echo "New container failed to start. Rolling back..."
-              # Remove failed container
-              docker rm -f ${{ steps.deploy-vars.outputs.container_name }}
+            # Update the image in the compose file
+            sed -i "s|image: ghcr.io/.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }}|" "$COMPOSE_FILE"
+
+            # Pull the latest images
+            echo "Pulling new images..."
+            docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" pull
+
+            # Function to check service health
+            check_health() {
+              local max_attempts=30
+              local attempt=1
               
-              # Restore old container
-              if [ "$(docker ps -aq -f name=${{ steps.deploy-vars.outputs.container_name }}-old)" ]; then
-                docker rename ${{ steps.deploy-vars.outputs.container_name }}-old ${{ steps.deploy-vars.outputs.container_name }}
-                docker start ${{ steps.deploy-vars.outputs.container_name }}
-                echo "Rollback complete - old container restored"
+              echo "Checking service health..."
+              while [ $attempt -le $max_attempts ]; do
+                if curl -f "$HEALTH_URL" >/dev/null 2>&1; then
+                  echo "Service is healthy!"
+                  return 0
+                fi
+                echo "Attempt $attempt/$max_attempts: Service not healthy yet, waiting..."
+                sleep 5
+                ((attempt++))
+              done
+              
+              echo "Service failed to become healthy after $max_attempts attempts"
+              return 1
+            }
+
+            # Function to rollback
+            rollback() {
+              echo "Rolling back to previous version..."
+              mv "$COMPOSE_FILE.backup" "$COMPOSE_FILE"
+              docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --remove-orphans
+              
+              if check_health; then
+                echo "Rollback successful!"
               else
-                echo "ERROR: Could not rollback - old container not found"
+                echo "ERROR: Rollback failed! Manual intervention required."
                 exit 1
               fi
+            }
+
+            # Deploy
+            echo "Starting deployment..."
+            
+            # Start new containers without stopping old ones first
+            docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --no-recreate --remove-orphans
+            
+            # Wait a moment for containers to initialize
+            sleep 15
+            
+            # Check if new deployment is healthy
+            if check_health; then
+              echo "New deployment is healthy, stopping old containers..."
               
-              echo "ERROR: Deployment failed - failed to deploy new container"
+              # Now recreate containers to ensure clean state
+              docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate --remove-orphans
+              
+              # Final health check after recreation
+              if check_health; then
+                echo "Deployment successful!"
+                rm -f "$COMPOSE_FILE.backup"
+                
+                # Clean up old images
+                echo "Cleaning up old images..."
+                docker image prune -f --filter "until=24h"
+              else
+                echo "Post-recreation health check failed, rolling back..."
+                rollback
+                exit 1
+              fi
+            else
+              echo "New deployment failed health check, rolling back..."
+              rollback
               exit 1
             fi
+            
           ENDSSH

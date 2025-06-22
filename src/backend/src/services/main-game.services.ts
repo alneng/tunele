@@ -28,17 +28,7 @@ export default class MainGameService {
       "gameTracks",
       localDate
     );
-
-    if (dailyGameTrack) {
-      return {
-        song: dailyGameTrack.song,
-        artists: dailyGameTrack.artists,
-        id: dailyGameTrack.id,
-        trackPreview: dailyGameTrack.trackPreview,
-        albumCover: dailyGameTrack.albumCover,
-        externalUrl: dailyGameTrack.externalUrl,
-      };
-    }
+    if (dailyGameTrack) return gameTrackTransformer(dailyGameTrack);
 
     let mostRecentTracksSnapshot: MainGameSnapshot | null =
       await db.getLastDocument("allTracks");

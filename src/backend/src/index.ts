@@ -7,6 +7,10 @@ import { httpRequestLogger, log } from "./utils/logger.utils";
 import { errorHandler } from "./utils/errors.utils";
 import { CORS_OPTIONS, PORT } from "./config";
 import apiRouter from "./api";
+import {
+  connectToRedisWithRetry,
+  gracefulShutdown,
+} from "./utils/server.utils";
 
 const app = express();
 
@@ -27,6 +31,28 @@ app.use("/api", apiRouter);
 // Error handler
 app.use(errorHandler);
 
-app.listen(PORT, "0.0.0.0", () => {
+// Start server and connect to Redis
+app.listen(PORT, "0.0.0.0", async () => {
   log.info(`API running at http://localhost:${PORT}`);
+
+  try {
+    await connectToRedisWithRetry();
+  } catch (error) {
+    log.error("Failed to establish Redis connection:", { meta: { error } });
+    process.exit(1);
+  }
+});
+
+// Register shutdown handlers
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+
+// Handle uncaught exceptions and unhandled rejections
+process.on("uncaughtException", (error) => {
+  log.error("Uncaught Exception:", { meta: { error, stack: error.stack } });
+  process.exit(1);
+});
+process.on("unhandledRejection", (reason, promise) => {
+  log.error("Unhandled Rejection:", { meta: { reason, promise } });
+  process.exit(1);
 });
