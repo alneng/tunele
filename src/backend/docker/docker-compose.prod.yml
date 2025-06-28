@@ -1,3 +1,5 @@
+name: tunele-api-prod
+
 services:
   api:
     image: ghcr.io/alneng/tunele-api:latest # This will be replaced by CI/CD

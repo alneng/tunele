@@ -1,3 +1,5 @@
+name: tunele-api-preview
+
 services:
   api:
     image: ghcr.io/alneng/tunele-api:preview # This will be replaced by CI/CD

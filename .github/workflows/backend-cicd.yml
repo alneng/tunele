@@ -120,12 +120,10 @@ jobs:
             if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview"* ]]; then
               COMPOSE_FILE="docker-compose.preview.yml"
               ENV_FILE=".env.preview"
-              export COMPOSE_PROJECT_NAME="${{ github.repository }}-preview"
               HEALTH_URL="http://localhost:7601/api/health"
             else
               COMPOSE_FILE="docker-compose.prod.yml"
               ENV_FILE=".env"
-              export COMPOSE_PROJECT_NAME="${{ github.repository }}-prod"
               HEALTH_URL="http://localhost:7600/api/health"
             fi
 

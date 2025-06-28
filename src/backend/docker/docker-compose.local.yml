@@ -1,3 +1,5 @@
+name: tunele-api
+
 services:
   tunele-api:
     container_name: tunele-api
