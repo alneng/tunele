@@ -4,6 +4,8 @@ import { HttpException, PlaylistNotFoundException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
 import { SPOTIFY_CLIENT_KEY } from "../config";
 import { log } from "./logger.utils";
+import { RedisService } from "../lib/redis.service";
+import { CacheKeys } from "./redis.utils";
 
 /**
  * Produces a Spotify access token
@@ -12,20 +14,30 @@ import { log } from "./logger.utils";
  */
 async function fetchAccessToken(): Promise<string> {
   try {
-    const data = {
-      grant_type: "client_credentials",
-    };
+    const token = await RedisService.getString(CacheKeys.SPOTIFY_ACCESS_TOKEN);
+    if (token) return token;
+
     const options = {
       method: "POST",
       headers: {
         Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      data: qs.stringify(data),
+      data: qs.stringify({ grant_type: "client_credentials" }),
       url: "https://accounts.spotify.com/api/token",
     };
     const response = await axios(options);
-    return response.data.access_token;
+    const { access_token, expires_in } = response.data;
+
+    // Cache the access token for the duration of its validity minus a buffer of 60 seconds
+    await RedisService.setString(
+      CacheKeys.SPOTIFY_ACCESS_TOKEN,
+      access_token,
+      expires_in - 60
+    );
+
+    // Return the access token
+    return access_token;
   } catch (error) {
     log.error("Failed to fetch access token", {
       meta: {

@@ -23,6 +23,9 @@ RUN yarn build
 
 FROM node:20-alpine AS prod
 
+# Install curl for health checks
+RUN apk add --no-cache curl
+
 # Set the working directory
 WORKDIR /app
 

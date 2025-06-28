@@ -1,17 +1,22 @@
+class MissingEnvVariableError extends Error {
+  constructor(variableName: string) {
+    super(`Missing environment variable: ${variableName}`);
+    this.name = "MissingEnvVariableError";
+  }
+}
+
 export const NODE_ENV = process.env.NODE_ENV || "development";
 
 // Throw if any required environment variables are missing
 if (NODE_ENV !== "test") {
   if (!process.env.CORS_OPTIONS)
-    throw new Error("Missing environment variable: CORS_OPTIONS");
+    throw new MissingEnvVariableError("CORS_OPTIONS");
   if (!process.env.COOKIE_SETTINGS)
-    throw new Error("Missing environment variable: COOKIE_SETTINGS");
+    throw new MissingEnvVariableError("COOKIE_SETTINGS");
   if (!process.env.SPOTIFY_CLIENT_KEY)
-    throw new Error("Missing environment variable: SPOTIFY_CLIENT_KEY");
+    throw new MissingEnvVariableError("SPOTIFY_CLIENT_KEY");
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-    throw new Error(
-      "Missing environment variable: FIREBASE_SERVICE_ACCOUNT_KEY"
-    );
+    throw new MissingEnvVariableError("FIREBASE_SERVICE_ACCOUNT_KEY");
 }
 
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
@@ -37,3 +42,10 @@ export const loggerConfig = {
   enableHttpLogPrinting: false, // Whether to print HTTP logs to console
   logLevel: "info" as const, // Default log level
 };
+
+// Redis configuration
+const redisUrlRegex =
+  /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
+export const REDIS_URL = process.env.REDIS_URL;
+if (!redisUrlRegex.test(REDIS_URL || "") && NODE_ENV !== "test")
+  throw new Error("Invalid REDIS_URL format");

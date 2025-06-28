@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto";
-import db from "./firebase.utils";
+import db from "../lib/firebase";
 import { fetchPlaylist } from "./spotify.utils";
 import {
   SpotifyPlaylistObject,

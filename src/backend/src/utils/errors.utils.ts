@@ -22,6 +22,12 @@ export class HttpException extends Error {
   }
 }
 
+export class InternalServerErrorException extends HttpException {
+  constructor(message = "Internal server error") {
+    super(500, message);
+  }
+}
+
 export class RateLimitException extends HttpException {
   constructor() {
     super(429, "Too many requests, please try again later");

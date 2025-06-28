@@ -1,5 +1,5 @@
 import MainGameService from "../src/services/main-game.services";
-import db from "../src/utils/firebase.utils";
+import db from "../src/lib/firebase";
 import { HttpException } from "../src/utils/errors.utils";
 import {
   gameTrackDocumentExtras,
@@ -8,7 +8,7 @@ import {
   allTracks,
 } from "./test-data/songs.test-data";
 
-jest.mock("../src/utils/firebase.utils");
+jest.mock("../src/lib/firebase");
 
 describe("Main Game Tests", () => {
   beforeEach(() => {
