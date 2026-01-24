@@ -11,6 +11,7 @@
     "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\"",
     "backend": "yarn workspace backend dev",
     "backend:preview": "yarn workspace backend build && yarn workspace backend preview",
+    "redis": "yarn workspace backend redis",
     "frontend": "yarn workspace frontend dev",
     "frontend:build": "yarn workspace frontend build",
     "frontend:preview": "yarn workspace frontend preview",

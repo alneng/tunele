@@ -19,6 +19,7 @@ export const createRateLimiter = () => {
       handler: (_req: Request, _res: Response, next: NextFunction) => {
         next(new RateLimitException());
       },
+      validate: { trustProxy: false },
     });
   }
 

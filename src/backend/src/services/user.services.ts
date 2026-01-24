@@ -4,7 +4,7 @@ import {
   getIdTokenAuthStatus,
   getAccessTokenAuthStatus,
 } from "../utils/auth.utils";
-import db from "../utils/firebase.utils";
+import db from "../lib/firebase";
 import { mergeGameData } from "../utils/user.utils";
 import { SavedGameData } from "../types";
 
