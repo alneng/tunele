@@ -2,84 +2,153 @@
 
 A Heardle clone after the game shut down on May 5th, 2023
 
-## How to use this repository
+## Architecture Overview
 
-### Required Services
+| Component | Technology | Location |
+|-----------|------------|----------|
+| Frontend | React + Vite + Tailwind | `src/frontend/` |
+| Backend | Node.js + Express + TypeScript | `src/backend/` |
+| Database | Firebase Firestore | Cloud |
+| Cache | Redis | Docker container |
+| Auth | Google OAuth 2.0 | Cloud |
 
-These services are **required** for Tunele to work properly.
+## Quick Start
 
-- A Spotify web application: [https://developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
-- A Firebase project with Firestore set up: [https://firebase.google.com/docs/firestore/quickstart](https://firebase.google.com/docs/firestore/quickstart)
-- A Google Cloud project with OAuth consent set up and client credentials: [https://developers.google.com/identity/protocols/oauth2](https://developers.google.com/identity/protocols/oauth2)
+### Prerequisites
 
-### Required Developer Tools
+1. **Developer Tools**
+   - [Git](https://git-scm.com/downloads)
+   - [Node.js 18+](https://nodejs.org/en/about/previous-releases)
+   - [Docker](https://www.docker.com/get-started) (for Redis)
+   - Yarn - `npm i -g yarn`
 
-1. Git - https://git-scm.com/downloads
-2. Node.js 18+ - https://nodejs.org/en/about/previous-releases
-3. Yarn - `npm i -g yarn` (must be done after Node.js is installed)
+2. **External Services**
+   - [Spotify Developer App](https://developer.spotify.com/dashboard)
+   - [Firebase Project with Firestore](https://firebase.google.com/docs/firestore/quickstart)
+   - [Google Cloud OAuth Credentials](https://developers.google.com/identity/protocols/oauth2)
 
-### Required Config Files for Running Tunele
+### Setup
 
-1. `src/backend/.env`
+1. **Clone the repository**
 
-   - Copy `src/backend/.env.example` to `src/backend/.env` and fill in the fields
-   - Values
-     - `SPOTIFY_CLIENT_KEY` - <base64 encoded `client_id:client_secret`>
-       - e.g. if your client_id is `abc` and client_secret is `123`, base64 encode the string `abc:123` and that is your key
-     - `FIREBASE_SERVICE_ACCOUNT_KEY` - JSON of Service Key with read/write access to Firebase project's Firestore Database (should be inline like the example)
-     - `GOOGLE_OAUTH_CLIENT_ID` - Google Cloud OAuth 2.0 client ID
-     - `GOOGLE_OAUTH_CLIENT_SECRET` - Google Cloud OAuth 2.0 client secret
-     - `REDIRECT_URI` - Google OAuth 2.0 redirect_uri
+   ```bash
+   git clone https://github.com/alneng/tunele.git
+   cd tunele
+   ```
 
-2. `src/frontend/.env`
+2. **Configure environment variables**
 
-   - Copy `src/frontend/.env.example` to `src/frontend/.env` and fill in the fields (`VITE_OAUTH_CLIENT_ID` for local development, same value as `GOOGLE_OAUTH_CLIENT_ID`)
+   ```bash
+   # Backend
+   cp src/backend/.env.example src/backend/.env
+   # Edit src/backend/.env with your credentials
 
-### Starting Tunele Locally
+   # Frontend
+   cp src/frontend/.env.example src/frontend/.env
+   # Edit src/frontend/.env with your credentials
+   ```
 
-1. Clone the repository to the directory of your choice - `git clone https://github.com/alneng/tunele.git`
-2. Download dependencies - `yarn install`
-3. Start Redis - `yarn redis`
-4. Start the frontend and backend - `yarn start`
-5. Access the frontend - http://localhost:5173
+3. **Install dependencies**
 
-### Running Tunele with Redis Locally
+   ```bash
+   yarn install
+   ```
 
-**Start Redis with Docker**
+4. **Start Redis**
 
-Yarn Script (deletes container after close)
+   ```bash
+   yarn redis
+   ```
 
-```bash
-yarn redis
-```
+5. **Start the application**
 
-Docker command
+   ```bash
+   yarn start
+   ```
 
-```bash
-docker run --name redis -p 6379:6379 redis:8-alpine
-```
+6. **Access the app** at http://localhost:5173
 
-### Starting Tunele backend with Docker
+## Environment Variables
 
-Building the image
+### Backend (`src/backend/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Server port (default: 7600) |
+| `CORS_OPTIONS` | CORS configuration JSON |
+| `COOKIE_SETTINGS` | Cookie configuration JSON |
+| `SPOTIFY_CLIENT_KEY` | Base64 encoded `client_id:client_secret` |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Firebase service account JSON (inline) |
+| `GOOGLE_OAUTH_CLIENT_ID` | Google OAuth 2.0 client ID |
+| `GOOGLE_OAUTH_CLIENT_SECRET` | Google OAuth 2.0 client secret |
+| `REDIRECT_URI` | OAuth redirect URI |
+| `REDIS_URL` | Redis connection URL |
+| `REDIS_PASSWORD` | Redis password (required in production) |
+
+### Frontend (`src/frontend/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_OAUTH_CLIENT_ID` | Same as `GOOGLE_OAUTH_CLIENT_ID` |
+
+## Development
+
+### Running with Docker
+
+Build and run the backend with Docker Compose:
 
 ```bash
 cd src/backend
-docker compose -f "./docker/docker-compose.local.yml" build # Creates image tunele-api:latest
+docker compose -f "./docker/docker-compose.local.yml" build
+docker compose -f "./docker/docker-compose.local.yml" up
 ```
 
-Running the image
+This starts both the API and Redis containers.
 
-```bash
-# With Docker Compose
+### Available Scripts
 
-cd src/backend
-docker compose -f "./docker/docker-compose.local.yml" up # Has the correct context (log directory, env file)
+| Command | Description |
+|---------|-------------|
+| `yarn start` | Start frontend and backend in development mode |
+| `yarn redis` | Start Redis container (auto-removes on stop) |
+| `yarn lint` | Run ESLint across all packages |
+| `yarn test` | Run test suites |
 
-# or Manually run the image - configure log directory and env file as fit
+## Deployment
 
-# Mac/Unix
-docker run -v $(pwd)/logs:/app/logs --env-file .env -p 7600:7600 --name tunele tunele-api:latest
-# Windows
-docker run -v ${pwd}/logs:/app/logs --env-file .env -p 7600:7600 --name tunele tunele-api:latest
+See [`src/backend/README.md`](src/backend/README.md) for detailed deployment documentation.
+
+### Quick Reference
+
+- **Production**: Auto-deploys on push to `master` (backend changes only)
+- **Preview**: Manual deployment via GitHub Actions workflow dispatch
+- **CI/CD**: GitHub Actions with lint/test gates before deployment
+
+### Environments
+
+| Environment | Branch | Port | Compose File |
+|-------------|--------|------|--------------|
+| Production | `master` | 7600 | `docker-compose.prod.yml` |
+| Preview | `develop` | 7601 | `docker-compose.preview.yml` |
+
+## Project Structure
+
 ```
+tunele/
+├── .github/workflows/     # CI/CD pipelines
+│   ├── ci.yml             # Lint and test (runs on all PRs/pushes)
+│   └── backend-cicd.yml   # Build and deploy backend
+├── src/
+│   ├── backend/           # Express API server
+│   │   ├── docker/        # Docker configuration
+│   │   ├── src/           # Application source
+│   │   └── tests/         # Test suites
+│   └── frontend/          # React application
+│       ├── src/           # Application source
+│       └── public/        # Static assets
+└── package.json           # Root workspace config
+```
+
+## License
+
+See [LICENSE](LICENSE) for details.
