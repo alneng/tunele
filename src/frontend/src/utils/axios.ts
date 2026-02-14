@@ -2,6 +2,7 @@ import axios from "axios";
 import { logout, refreshUserSession } from "@/api/auth";
 import { AxiosApiError } from "@/types";
 import { useUserStore } from "@/store/user.store";
+import { pushError } from "@/lib/faro";
 
 export const API_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
@@ -9,6 +10,14 @@ export const API_URL =
 const api = axios.create({
   baseURL: `${API_URL}/api`,
   withCredentials: true,
+});
+
+const sessionCorrelationId = crypto.randomUUID();
+
+// Add correlation ID to all outgoing requests
+api.interceptors.request.use((config) => {
+  config.headers["X-Correlation-ID"] = sessionCorrelationId;
+  return config;
 });
 
 // Add a response interceptor to redirect unauthenticated requests to login
@@ -28,9 +37,14 @@ api.interceptors.response.use(
           await logout();
         }
       }
+    } else {
+      pushError(error, {
+        correlationId: sessionCorrelationId,
+        url: error.config?.url ?? "unknown",
+      });
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

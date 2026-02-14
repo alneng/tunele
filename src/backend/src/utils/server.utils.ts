@@ -1,7 +1,5 @@
-import { Request, Response } from "express";
 import { RedisService } from "../lib/redis.service";
 import { log } from "./logger.utils";
-import redisClient from "../lib/redis.client";
 
 /**
  * Attempts to connect to Redis with exponential backoff retry.
@@ -57,24 +55,4 @@ export const gracefulShutdown = async (signal: string) => {
   }
 
   process.exit(0);
-};
-
-/**
- * Health check endpoint to verify the API's status.
- */
-export const healthCheck = async (_req: Request, res: Response) => {
-  try {
-    // Check database/Redis connectivity
-    await redisClient.ping();
-
-    res.status(200).json({
-      status: "healthy",
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    log.error("Health check failed", { meta: { error } });
-    res.status(503).json({
-      status: "unhealthy",
-    });
-  }
 };

@@ -7,8 +7,10 @@ import {
   TalkThatTalk,
   allTracks,
 } from "./test-data/songs.test-data";
+import { RedisService } from "../src/lib/redis.service";
 
 jest.mock("../src/lib/firebase");
+jest.mock("../src/lib/redis.service");
 
 describe("Main Game Tests", () => {
   beforeEach(() => {
@@ -16,14 +18,31 @@ describe("Main Game Tests", () => {
   });
 
   describe("/dailySong endpoint", () => {
-    test("getDailySong returns a song if one already exists", async () => {
-      jest.spyOn(db, "getDocument").mockResolvedValue(NeverGonna);
+    test("getDailySong returns a song from Redis if it exists", async () => {
+      jest.spyOn(RedisService, "getJSON").mockResolvedValue(NeverGonna);
+      const getDocumentSpy = jest.spyOn(db, "getDocument");
 
       const dailySong = await MainGameService.getDailySong("2024-01-26");
       expect(dailySong).toEqual(NeverGonna);
+      expect(getDocumentSpy).not.toHaveBeenCalled();
+    });
+
+    test("getDailySong returns a song from DB if not in Redis", async () => {
+      jest.spyOn(RedisService, "getJSON").mockResolvedValue(null);
+      jest.spyOn(db, "getDocument").mockResolvedValue(NeverGonna);
+      const setJSONSpy = jest.spyOn(RedisService, "setJSON");
+
+      const dailySong = await MainGameService.getDailySong("2024-01-26");
+      expect(dailySong).toEqual(NeverGonna);
+      expect(setJSONSpy).toHaveBeenCalledWith(
+        expect.stringContaining("cache:main:game_track:2024-01-26"),
+        NeverGonna,
+        expect.any(Number)
+      );
     });
 
     test("getDailySong returns a new song if one doesn't exist", async () => {
+      jest.spyOn(RedisService, "getJSON").mockResolvedValue(null);
       jest.spyOn(db, "getDocument").mockResolvedValue(null);
       jest.spyOn(db, "getLastDocument").mockResolvedValueOnce({
         id: "2024-01-26 23:27:00",
@@ -32,9 +51,18 @@ describe("Main Game Tests", () => {
       jest
         .spyOn(db, "getLastDocument")
         .mockResolvedValueOnce({ id: "2024-01-26", data: NeverGonna });
+      const setJSONSpy = jest.spyOn(RedisService, "setJSON");
 
       const dailySong = await MainGameService.getDailySong("2024-01-27");
       expect(dailySong).toEqual(TalkThatTalk);
+      expect(setJSONSpy).toHaveBeenCalledWith(
+        expect.stringContaining("cache:main:game_track:2024-01-27"),
+        expect.objectContaining({
+          song: TalkThatTalk.song,
+          artists: TalkThatTalk.artists,
+        }),
+        expect.any(Number)
+      );
     });
   });
 

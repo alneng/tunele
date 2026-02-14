@@ -6,6 +6,8 @@ import { SPOTIFY_CLIENT_KEY } from "../config";
 import { log } from "./logger.utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "./redis.utils";
+import { spotifyMetrics } from "../metrics/spotify.metrics";
+import { startTimer } from "../metrics/registry";
 
 /**
  * Produces a Spotify access token
@@ -13,6 +15,7 @@ import { CacheKeys } from "./redis.utils";
  * @returns a Spotify access token
  */
 async function fetchAccessToken(): Promise<string> {
+  const end = startTimer();
   try {
     const token = await RedisService.getString(CacheKeys.SPOTIFY_ACCESS_TOKEN);
     if (token) return token;
@@ -29,16 +32,19 @@ async function fetchAccessToken(): Promise<string> {
     const response = await axios(options);
     const { access_token, expires_in } = response.data;
 
+    spotifyMetrics.recordRequest("token", "success", end());
+
     // Cache the access token for the duration of its validity minus a buffer of 60 seconds
     await RedisService.setString(
       CacheKeys.SPOTIFY_ACCESS_TOKEN,
       access_token,
-      expires_in - 60
+      expires_in - 60,
     );
 
-    // Return the access token
     return access_token;
   } catch (error) {
+    spotifyMetrics.recordRequest("token", "error", end());
+
     log.error("Failed to fetch access token", {
       meta: {
         error,
@@ -60,9 +66,10 @@ async function fetchAccessToken(): Promise<string> {
  */
 export async function fetchPlaylist(
   playlistId: string,
-  options: { fetchAllTracks: boolean } = { fetchAllTracks: false }
+  options: { fetchAllTracks: boolean } = { fetchAllTracks: false },
 ): Promise<SpotifyPlaylistObject> {
   const token = await fetchAccessToken();
+  const end = startTimer();
   try {
     const response = await axios({
       method: "GET",
@@ -73,14 +80,18 @@ export async function fetchPlaylist(
       url: `https://api.spotify.com/v1/playlists/${playlistId}`,
     });
 
+    spotifyMetrics.recordRequest("playlist", "success", end());
+
     const data = response.data;
     if (options.fetchAllTracks && data.tracks.next) {
       data.tracks.items = data.tracks.items.concat(
-        await fetchTracks(data.tracks.next, token)
+        await fetchTracks(data.tracks.next, token),
       );
     }
     return data;
   } catch (error) {
+    spotifyMetrics.recordRequest("playlist", "error", end());
+
     if (axios.isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data;
       if (errorData.error?.status === 404)
@@ -108,8 +119,9 @@ export async function fetchPlaylist(
  */
 async function fetchTracks(
   nextUrl: string,
-  token: string
+  token: string,
 ): Promise<PlaylistTrackObject[]> {
+  const end = startTimer();
   try {
     const response = await axios({
       method: "GET",
@@ -119,12 +131,17 @@ async function fetchTracks(
       },
       url: nextUrl,
     });
+
+    spotifyMetrics.recordRequest("tracks", "success", end());
+
     let items = response.data.items;
     if (response.data.next) {
       items = items.concat(await fetchTracks(response.data.next, token));
     }
     return items;
   } catch (error) {
+    spotifyMetrics.recordRequest("tracks", "error", end());
+
     log.error("Failed to fetch tracks", {
       meta: {
         error,

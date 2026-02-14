@@ -1,7 +1,15 @@
 import winston from "winston";
-import morgan from "morgan";
 import path from "path";
-import { loggerConfig } from "../config";
+import LokiTransport from "winston-loki";
+import {
+  loggerConfig,
+  NODE_ENV,
+  GRAFANA_LOKI_HOST,
+  GRAFANA_LOKI_USER,
+  GRAFANA_LOKI_TOKEN,
+  CLUSTER_NAME,
+} from "../config";
+import { getCorrelationId } from "../middleware/correlation.middleware";
 
 const levels = {
   error: 0,
@@ -43,23 +51,33 @@ const conditionalHttpFilter = winston.format((info) => {
   return info;
 });
 
-const logger = winston.createLogger({
-  level: "http",
-  levels,
-  format: winston.format.combine(
-    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  transports: [
+/**
+ * Format that adds correlation ID to log entries
+ */
+const correlationIdFormat = winston.format((info) => {
+  const correlationId = getCorrelationId();
+  if (correlationId) {
+    info.correlationId = correlationId;
+  }
+  return info;
+});
+
+/**
+ * Build transports array based on environment
+ */
+function buildTransports(): winston.transport[] {
+  const transports: winston.transport[] = [
     // Handles printing logs to console
     new winston.transports.Console({
       format: winston.format.combine(
         conditionalHttpFilter(),
         winston.format.colorize({ all: true }),
-        winston.format.printf(
-          (info) => `[${info.timestamp}] ${info.level}: ${info.message}`
-        )
+        winston.format.printf((info) => {
+          const correlationId = info.correlationId
+            ? ` [${info.correlationId}]`
+            : "";
+          return `[${info.timestamp}]${correlationId} ${info.level}: ${info.message}`;
+        }),
       ),
     }),
     // Separate log file for error logs
@@ -73,7 +91,7 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         onlyHttpFilter(),
         winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        winston.format.json()
+        winston.format.json(),
       ),
     }),
     // Combined log file for all other logs (excluding HTTP logs)
@@ -82,10 +100,53 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         excludeHttpFilter(),
         winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        winston.format.json()
+        winston.format.json(),
       ),
     }),
-  ],
+  ];
+
+  // Add Loki transport for production
+  if (
+    NODE_ENV === "production" &&
+    GRAFANA_LOKI_HOST &&
+    GRAFANA_LOKI_USER &&
+    GRAFANA_LOKI_TOKEN
+  ) {
+    transports.push(
+      new LokiTransport({
+        host: GRAFANA_LOKI_HOST,
+        basicAuth: `${GRAFANA_LOKI_USER}:${GRAFANA_LOKI_TOKEN}`,
+        labels: {
+          app: "tunele-api",
+          env: NODE_ENV,
+          cluster: CLUSTER_NAME,
+        },
+        json: true,
+        format: winston.format.combine(
+          correlationIdFormat(),
+          winston.format.json(),
+        ),
+        replaceTimestamp: true,
+        onConnectionError: (err) => {
+          console.error("Loki connection error:", err);
+        },
+      }),
+    );
+  }
+
+  return transports;
+}
+
+const logger = winston.createLogger({
+  level: "http",
+  levels,
+  format: winston.format.combine(
+    correlationIdFormat(),
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    winston.format.errors({ stack: true }),
+    winston.format.json(),
+  ),
+  transports: buildTransports(),
 });
 
 export const log = {
@@ -94,10 +155,3 @@ export const log = {
   info: (message: string, meta?: unknown) => logger.info(message, meta),
   http: (message: string, meta?: unknown) => logger.http(message, meta),
 } as const;
-
-/**
- * Morgan middleware for logging HTTP requests.
- */
-export const httpRequestLogger = morgan("combined", {
-  stream: { write: (message: string) => log.http(message.trim()) },
-});

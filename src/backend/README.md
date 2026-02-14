@@ -17,7 +17,7 @@ yarn start    # Start frontend + backend
 
 ```bash
 cd src/backend
-docker compose -f "./docker/docker-compose.local.yml" up --build
+docker compose -f "./docker/docker-compose.local.yml" --env-file ".env" up --build
 ```
 
 This starts the API and Redis containers together.
@@ -48,14 +48,16 @@ This starts the API and Redis containers together.
 
 ### Environments
 
-| Environment | Trigger | Image Tag | Port | Compose File |
-|-------------|---------|-----------|------|--------------|
-| **Production** | Push to `master` | `latest`, `{sha}` | 7600 | `docker-compose.prod.yml` |
-| **Preview** | Manual dispatch | `preview`, `preview-{sha}` | 7601 | `docker-compose.preview.yml` |
+| Environment    | Trigger           | Image Tag                  | Port | Compose File                 |
+| -------------- | ----------------- | -------------------------- | ---- | ---------------------------- |
+| **Production** | Push to `master`  | `latest`, `{sha}`          | 7600 | `docker-compose.prod.yml`    |
+| **Preview**    | Manual dispatch   | `preview`, `preview-{sha}` | 7601 | `docker-compose.preview.yml` |
+| **Local**      | Local development | `tunele-api-local`         | 7600 | `docker-compose.local.yml`   |
 
 ### CI/CD Pipeline
 
 The deployment pipeline (`backend-cicd.yml`) runs on:
+
 - **Automatic**: Push to `master` with changes in `src/backend/**`
 - **Manual**: Workflow dispatch (select environment: preview or production)
 
@@ -84,6 +86,7 @@ To deploy a branch to an environment manually:
 4. Click **Run workflow**
 
 This is useful for:
+
 - Testing `develop` branch changes in production before merging
 - Deploying hotfixes from feature branches
 - Rolling back to a previous commit
@@ -134,25 +137,38 @@ REDIS_URL='redis://redis:6379'
 REDIS_PASSWORD='your_secure_redis_password'
 ```
 
+#### Observability Configuration - Environment Variables
+
+| Variable                        | Description                          |
+| ------------------------------- | ------------------------------------ |
+| `METRICS_AUTH_TOKEN` (optional) | Metrics authentication token         |
+| `CLUSTER_NAME` (optional)       | Cluster name for metrics and logging |
+| `GRAFANA_LOKI_HOST`             | Grafana Loki host                    |
+| `GRAFANA_LOKI_USER`             | Grafana Loki user                    |
+| `GRAFANA_LOKI_TOKEN`            | Grafana Loki token                   |
+| `GRAFANA_PROMETHEUS_URL`        | Grafana Prometheus URL               |
+| `GRAFANA_PROMETHEUS_USER`       | Grafana Prometheus user              |
+| `GRAFANA_PROMETHEUS_TOKEN`      | Grafana Prometheus token             |
+
 #### GitHub Secrets Required
 
 Configure these in your repository settings:
 
-| Secret | Description |
-|--------|-------------|
+| Secret            | Description                       |
+| ----------------- | --------------------------------- |
 | `SSH_PRIVATE_KEY` | SSH private key for server access |
-| `SERVER_HOST` | Server hostname or IP |
-| `SERVER_USER` | SSH username on server |
+| `SERVER_HOST`     | Server hostname or IP             |
+| `SERVER_USER`     | SSH username on server            |
 
 ### Docker Configuration
 
 #### Compose Files
 
-| File | Purpose | Services |
-|------|---------|----------|
-| `docker-compose.local.yml` | Local development | API + Redis (port 6379 exposed) |
-| `docker-compose.prod.yml` | Production | API (port 7600) + Redis (internal) |
-| `docker-compose.preview.yml` | Preview/staging | API (port 7601) + Redis (internal) |
+| File                         | Purpose           | Services                           |
+| ---------------------------- | ----------------- | ---------------------------------- |
+| `docker-compose.local.yml`   | Local development | API + Redis (port 6379 exposed)    |
+| `docker-compose.prod.yml`    | Production        | API (port 7600) + Redis (internal) |
+| `docker-compose.preview.yml` | Preview/staging   | API (port 7601) + Redis (internal) |
 
 #### Health Checks
 

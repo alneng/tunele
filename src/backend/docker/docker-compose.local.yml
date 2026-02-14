@@ -1,9 +1,9 @@
-name: tunele-api
+name: tunele-api-local
 
 services:
-  tunele-api:
-    container_name: tunele-api
-    image: tunele-api
+  api:
+    image: tunele-api-local
+    container_name: tunele-api-local
     env_file: "../.env"
     build:
       context: ../../../ # Pull the yarn.lock from the root directory
@@ -38,6 +38,27 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+
+  grafana-agent:
+    image: grafana/agent:latest
+    container_name: tunele-grafana-agent-local
+    restart: unless-stopped
+    volumes:
+      - ../grafana/grafana-agent.yml:/etc/agent/agent.yaml:ro
+    environment:
+      - CLUSTER_NAME=${CLUSTER_NAME}
+      - API_HOST=api
+      - API_PORT=7600
+      - METRICS_AUTH_TOKEN=${METRICS_AUTH_TOKEN}
+      - GRAFANA_CLOUD_PROMETHEUS_URL=${GRAFANA_PROMETHEUS_URL}
+      - GRAFANA_CLOUD_PROMETHEUS_USERNAME=${GRAFANA_PROMETHEUS_USER}
+      - GRAFANA_CLOUD_API_KEY=${GRAFANA_PROMETHEUS_TOKEN}
+    command: ["-config.file=/etc/agent/agent.yaml", "-config.expand-env"]
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - tunele-network
 
 networks:
   tunele-network:

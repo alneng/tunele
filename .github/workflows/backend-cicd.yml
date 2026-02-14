@@ -207,6 +207,12 @@ jobs:
               exit 1
             }
             
+            # Download Grafana Agent config for observability
+            echo "Downloading Grafana Agent config..."
+            curl -f -o "grafana-agent.yml" "$REPO_URL/src/backend/grafana/grafana-agent.yml" || {
+              echo "WARNING: Failed to download grafana-agent.yml (observability may not work)"
+            }
+            
             # Backup existing files and replace with new ones
             echo "Updating configuration files..."
             
