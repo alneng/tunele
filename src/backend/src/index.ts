@@ -3,8 +3,13 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { createRateLimiter } from "./utils/middleware";
-import { httpRequestLogger, log } from "./utils/logger.utils";
+import { log } from "./utils/logger.utils";
 import { errorHandler } from "./utils/errors.utils";
+import {
+  httpRequestLogger,
+  metricsMiddleware,
+} from "./middleware/http.middleware";
+import { correlationMiddleware } from "./middleware/correlation.middleware";
 import { CORS_OPTIONS, PORT } from "./config";
 import apiRouter from "./api";
 import {
@@ -22,6 +27,8 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
+app.use(correlationMiddleware);
+app.use(metricsMiddleware);
 app.use(createRateLimiter());
 app.use(httpRequestLogger);
 

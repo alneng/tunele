@@ -43,6 +43,15 @@ export const loggerConfig = {
   logLevel: "info" as const, // Default log level
 };
 
+// Grafana Cloud configuration for observability
+export const GRAFANA_LOKI_HOST = process.env.GRAFANA_LOKI_HOST;
+export const GRAFANA_LOKI_USER = process.env.GRAFANA_LOKI_USER;
+export const GRAFANA_LOKI_TOKEN = process.env.GRAFANA_LOKI_TOKEN;
+export const CLUSTER_NAME = process.env.CLUSTER_NAME || "tunele-local";
+
+// Metrics endpoint authentication token (shared between API and Grafana Agent)
+export const METRICS_AUTH_TOKEN = process.env.METRICS_AUTH_TOKEN;
+
 // Redis configuration
 const redisUrlRegex =
   /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
