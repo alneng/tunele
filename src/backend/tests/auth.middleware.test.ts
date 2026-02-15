@@ -109,7 +109,7 @@ describe("Auth Middleware", () => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(SessionService.updateLastAccessed).toHaveBeenCalledWith(
-        mockSession.sessionId,
+        mockSession,
       );
     });
   });
