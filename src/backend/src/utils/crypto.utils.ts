@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { SESSION_ENCRYPTION_KEY } from "../config";
+import config from "../config";
 
 /**
  * Encryption algorithm and configuration
@@ -22,11 +22,11 @@ function toUint8Array(buf: Buffer): Uint8Array {
 }
 
 /**
- * Get encryption key from environment
+ * Get encryption key from config
  */
 function getEncryptionKey(): Uint8Array {
   const buf = crypto.pbkdf2Sync(
-    SESSION_ENCRYPTION_KEY,
+    config.session.encryptionKey,
     PBKDF2_SALT,
     PBKDF2_ITERATIONS,
     KEY_LENGTH,

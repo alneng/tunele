@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 import { RateLimitException } from "./errors.utils";
 import { NextFunction, Request, Response } from "express";
-import { NODE_ENV } from "../config";
+import config from "../config";
 
 /**
  * Create a rate limiter middleware for the API. Only applies in production.
@@ -9,7 +9,7 @@ import { NODE_ENV } from "../config";
  * @returns a rate limiter middleware factory
  */
 export const createRateLimiter = () => {
-  if (NODE_ENV === "production") {
+  if (config.env === "production") {
     return rateLimit({
       windowMs: 60 * 1000,
       max: 20,

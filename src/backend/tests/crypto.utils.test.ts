@@ -7,8 +7,6 @@ import {
   generateUUID,
 } from "../src/utils/crypto.utils";
 
-process.env.SESSION_ENCRYPTION_KEY = "test-encryption-key-for-testing-only";
-
 const URL_SAFE_BASE64_PATTERN = /^[A-Za-z0-9_-]+$/;
 const UUID_V4_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -57,7 +55,7 @@ describe("Crypto Utils", () => {
     it("should throw error on tampered encrypted text", () => {
       const encrypted = encrypt("test-data");
       const parts = encrypted.split(":");
-      
+
       // Flip the first character of the ciphertext (guaranteed to tamper)
       const ciphertext = parts[2];
       const firstChar = ciphertext[0];

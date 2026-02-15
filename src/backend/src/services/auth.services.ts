@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 import { OAuth2Client } from "google-auth-library";
 import { HttpException } from "../utils/errors.utils";
-import { GOOGLE_OAUTH_CONFIG } from "../config";
+import config from "../config";
 import { log } from "../utils/logger.utils";
 import { SessionService } from "../lib/session.service";
 import { storeOIDCState, consumeOIDCState, validateNonce } from "../utils/oidc.utils";
@@ -10,12 +10,16 @@ import { UserIdentity } from "../types/session.types";
 import db from "../lib/firebase";
 
 export default class AuthService {
-  static authClientCredentials = {
-    client_id: GOOGLE_OAUTH_CONFIG.client_id,
-    client_secret: GOOGLE_OAUTH_CONFIG.client_secret,
-  };
+  static get authClientCredentials() {
+    return {
+      client_id: config.googleOAuth.clientId,
+      client_secret: config.googleOAuth.clientSecret,
+    };
+  }
 
-  static oauth2Client = new OAuth2Client(GOOGLE_OAUTH_CONFIG.client_id);
+  static get oauth2Client() {
+    return new OAuth2Client(config.googleOAuth.clientId);
+  }
 
   /**
    * Initiate OIDC flow by storing state and nonce in Redis
@@ -72,7 +76,7 @@ export default class AuthService {
       grant_type: "authorization_code",
       code,
       code_verifier: codeVerifier,
-      redirect_uri: GOOGLE_OAUTH_CONFIG.redirect_uri,
+      redirect_uri: config.googleOAuth.redirectUri,
     };
 
     let tokenResponse;
@@ -107,7 +111,7 @@ export default class AuthService {
     try {
       ticket = await this.oauth2Client.verifyIdToken({
         idToken: id_token,
-        audience: GOOGLE_OAUTH_CONFIG.client_id,
+        audience: config.googleOAuth.clientId,
       });
     } catch (error) {
       log.error("Failed to verify ID token", {

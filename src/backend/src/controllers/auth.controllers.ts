@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import AuthService from "../services/auth.services";
 import { SessionService } from "../lib/session.service";
-import { COOKIE_SETTINGS } from "../config";
+import config from "../config";
 
 export default class AuthController {
   /**
@@ -46,10 +46,10 @@ export default class AuthController {
 
       // Set session cookie (HttpOnly, Secure, SameSite)
       res.cookie("session", sessionId, {
-        ...COOKIE_SETTINGS,
+        ...config.cookie,
         maxAge: expiresIn * 1000,
         httpOnly: true, // Prevents JavaScript access
-        secure: process.env.NODE_ENV === "production", // HTTPS only in production
+        secure: config.env === "production", // HTTPS only in production
         sameSite: "lax", // CSRF protection
       });
 

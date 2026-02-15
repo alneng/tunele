@@ -9,7 +9,7 @@ import { encrypt, decrypt, generateUUID } from "../utils/crypto.utils";
 import { log } from "../utils/logger.utils";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { CacheKeys } from "../utils/redis.utils";
-import { SESSION_TTL_SECONDS } from "../config";
+import config from "../config";
 
 /**
  * SessionService manages user sessions with two-tier storage:
@@ -29,8 +29,9 @@ export class SessionService {
     googleRefreshToken: string,
   ): Promise<{ sessionId: string; expiresIn: number }> {
     const sessionId = generateUUID();
+    const ttlSeconds = config.session.ttlSeconds;
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + SESSION_TTL_SECONDS * 1000);
+    const expiresAt = new Date(now.getTime() + ttlSeconds * 1000);
 
     // Encrypt the Google refresh token before storage
     const encryptedRefreshToken = encrypt(googleRefreshToken);
@@ -63,7 +64,7 @@ export class SessionService {
 
     return {
       sessionId,
-      expiresIn: SESSION_TTL_SECONDS,
+      expiresIn: ttlSeconds,
     };
   }
 

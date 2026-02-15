@@ -1,9 +1,9 @@
 import { createClient } from "redis";
-import { REDIS_URL } from "../config";
+import config from "../config";
 import { log } from "../utils/logger.utils";
 
 const client = createClient({
-  url: REDIS_URL,
+  url: config.redis.url,
   socket: {
     // Disable automatic reconnection
     reconnectStrategy: false,
