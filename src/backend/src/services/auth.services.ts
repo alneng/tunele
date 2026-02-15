@@ -168,7 +168,6 @@ export default class AuthService {
     log.info("User authenticated via OIDC", {
       meta: {
         userId: userIdentity.sub,
-        email: userIdentity.email,
         requestMetadata: metadata,
       },
     });
