@@ -15,7 +15,7 @@ export async function requireAuth(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const sessionId = req.cookies.session;
+    const sessionId: string | undefined = req.cookies.session;
 
     if (!sessionId) {
       throw new AccessDeniedException(401, "No session cookie", false);
@@ -38,8 +38,8 @@ export async function requireAuth(
     req.userId = session.userId;
 
     // Update last accessed time (async, don't await to avoid blocking)
-    SessionService.updateLastAccessed(sessionId).catch((error) => {
-      log.error("Failed to update session last accessed:", {
+    SessionService.updateLastAccessed(session).catch((error) => {
+      log.error("Failed to update session last accessed", {
         meta: { error: JSON.stringify(error) },
       });
     });
