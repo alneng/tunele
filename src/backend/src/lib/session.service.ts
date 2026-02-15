@@ -4,6 +4,7 @@ import {
   SessionData,
   FirestoreSessionData,
   UserIdentity,
+  RequestMetadata,
 } from "../types/session.types";
 import { encrypt, decrypt, generateUUID } from "../utils/crypto.utils";
 import { log } from "../utils/logger.utils";
@@ -22,11 +23,13 @@ export class SessionService {
    *
    * @param userIdentity user identity from ID token
    * @param googleRefreshToken Google refresh token (will be encrypted)
+   * @param metadata request metadata at session creation for audit trail
    * @returns session ID and expiration time
    */
   static async createSession(
     userIdentity: UserIdentity,
     googleRefreshToken: string,
+    metadata?: RequestMetadata,
   ): Promise<{ sessionId: string; expiresIn: number }> {
     const sessionId = generateUUID();
     const ttlSeconds = config.session.ttlSeconds;
@@ -45,6 +48,7 @@ export class SessionService {
       createdAt: now,
       expiresAt,
       lastAccessed: now,
+      ...(metadata && { metadata }),
     };
 
     // Store in Firestore first (source of truth)
@@ -59,6 +63,7 @@ export class SessionService {
         userId: userIdentity.sub,
         email: userIdentity.email,
         expiresAt: expiresAt.toISOString(),
+        requestMetadata: metadata,
       },
     });
 
@@ -109,20 +114,15 @@ export class SessionService {
   /**
    * Update session's last accessed time
    *
-   * @param sessionId the session ID
+   * @param session the session data
    */
-  static async updateLastAccessed(sessionId: string): Promise<void> {
-    const session = await this.getSession(sessionId);
-    if (!session) {
-      return;
-    }
-
+  static async updateLastAccessed(session: SessionData): Promise<void> {
     session.lastAccessed = new Date();
 
     // Update both Redis and Firestore
     await Promise.all([
       this.cacheSessionInRedis(session),
-      this.updateSessionInFirestore(sessionId, {
+      this.updateSessionInFirestore(session.sessionId, {
         lastAccessed: session.lastAccessed.toISOString(),
       }),
     ]);
@@ -237,6 +237,7 @@ export class SessionService {
       createdAt: session.createdAt.toISOString(),
       expiresAt: session.expiresAt.toISOString(),
       lastAccessed: session.lastAccessed.toISOString(),
+      ...(session.metadata && { metadata: session.metadata }),
     };
 
     await db.createDocument("sessions", session.sessionId, firestoreData);
@@ -266,6 +267,7 @@ export class SessionService {
       createdAt: new Date(data.createdAt),
       expiresAt: new Date(data.expiresAt),
       lastAccessed: new Date(data.lastAccessed),
+      ...(data.metadata && { metadata: data.metadata }),
     };
   }
 

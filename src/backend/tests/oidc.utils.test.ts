@@ -52,6 +52,22 @@ describe("OIDC Utils", () => {
         OIDC_STATE_TTL_SECONDS,
       );
     });
+
+    it("should store metadata when provided", async () => {
+      await storeOIDCState(TEST_STATE, TEST_NONCE, {
+        ipAddress: "192.168.1.1",
+      });
+
+      expect(RedisService.setJSON).toHaveBeenCalledWith(
+        CacheKeys.OIDC_STATE(TEST_STATE),
+        expect.objectContaining({
+          state: TEST_STATE,
+          nonce: TEST_NONCE,
+          metadata: { ipAddress: "192.168.1.1" },
+        }),
+        OIDC_STATE_TTL_SECONDS,
+      );
+    });
   });
 
   describe("consumeOIDCState", () => {
@@ -62,7 +78,8 @@ describe("OIDC Utils", () => {
       const result = await consumeOIDCState(TEST_STATE);
       const expectedCacheKey = CacheKeys.OIDC_STATE(TEST_STATE);
 
-      expect(result).toBe(mockData.nonce);
+      expect(result).not.toBeNull();
+      expect(result!.nonce).toBe(mockData.nonce);
       expect(RedisService.getJSON).toHaveBeenCalledWith(expectedCacheKey);
       expect(RedisService.delete).toHaveBeenCalledWith(expectedCacheKey);
     });

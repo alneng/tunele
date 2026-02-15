@@ -4,12 +4,17 @@ import { log } from "./logger.utils";
 import { HttpException } from "./errors.utils";
 import crypto from "crypto";
 import { CacheKeys } from "./redis.utils";
-import { OIDCFlowState } from "../types/session.types";
+import { OIDCFlowState, RequestMetadata } from "../types/session.types";
 
 /**
  * OIDC state TTL in seconds (10 minutes - enough for user to complete auth flow)
  */
 const OIDC_STATE_TTL_SECONDS = 600;
+
+export interface ConsumedOIDCState {
+  nonce: string;
+  metadata?: RequestMetadata;
+}
 
 /**
  * Store OIDC flow state in Redis
@@ -17,16 +22,19 @@ const OIDC_STATE_TTL_SECONDS = 600;
  *
  * @param state the state parameter
  * @param nonce the nonce parameter
+ * @param metadata request metadata for audit trail
  */
 export async function storeOIDCState(
   state: string,
   nonce: string,
+  metadata?: RequestMetadata,
 ): Promise<void> {
   const key = CacheKeys.OIDC_STATE(state);
   const data: OIDCFlowState = {
     state,
     nonce,
     createdAt: new Date().toISOString(),
+    ...(metadata && { metadata }),
   };
 
   await RedisService.setJSON(key, data, OIDC_STATE_TTL_SECONDS);
@@ -37,21 +45,30 @@ export async function storeOIDCState(
  * This ensures state can only be used once (prevents replay attacks)
  *
  * @param state the state parameter
- * @returns the stored nonce, or null if state not found/expired
+ * @param metadata request metadata for audit logging (when state not found)
+ * @returns the stored nonce and metadata, or null if state not found/expired
  */
-export async function consumeOIDCState(state: string): Promise<string | null> {
+export async function consumeOIDCState(
+  state: string,
+  metadata?: RequestMetadata,
+): Promise<ConsumedOIDCState | null> {
   const key = CacheKeys.OIDC_STATE(state);
   const data = await RedisService.getJSON<OIDCFlowState>(key);
 
   if (!data) {
-    log.warn("OIDC state not found or expired", { meta: { state } });
+    log.warn("OIDC state not found or expired", {
+      meta: { state, requestMetadata: metadata },
+    });
     return null;
   }
 
   // Delete the state immediately (one-time use)
   await RedisService.delete(key);
 
-  return data.nonce;
+  return {
+    nonce: data.nonce,
+    ...(data.metadata && { metadata: data.metadata }),
+  };
 }
 
 /**

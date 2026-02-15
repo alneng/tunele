@@ -1,4 +1,12 @@
 /**
+ * Request metadata for audit trail.
+ * Extensible for future fields (userAgent, etc.).
+ */
+export interface RequestMetadata {
+  ipAddress?: string;
+}
+
+/**
  * Session data stored in both Redis and Firestore
  */
 export interface SessionData {
@@ -10,6 +18,7 @@ export interface SessionData {
   createdAt: Date;
   expiresAt: Date;
   lastAccessed: Date;
+  metadata?: RequestMetadata;
 }
 
 /**
@@ -24,6 +33,7 @@ export interface FirestoreSessionData {
   createdAt: string; // ISO timestamp
   expiresAt: string; // ISO timestamp
   lastAccessed: string; // ISO timestamp
+  metadata?: RequestMetadata;
 }
 
 /**
@@ -43,4 +53,5 @@ export interface OIDCFlowState {
   state: string;
   nonce: string;
   createdAt: string;
+  metadata?: RequestMetadata;
 }

@@ -1,3 +1,5 @@
+import { RequestMetadata } from "../../src/types/session.types";
+
 /**
  * Known PKCE test vector from RFC 7636 Appendix B.
  * Used to verify S256 code_challenge generation and validation.
@@ -23,6 +25,7 @@ export interface StoredOIDCData {
   state: string;
   nonce: string;
   createdAt: string;
+  metadata?: RequestMetadata;
 }
 
 /**
