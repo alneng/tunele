@@ -1,0 +1,139 @@
+import crypto from "crypto";
+import { SESSION_ENCRYPTION_KEY } from "../config";
+
+/**
+ * Encryption algorithm and configuration
+ */
+const ALGORITHM = "aes-256-gcm";
+const HASH_ALGORITHM = "sha256";
+const IV_LENGTH = 16;
+const KEY_LENGTH = 32;
+const PBKDF2_ITERATIONS = 100000;
+const PBKDF2_SALT = "tunele-session-salt";
+const ENCRYPTED_PARTS_COUNT = 3;
+const ENCRYPTED_DELIMITER = ":";
+const DEFAULT_RANDOM_LENGTH = 32;
+
+/**
+ * Convert a Buffer to a Uint8Array (zero-copy)
+ */
+function toUint8Array(buf: Buffer): Uint8Array {
+  return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+}
+
+/**
+ * Get encryption key from environment
+ */
+function getEncryptionKey(): Uint8Array {
+  const buf = crypto.pbkdf2Sync(
+    SESSION_ENCRYPTION_KEY,
+    PBKDF2_SALT,
+    PBKDF2_ITERATIONS,
+    KEY_LENGTH,
+    HASH_ALGORITHM,
+  );
+  return toUint8Array(buf);
+}
+
+/**
+ * Encrypt a string value
+ *
+ * @param text the plaintext to encrypt
+ * @returns encrypted string in format: iv:authTag:encryptedData (all hex-encoded)
+ */
+export function encrypt(text: string): string {
+  const key = getEncryptionKey();
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, toUint8Array(iv));
+
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+
+  const authTag = cipher.getAuthTag();
+
+  return [iv.toString("hex"), authTag.toString("hex"), encrypted].join(
+    ENCRYPTED_DELIMITER,
+  );
+}
+
+/**
+ * Decrypt an encrypted string
+ *
+ * @param encryptedText the encrypted text in format: iv:authTag:encryptedData
+ * @returns decrypted plaintext
+ */
+export function decrypt(encryptedText: string): string {
+  const key = getEncryptionKey();
+  const parts = encryptedText.split(ENCRYPTED_DELIMITER);
+
+  if (parts.length !== ENCRYPTED_PARTS_COUNT) {
+    throw new Error("Invalid encrypted text format");
+  }
+
+  const iv = Buffer.from(parts[0], "hex");
+  const authTag = Buffer.from(parts[1], "hex");
+  const encrypted = parts[2];
+
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, toUint8Array(iv));
+  decipher.setAuthTag(toUint8Array(authTag));
+
+  let decrypted = decipher.update(encrypted, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+
+  return decrypted;
+}
+
+/**
+ * Generate a cryptographically secure random string
+ *
+ * @param length the length of the random string (in bytes, will be hex-encoded so output is 2x)
+ * @returns random hex string
+ */
+export function generateRandomString(
+  length: number = DEFAULT_RANDOM_LENGTH,
+): string {
+  return crypto.randomBytes(length).toString("hex");
+}
+
+/**
+ * Generate a cryptographically secure random string using URL-safe base64
+ * (suitable for PKCE code_verifier)
+ *
+ * @param length the length in bytes (default 32 for 43 base64 characters)
+ * @returns random URL-safe base64 string
+ */
+export function generateRandomBase64Url(
+  length: number = DEFAULT_RANDOM_LENGTH,
+): string {
+  return crypto
+    .randomBytes(length)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
+}
+
+/**
+ * Generate a SHA256 hash of a string
+ *
+ * @param text the text to hash
+ * @returns base64url-encoded hash
+ */
+export function sha256Base64Url(text: string): string {
+  return crypto
+    .createHash(HASH_ALGORITHM)
+    .update(text)
+    .digest("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
+}
+
+/**
+ * Generate a UUID v4
+ *
+ * @returns UUID string
+ */
+export function generateUUID(): string {
+  return crypto.randomUUID();
+}

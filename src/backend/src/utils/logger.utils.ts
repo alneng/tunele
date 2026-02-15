@@ -128,7 +128,9 @@ function buildTransports(): winston.transport[] {
         ),
         replaceTimestamp: true,
         onConnectionError: (err) => {
-          console.error("Loki connection error:", err);
+          log.error("Loki connection error:", {
+            meta: { error: JSON.stringify(err) },
+          });
         },
       }),
     );

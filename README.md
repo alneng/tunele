@@ -82,6 +82,8 @@ A Heardle clone after the game shut down on May 5th, 2023
 | `GOOGLE_OAUTH_CLIENT_ID`       | Google OAuth 2.0 client ID               |
 | `GOOGLE_OAUTH_CLIENT_SECRET`   | Google OAuth 2.0 client secret           |
 | `REDIRECT_URI`                 | OAuth redirect URI                       |
+| `SESSION_ENCRYPTION_KEY`       | Session encryption key                   |
+| `SESSION_TTL_SECONDS`          | Session TTL in seconds (default: 7 days) |
 | `REDIS_URL`                    | Redis connection URL                     |
 | `REDIS_PASSWORD`               | Redis password (required in production)  |
 

@@ -1,94 +1,84 @@
 import _ from "lodash";
-import {
-  doesAccessIdTokenExist,
-  getIdTokenAuthStatus,
-  getAccessTokenAuthStatus,
-} from "../utils/auth.utils";
 import db from "../lib/firebase";
 import { mergeGameData } from "../utils/user.utils";
 import { SavedGameData } from "../types";
+import { HttpException } from "../utils/errors.utils";
 
 export default class UserService {
   /**
-   * Get a user's saved data
+   * Get a user's saved data (session-based auth)
    *
-   * @param userId the user id to get the data of
-   * @param accessToken auth access token
-   * @param idToken auth id token
-   * @param refreshToken auth refresh token
-   * @throws AccessDeniedException if bad access or id token
+   * @param userId the user id (Google sub)
    * @returns the user's saved data
    */
-  static async getUserData(
+  static async getUserDataWithSession(
     userId: string,
-    accessToken: string,
-    idToken: string,
-    refreshToken: string
   ): Promise<{ status: number; message: SavedGameData }> {
-    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
-    await getIdTokenAuthStatus(idToken);
-    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
-
     const data: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", id);
-    if (data) return { status: 200, message: data.data };
+      await db.getDocument("users", userId);
 
-    const doc: { email: string; data: SavedGameData } = {
-      data: { main: [], custom: {} },
-      email: email,
-    };
-    await db.createDocument("users", id, doc);
+    if (data && data.data) {
+      return { status: 200, message: data.data };
+    }
 
-    return {
-      status: 201,
-      message: doc.data,
-    };
+    // User document might exist without data field (legacy)
+    if (data) {
+      const defaultData = { main: [], custom: {} };
+      await db.updateDocument("users", userId, { data: defaultData });
+      return { status: 200, message: defaultData };
+    }
+
+    // User document doesn't exist (shouldn't happen if session is valid)
+    throw new HttpException(404, "User not found");
   }
 
   /**
-   * Update a user's saved data
+   * Update a user's saved data (session-based auth)
    *
-   * @param userId the user id to get the data of
+   * @param userId the user id (Google sub)
    * @param bodyData the data to save for the user
-   * @param accessToken auth access token
-   * @param idToken auth id token
-   * @param refreshToken auth refresh token
-   * @throws AccessDeniedException if bad access or id token
+   * @param email the user's email from session
    * @returns the user's saved data
    */
-  static async updateUserData(
+  static async updateUserDataWithSession(
     userId: string,
     bodyData: SavedGameData,
-    accessToken: string,
-    idToken: string,
-    refreshToken: string
+    email: string,
   ): Promise<{ status: number; message: SavedGameData }> {
-    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
-    await getIdTokenAuthStatus(idToken);
-    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
-
     const savedData: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", id);
+      await db.getDocument("users", userId);
+
     let gameData: SavedGameData | undefined = savedData?.data;
+
     if (!gameData) {
       gameData = { main: [], custom: {} };
-      await db.createDocument("users", id, {
-        data: gameData,
-        email: email,
-      });
+      if (!savedData) {
+        // Create new user document
+        await db.createDocument("users", userId, {
+          data: gameData,
+          email: email,
+          googleSub: userId,
+          lastLoginAt: new Date().toISOString(),
+        });
+      } else {
+        // Update existing document with data field
+        await db.updateDocument("users", userId, {
+          data: gameData,
+        });
+      }
     }
 
-    if (_.isEqual(gameData, bodyData))
+    if (_.isEqual(gameData, bodyData)) {
       return { status: 200, message: gameData };
+    }
 
-    const doc: { email: string; data: SavedGameData } = {
-      data: mergeGameData(gameData, bodyData),
-      email: email,
-    };
-    await db.updateDocument("users", id, doc);
+    const mergedData = mergeGameData(gameData, bodyData);
+    await db.updateDocument("users", userId, { data: mergedData });
+
     return {
       status: 201,
-      message: doc.data,
+      message: mergedData,
     };
   }
+
 }

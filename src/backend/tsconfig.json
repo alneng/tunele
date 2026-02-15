@@ -19,6 +19,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "./@types/**/*.d.ts"],
   "exclude": ["**/node_modules/*", "dist", "../frontend", "**/tests/*"]
 }

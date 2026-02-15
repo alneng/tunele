@@ -17,6 +17,8 @@ if (NODE_ENV !== "test") {
     throw new MissingEnvVariableError("SPOTIFY_CLIENT_KEY");
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
     throw new MissingEnvVariableError("FIREBASE_SERVICE_ACCOUNT_KEY");
+  if (!process.env.SESSION_ENCRYPTION_KEY)
+    throw new MissingEnvVariableError("SESSION_ENCRYPTION_KEY");
 }
 
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
@@ -58,3 +60,12 @@ const redisUrlRegex =
 export const REDIS_URL = process.env.REDIS_URL;
 if (!redisUrlRegex.test(REDIS_URL || "") && NODE_ENV !== "test")
   throw new Error("Invalid REDIS_URL format");
+
+// Session configuration
+export const SESSION_ENCRYPTION_KEY =
+  NODE_ENV === "test"
+    ? "6ce826c13ed5c151b8987bec062ad73fbd3e3d998442bd6209ae9852bc64cb4d"
+    : (process.env.SESSION_ENCRYPTION_KEY as string);
+export const SESSION_TTL_SECONDS = parseInt(
+  process.env.SESSION_TTL_SECONDS || "604800",
+); // 7 days default

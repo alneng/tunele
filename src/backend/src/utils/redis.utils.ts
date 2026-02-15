@@ -7,4 +7,8 @@ export const CacheKeys = {
   // Custom Game
   PLAYLIST_GAME_TRACK: (playlistId: string, date: string) =>
     `cache:spotify_playlist:${playlistId}:game_track:${date}`,
+
+  // Auth
+  OIDC_STATE: (state: string) => `auth:oidc:state:${state}`,
+  SESSION: (sessionId: string) => `auth:session:${sessionId}`,
 };
