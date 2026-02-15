@@ -6,21 +6,22 @@ Express.js API server for Tunele.
 
 The backend uses **OpenID Connect (OIDC)** for user authentication with Google. Key security features:
 
-- **CSRF Protection:** `state` parameter validation
+- **CSRF Protection:** `state` stored server-side (Redis), validated and consumed once on callback
 - **PKCE:** Proof Key for Code Exchange (S256)
 - **Nonce:** Prevents ID token replay attacks
 - **Session-based Auth:** Server-side sessions with HttpOnly cookies
-- **Two-tier Storage:** Redis cache + Firestore persistence
+- **Two-tier Storage:** Redis cache + Firestore persistence; Google refresh token encrypted at rest
 
 ### Auth Flow
 
-1. Frontend generates state/nonce/PKCE and redirects to Google
-2. Backend validates parameters, verifies ID token, creates session
-3. Session cookie is used for all authenticated requests
-4. Session deleted on logout
+1. Frontend generates state/nonce/PKCE, calls `POST /api/auth/initiate`; backend stores state/nonce in Redis
+2. Frontend redirects to Google; user signs in; Google redirects back to frontend callback
+3. Frontend sends code + state + nonce + code_verifier to `POST /api/auth/callback`; backend validates, exchanges code, verifies ID token, creates session
+4. Session cookie used for authenticated requests; logout deletes session and clears cookie
 
 ### Endpoints
 
+- `POST /api/auth/initiate` - Register state/nonce before redirect to Google
 - `POST /api/auth/callback` - OIDC authentication callback
 - `GET /api/auth/verify` - Verify session
 - `GET /api/auth/logout` - Logout
