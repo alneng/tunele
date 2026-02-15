@@ -2,7 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { createRateLimiter } from "./utils/middleware";
+import { createRateLimiter } from "./middleware/rate-limit.middleware";
 import { log } from "./utils/logger.utils";
 import { errorHandler } from "./utils/errors.utils";
 import {
