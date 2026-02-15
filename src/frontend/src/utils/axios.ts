@@ -3,6 +3,7 @@ import { logout } from "@/api/auth";
 import { AxiosApiError } from "@/types";
 import { useUserStore } from "@/store/user.store";
 import { pushError } from "@/lib/faro";
+import { getStickyCorrelationId } from "@/utils/stickyCorrelationId";
 
 export const API_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
@@ -12,11 +13,9 @@ const api = axios.create({
   withCredentials: true,
 });
 
-const sessionCorrelationId = crypto.randomUUID();
-
 // Add correlation ID to all outgoing requests
 api.interceptors.request.use((config) => {
-  config.headers["X-Correlation-ID"] = sessionCorrelationId;
+  config.headers["X-Correlation-ID"] = getStickyCorrelationId();
   return config;
 });
 
@@ -86,7 +85,7 @@ api.interceptors.response.use(
       }
     } else {
       pushError(error, {
-        correlationId: sessionCorrelationId,
+        correlationId: getStickyCorrelationId(),
         url: error.config?.url ?? "unknown",
       });
     }
