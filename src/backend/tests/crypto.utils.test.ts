@@ -6,18 +6,12 @@ import {
   sha256Base64Url,
   generateUUID,
 } from "../src/utils/crypto.utils";
-
-const URL_SAFE_BASE64_PATTERN = /^[A-Za-z0-9_-]+$/;
-const UUID_V4_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-const hexLengthForBytes = (bytes: number) => bytes * 2;
-
-// Known PKCE test vector (RFC 7636 Appendix B)
-const PKCE_TEST_VECTOR = {
-  verifier: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
-  expectedChallenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM",
-};
+import {
+  hexLengthForBytes,
+  URL_SAFE_BASE64_PATTERN,
+  UUID_V4_PATTERN,
+} from "./fixtures/patterns";
+import { PKCE_TEST_VECTOR } from "./fixtures/oidc.fixtures";
 
 describe("Crypto Utils", () => {
   describe("encrypt and decrypt", () => {
@@ -142,7 +136,7 @@ describe("Crypto Utils", () => {
     it("should generate valid PKCE code_challenge", () => {
       const challenge = sha256Base64Url(PKCE_TEST_VECTOR.verifier);
 
-      expect(challenge).toBe(PKCE_TEST_VECTOR.expectedChallenge);
+      expect(challenge).toBe(PKCE_TEST_VECTOR.challenge);
     });
   });
 

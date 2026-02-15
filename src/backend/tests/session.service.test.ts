@@ -1,10 +1,15 @@
 import { SessionService } from "../src/lib/session.service";
 import { RedisService } from "../src/lib/redis.service";
 import db from "../src/lib/firebase";
-import { UserIdentity } from "../src/types/session.types";
 import { CacheKeys } from "../src/utils/redis.utils";
+import {
+  MOCK_SESSION_ID,
+  TEST_USER_IDENTITY,
+  TEST_REFRESH_TOKEN,
+  ENCRYPTED_REFRESH_TOKEN,
+  sessionServiceFixtures,
+} from "./fixtures/session.fixtures";
 
-const MOCK_SESSION_ID = "test-session-id";
 const SESSIONS_COLLECTION = "sessions";
 
 jest.mock("../src/lib/redis.service");
@@ -14,53 +19,6 @@ jest.mock("../src/utils/crypto.utils", () => ({
   decrypt: jest.fn((text: string) => text.replace("encrypted_", "")),
   generateUUID: jest.fn(() => MOCK_SESSION_ID),
 }));
-
-const TEST_USER_IDENTITY: UserIdentity = {
-  sub: "google-user-123",
-  email: "test@example.com",
-  name: "Test User",
-};
-
-const TEST_REFRESH_TOKEN = "google-refresh-token";
-const ENCRYPTED_REFRESH_TOKEN = `encrypted_${TEST_REFRESH_TOKEN}`;
-
-const createMockSession = (overrides: Record<string, unknown> = {}) => ({
-  sessionId: MOCK_SESSION_ID,
-  userId: TEST_USER_IDENTITY.sub,
-  email: TEST_USER_IDENTITY.email,
-  name: TEST_USER_IDENTITY.name,
-  googleRefreshToken: ENCRYPTED_REFRESH_TOKEN,
-  createdAt: new Date(),
-  expiresAt: new Date(Date.now() + 86400000),
-  lastAccessed: new Date(),
-  ...overrides,
-});
-
-const createFirestoreSession = (overrides: Record<string, unknown> = {}) => {
-  const base = createMockSession(overrides);
-  return {
-    ...base,
-    createdAt:
-      base.createdAt instanceof Date
-        ? base.createdAt.toISOString()
-        : base.createdAt,
-    expiresAt:
-      base.expiresAt instanceof Date
-        ? base.expiresAt.toISOString()
-        : base.expiresAt,
-    lastAccessed:
-      base.lastAccessed instanceof Date
-        ? base.lastAccessed.toISOString()
-        : base.lastAccessed,
-  };
-};
-
-const createExpiredFirestoreSession = () =>
-  createFirestoreSession({
-    createdAt: new Date(Date.now() - 86400000 * 8),
-    expiresAt: new Date(Date.now() - 86400000),
-    lastAccessed: new Date(Date.now() - 86400000),
-  });
 
 describe("SessionService", () => {
   beforeEach(() => {
@@ -114,7 +72,7 @@ describe("SessionService", () => {
 
   describe("getSession", () => {
     it("should return session from Redis cache if available", async () => {
-      const mockSession = createMockSession();
+      const mockSession = sessionServiceFixtures.createMockSession();
       (RedisService.getJSON as jest.Mock).mockResolvedValue(mockSession);
 
       const result = await SessionService.getSession(mockSession.sessionId);
@@ -127,7 +85,7 @@ describe("SessionService", () => {
     });
 
     it("should fall back to Firestore if not in Redis", async () => {
-      const firestoreSession = createFirestoreSession();
+      const firestoreSession = sessionServiceFixtures.createFirestoreSession();
       (RedisService.getJSON as jest.Mock).mockResolvedValue(null);
       (db.getDocument as jest.Mock).mockResolvedValue(firestoreSession);
 
@@ -155,7 +113,8 @@ describe("SessionService", () => {
     });
 
     it("should return null if session is expired", async () => {
-      const expiredSession = createExpiredFirestoreSession();
+      const expiredSession =
+        sessionServiceFixtures.createExpiredFirestoreSession();
       (RedisService.getJSON as jest.Mock).mockResolvedValue(null);
       (db.getDocument as jest.Mock).mockResolvedValue(expiredSession);
 
@@ -181,7 +140,7 @@ describe("SessionService", () => {
 
   describe("getGoogleRefreshToken", () => {
     it("should decrypt and return the refresh token", async () => {
-      const mockSession = createMockSession();
+      const mockSession = sessionServiceFixtures.createMockSession();
       (RedisService.getJSON as jest.Mock).mockResolvedValue(mockSession);
 
       const result = await SessionService.getGoogleRefreshToken(

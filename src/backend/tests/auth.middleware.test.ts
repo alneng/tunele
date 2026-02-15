@@ -1,27 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { requireAuth, optionalAuth } from "../src/middleware/auth.middleware";
 import { SessionService } from "../src/lib/session.service";
+import {
+  createExpiredSession,
+  createMockSession,
+} from "./fixtures/session.fixtures";
 
 jest.mock("../src/lib/session.service");
-
-const createMockSession = (overrides: Record<string, unknown> = {}) => ({
-  sessionId: "test-session",
-  userId: "google-user-123",
-  email: "test@example.com",
-  name: "Test User",
-  googleRefreshToken: "encrypted_token",
-  createdAt: new Date(),
-  expiresAt: new Date(Date.now() + 86400000),
-  lastAccessed: new Date(),
-  ...overrides,
-});
-
-const createExpiredSession = () =>
-  createMockSession({
-    createdAt: new Date(Date.now() - 86400000 * 8),
-    expiresAt: new Date(Date.now() - 86400000),
-    lastAccessed: new Date(Date.now() - 86400000),
-  });
 
 describe("Auth Middleware", () => {
   let mockRequest: Partial<Request>;

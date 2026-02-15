@@ -7,25 +7,16 @@ import {
 } from "../src/utils/oidc.utils";
 import { RedisService } from "../src/lib/redis.service";
 import { CacheKeys } from "../src/utils/redis.utils";
+import {
+  createStoredOIDCData,
+  EXPECTED_HEX_LENGTH,
+  OIDC_STATE_TTL_SECONDS,
+  PKCE_TEST_VECTOR,
+  TEST_NONCE,
+  TEST_STATE,
+} from "./fixtures/oidc.fixtures";
 
 jest.mock("../src/lib/redis.service");
-
-const OIDC_STATE_TTL_SECONDS = 600;
-const EXPECTED_HEX_LENGTH = 64; // 32 bytes = 64 hex chars
-
-const TEST_STATE = "test-state";
-const TEST_NONCE = "test-nonce";
-
-const PKCE_TEST_VECTOR = {
-  verifier: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
-  challenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM",
-};
-
-const createStoredOIDCData = (state = TEST_STATE, nonce = TEST_NONCE) => ({
-  state,
-  nonce,
-  createdAt: new Date().toISOString(),
-});
 
 describe("OIDC Utils", () => {
   beforeEach(() => {
