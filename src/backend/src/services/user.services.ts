@@ -4,10 +4,11 @@ import { mergeGameData } from "../utils/user.utils";
 import { SavedGameData } from "../types/game.types";
 import { FirebaseUser } from "../types/firebase.types";
 import { HttpException } from "../utils/errors.utils";
+import { log } from "../utils/logger.utils";
 
 export default class UserService {
   /**
-   * Get a user's saved data (session-based auth)
+   * Get a user's saved data
    *
    * @param userId the user id (Google sub)
    * @returns the user's saved data
@@ -15,26 +16,29 @@ export default class UserService {
   static async getUserData(
     userId: string,
   ): Promise<{ status: number; message: SavedGameData }> {
-    const data: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", userId);
+    const data = await db.getDocument<FirebaseUser>("users", userId);
 
-    if (data && data.data) {
+    if (!data) {
+      log.error("Couldn't find user in database but session is valid", {
+        meta: { userId },
+      });
+      throw new HttpException(404, "User not found");
+    }
+
+    if (data.data) {
       return { status: 200, message: data.data };
     }
 
-    // User document might exist without data field (legacy)
-    if (data) {
-      const defaultData = { main: [], custom: {} };
-      await db.updateDocument("users", userId, { data: defaultData });
-      return { status: 200, message: defaultData };
-    }
-
-    // User document doesn't exist (shouldn't happen if session is valid)
-    throw new HttpException(404, "User not found");
+    // User document has no game data
+    const defaultData = { main: [], custom: {} };
+    await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+      data: defaultData,
+    });
+    return { status: 200, message: defaultData };
   }
 
   /**
-   * Update a user's saved data (session-based auth)
+   * Update a user's saved data
    *
    * @param userId the user id (Google sub)
    * @param bodyData the data to save for the user
