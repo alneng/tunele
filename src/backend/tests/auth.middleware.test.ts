@@ -49,7 +49,7 @@ describe("Auth Middleware", () => {
       );
 
       expect(mockNext).toHaveBeenCalledWith(
-        expect.objectContaining({ status: 401, message: "No session cookie" }),
+        expect.objectContaining({ status: 401, message: "No session provided" }),
       );
     });
 
@@ -67,7 +67,7 @@ describe("Auth Middleware", () => {
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 401,
-          message: "Invalid or expired session",
+          message: "Invalid session",
         }),
       );
     });

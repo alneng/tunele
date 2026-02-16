@@ -2,16 +2,9 @@ import {
   encrypt,
   decrypt,
   generateRandomString,
-  generateRandomBase64Url,
-  sha256Base64Url,
   generateUUID,
 } from "../src/utils/crypto.utils";
-import {
-  hexLengthForBytes,
-  URL_SAFE_BASE64_PATTERN,
-  UUID_V4_PATTERN,
-} from "./fixtures/patterns";
-import { PKCE_TEST_VECTOR } from "./fixtures/oidc.fixtures";
+import { hexLengthForBytes, UUID_V4_PATTERN } from "./fixtures/patterns";
 
 describe("Crypto Utils", () => {
   describe("encrypt and decrypt", () => {
@@ -83,60 +76,6 @@ describe("Crypto Utils", () => {
         const random = generateRandomString(byteLength);
         expect(random).toHaveLength(hexLengthForBytes(byteLength));
       }
-    });
-  });
-
-  describe("generateRandomBase64Url", () => {
-    it("should generate URL-safe base64 string", () => {
-      const random = generateRandomBase64Url(32);
-
-      expect(random).not.toMatch(/[+/=]/);
-      expect(random).toMatch(URL_SAFE_BASE64_PATTERN);
-    });
-
-    it("should generate unique values", () => {
-      const random1 = generateRandomBase64Url(32);
-      const random2 = generateRandomBase64Url(32);
-
-      expect(random1).not.toBe(random2);
-    });
-
-    it("should generate approximately correct length", () => {
-      const byteLength = 32;
-      const expectedBase64Len = Math.ceil((byteLength * 4) / 3);
-      const tolerance = 3;
-
-      const random = generateRandomBase64Url(byteLength);
-
-      expect(random.length).toBeGreaterThanOrEqual(
-        expectedBase64Len - tolerance,
-      );
-      expect(random.length).toBeLessThanOrEqual(expectedBase64Len + tolerance);
-    });
-  });
-
-  describe("sha256Base64Url", () => {
-    it("should generate consistent hash for same input", () => {
-      const input = "test-input";
-
-      expect(sha256Base64Url(input)).toBe(sha256Base64Url(input));
-    });
-
-    it("should generate different hashes for different inputs", () => {
-      expect(sha256Base64Url("input1")).not.toBe(sha256Base64Url("input2"));
-    });
-
-    it("should generate URL-safe base64 hash", () => {
-      const hash = sha256Base64Url("test-input");
-
-      expect(hash).not.toMatch(/[+/=]/);
-      expect(hash).toMatch(URL_SAFE_BASE64_PATTERN);
-    });
-
-    it("should generate valid PKCE code_challenge", () => {
-      const challenge = sha256Base64Url(PKCE_TEST_VECTOR.verifier);
-
-      expect(challenge).toBe(PKCE_TEST_VECTOR.challenge);
     });
   });
 
