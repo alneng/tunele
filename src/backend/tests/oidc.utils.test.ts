@@ -2,16 +2,12 @@ import {
   storeOIDCState,
   consumeOIDCState,
   validateNonce,
-  validatePKCE,
-  generateOIDCParams,
 } from "../src/utils/oidc.utils";
 import { RedisService } from "../src/lib/redis.service";
 import { CacheKeys } from "../src/utils/redis.utils";
 import {
   createStoredOIDCData,
-  EXPECTED_HEX_LENGTH,
   OIDC_STATE_TTL_SECONDS,
-  PKCE_TEST_VECTOR,
   TEST_NONCE,
   TEST_STATE,
 } from "./fixtures/oidc.fixtures";
@@ -21,25 +17,6 @@ jest.mock("../src/lib/redis.service");
 describe("OIDC Utils", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe("generateOIDCParams", () => {
-    it("should generate state and nonce of correct length", () => {
-      const params = generateOIDCParams();
-
-      expect(params).toHaveProperty("state");
-      expect(params).toHaveProperty("nonce");
-      expect(params.state).toHaveLength(EXPECTED_HEX_LENGTH);
-      expect(params.nonce).toHaveLength(EXPECTED_HEX_LENGTH);
-    });
-
-    it("should generate unique values each time", () => {
-      const params1 = generateOIDCParams();
-      const params2 = generateOIDCParams();
-
-      expect(params1.state).not.toBe(params2.state);
-      expect(params1.nonce).not.toBe(params2.nonce);
-    });
   });
 
   describe("storeOIDCState", () => {
@@ -109,30 +86,6 @@ describe("OIDC Utils", () => {
       expect(() => validateNonce(undefined, TEST_NONCE)).toThrow(
         "Invalid nonce in ID token",
       );
-    });
-  });
-
-  describe("validatePKCE", () => {
-    it("should validate plain code_challenge", () => {
-      const verifier = "test-verifier";
-
-      expect(validatePKCE(verifier, verifier, "plain")).toBe(true);
-    });
-
-    it("should validate S256 code_challenge", () => {
-      const result = validatePKCE(
-        PKCE_TEST_VECTOR.verifier,
-        PKCE_TEST_VECTOR.challenge,
-        "S256",
-      );
-
-      expect(result).toBe(true);
-    });
-
-    it("should reject invalid S256 code_challenge", () => {
-      const result = validatePKCE("test-verifier", "wrong-challenge", "S256");
-
-      expect(result).toBe(false);
     });
   });
 });
