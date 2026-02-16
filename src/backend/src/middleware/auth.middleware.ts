@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { SessionService } from "../lib/session.service";
-import { AccessDeniedException } from "../utils/errors.utils";
 import { log } from "../utils/logger.utils";
+import { verifySession } from "../utils/auth.utils";
 
 /**
  * Middleware to require authentication via session
@@ -16,22 +16,7 @@ export async function requireAuth(
 ): Promise<void> {
   try {
     const sessionId: string | undefined = req.cookies.session;
-
-    if (!sessionId) {
-      throw new AccessDeniedException(401, "No session cookie", false);
-    }
-
-    const session = await SessionService.getSession(sessionId);
-
-    if (!session) {
-      throw new AccessDeniedException(401, "Invalid or expired session", false);
-    }
-
-    // Check if session is expired
-    if (new Date(session.expiresAt) < new Date()) {
-      await SessionService.deleteSession(sessionId);
-      throw new AccessDeniedException(401, "Session expired", false);
-    }
+    const session = await verifySession(sessionId);
 
     // Attach session data to request
     req.session = session;
