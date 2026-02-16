@@ -73,9 +73,6 @@ export default class AuthService {
     // Validate state and retrieve stored nonce (server-side CSRF protection)
     const stored = await consumeOIDCState(state, metadata);
     if (!stored) {
-      log.error("Invalid or expired state parameter", {
-        meta: { state, requestMetadata: metadata },
-      });
       throw new HttpException(401, "Invalid or expired state parameter");
     }
 
