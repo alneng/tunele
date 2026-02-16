@@ -9,77 +9,80 @@ import morgan from "morgan";
 import { log } from "../utils/logger.utils";
 
 /**
- * Normalize route path to avoid high cardinality metrics.
- * Replaces dynamic segments with placeholders.
+ * Routes that should be tracked individually in metrics.
+ * Everything else is collapsed to "/unmatched" to prevent bot traffic from causing cardinality explosion.
+ */
+const KNOWN_ROUTE_PREFIXES = [
+  "/api/dailySong",
+  "/api/allSongs",
+  "/api/stats",
+  "/api/playlist",
+  "/api/auth",
+  "/api/user",
+  "/api/health",
+];
+
+/**
+ * Replace dynamic path segments with placeholders.
  *
- * @param req Express request object
- * @returns Normalized route path
+ * @param path The path to normalize.
+ * @returns The normalized path.
+ */
+function normalizeDynamicSegments(path: string): string {
+  return path
+    .replace(
+      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
+      ":id",
+    )
+    .replace(/\/[A-Za-z0-9]{22}(?=\/|$)/g, "/:playlistId")
+    .replace(/\/\d+(?=\/|$)/g, "/:id")
+    .replace(/\/\d{4}-\d{2}-\d{2}(?=\/|$)/g, "/:date");
+}
+
+/**
+ * Normalize route path for metrics labels.
+ * Uses Express matched route when available, falls back to prefix matching for known routes, and collapses everything else.
+ *
+ * @param req The request object.
+ * @returns The normalized route path.
  */
 function normalizeRoutePath(req: Request): string {
-  // Use the matched route pattern if available (Express populates this)
   if (req.route?.path) {
     return req.baseUrl + req.route.path;
   }
 
-  // Fallback: normalize common dynamic patterns
-  let path = req.path;
+  const fullPath = (req.baseUrl || "") + (req.path || "");
 
-  // Replace UUIDs
-  path = path.replace(
-    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
-    ":id",
+  const isKnown = KNOWN_ROUTE_PREFIXES.some(
+    (prefix) => fullPath === prefix || fullPath.startsWith(prefix + "/"),
   );
 
-  // Replace Spotify playlist IDs (22 alphanumeric characters)
-  path = path.replace(/\/[A-Za-z0-9]{22}(?=\/|$)/g, "/:playlistId");
-
-  // Replace numeric IDs
-  path = path.replace(/\/\d+(?=\/|$)/g, "/:id");
-
-  // Replace date patterns (YYYY-MM-DD)
-  path = path.replace(/\/\d{4}-\d{2}-\d{2}(?=\/|$)/g, "/:date");
-
-  return path;
+  return isKnown ? normalizeDynamicSegments(fullPath) : "/unmatched";
 }
 
 /**
- * Middleware to collect HTTP request metrics.
- * Tracks request count, duration, and in-flight requests.
+ * Collect HTTP request metrics: count, duration, and in-flight requests.
  */
 export function metricsMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
 ): void {
-  // Skip metrics endpoint to avoid self-referential metrics
-  if (req.path === "/api/metrics") {
-    return next();
-  }
+  if (req.path === "/api/metrics") return next();
 
   const end = startTimer();
-
   httpRequestsInFlight.inc();
 
   res.on("finish", () => {
     const route = normalizeRoutePath(req);
-    const method = req.method;
-    const statusCode = res.statusCode.toString();
-
-    httpRequestsTotal.inc({
-      method,
+    const labels = {
+      method: req.method,
       route,
-      status_code: statusCode,
-    });
+      status_code: res.statusCode.toString(),
+    };
 
-    httpRequestDuration.observe(
-      {
-        method,
-        route,
-        status_code: statusCode,
-      },
-      end(),
-    );
-
+    httpRequestsTotal.inc(labels);
+    httpRequestDuration.observe(labels, end());
     httpRequestsInFlight.dec();
   });
 
@@ -87,7 +90,7 @@ export function metricsMiddleware(
 }
 
 /**
- * Morgan middleware for logging HTTP requests.
+ * Morgan middleware for structured HTTP request logging.
  */
 export const httpRequestLogger = morgan(
   (tokens, req, res) => {
@@ -106,13 +109,9 @@ export const httpRequestLogger = morgan(
     stream: {
       write: (message: string) => {
         try {
-          const data = JSON.parse(message);
-          log.http("Incoming Request", data);
+          log.http("Incoming Request", JSON.parse(message));
         } catch (error) {
-          log.error(
-            "Error parsing HTTP request log message, defaulting to raw message",
-            { meta: { error } },
-          );
+          log.error("Failed to parse HTTP log message", { meta: { error } });
           log.http(message.trim());
         }
       },
