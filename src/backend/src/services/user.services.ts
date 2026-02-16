@@ -51,6 +51,9 @@ export default class UserService {
     const savedData = await db.getDocument<FirebaseUser>("users", userId);
 
     if (!savedData) {
+      log.error("Couldn't find user in database but session is valid", {
+        meta: { userId },
+      });
       throw new HttpException(404, "User not found");
     }
 
