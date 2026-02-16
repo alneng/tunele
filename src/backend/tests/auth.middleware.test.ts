@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { requireAuth, optionalAuth } from "../src/middleware/auth.middleware";
+import { requireAuth } from "../src/middleware/auth.middleware";
 import { SessionService } from "../src/lib/session.service";
 import {
   createExpiredSession,
@@ -111,66 +111,6 @@ describe("Auth Middleware", () => {
       expect(SessionService.updateLastAccessed).toHaveBeenCalledWith(
         mockSession,
       );
-    });
-  });
-
-  describe("optionalAuth", () => {
-    it("should attach session if valid", async () => {
-      const mockSession = createMockSession();
-      mockRequest.cookies = { session: mockSession.sessionId };
-      (SessionService.getSession as jest.Mock).mockResolvedValue(mockSession);
-
-      await optionalAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
-
-      expect(mockRequest.session).toEqual(mockSession);
-      expect(mockNext).toHaveBeenCalledWith();
-    });
-
-    it("should continue without error if no session cookie", async () => {
-      await optionalAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
-
-      expect(mockRequest.session).toBeUndefined();
-      expect(mockNext).toHaveBeenCalledWith();
-    });
-
-    it("should continue without error if session not found", async () => {
-      const mockSession = createMockSession();
-      mockRequest.cookies = { session: mockSession.sessionId };
-      (SessionService.getSession as jest.Mock).mockResolvedValue(null);
-
-      await optionalAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
-
-      expect(mockRequest.session).toBeUndefined();
-      expect(mockNext).toHaveBeenCalledWith();
-    });
-
-    it("should not attach expired session", async () => {
-      const expiredSession = createExpiredSession();
-      mockRequest.cookies = { session: expiredSession.sessionId };
-      (SessionService.getSession as jest.Mock).mockResolvedValue(
-        expiredSession,
-      );
-
-      await optionalAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
-
-      expect(mockRequest.session).toBeUndefined();
-      expect(mockNext).toHaveBeenCalledWith();
     });
   });
 });

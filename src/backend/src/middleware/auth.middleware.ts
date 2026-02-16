@@ -49,39 +49,3 @@ export async function requireAuth(
     next(error);
   }
 }
-
-/**
- * Middleware to optionally check authentication
- * If session exists and is valid, attaches session data to request
- * Otherwise, continues without authentication
- */
-export async function optionalAuth(
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): Promise<void> {
-  try {
-    const sessionId = req.cookies.session;
-
-    if (sessionId) {
-      const session = await SessionService.getSession(sessionId);
-
-      if (session && new Date(session.expiresAt) > new Date()) {
-        req.session = session;
-        req.userId = session.userId;
-
-        // Update last accessed time (async, don't await)
-        SessionService.updateLastAccessed(sessionId).catch((error) => {
-          log.error("Failed to update session last accessed:", {
-            meta: { error: JSON.stringify(error) },
-          });
-        });
-      }
-    }
-
-    next();
-  } catch {
-    // Don't fail if optional auth fails
-    next();
-  }
-}
