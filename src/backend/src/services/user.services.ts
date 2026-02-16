@@ -1,94 +1,84 @@
 import _ from "lodash";
-import {
-  doesAccessIdTokenExist,
-  getIdTokenAuthStatus,
-  getAccessTokenAuthStatus,
-} from "../utils/auth.utils";
 import db from "../lib/firebase";
 import { mergeGameData } from "../utils/user.utils";
-import { SavedGameData } from "../types";
+import { SavedGameData } from "../types/game.types";
+import { FirebaseUser } from "../types/firebase.types";
+import { HttpException } from "../utils/errors.utils";
+import { log } from "../utils/logger.utils";
 
 export default class UserService {
   /**
    * Get a user's saved data
    *
-   * @param userId the user id to get the data of
-   * @param accessToken auth access token
-   * @param idToken auth id token
-   * @param refreshToken auth refresh token
-   * @throws AccessDeniedException if bad access or id token
+   * @param userId the user id (Google sub)
    * @returns the user's saved data
    */
   static async getUserData(
     userId: string,
-    accessToken: string,
-    idToken: string,
-    refreshToken: string
   ): Promise<{ status: number; message: SavedGameData }> {
-    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
-    await getIdTokenAuthStatus(idToken);
-    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
+    const data = await db.getDocument<FirebaseUser>("users", userId);
 
-    const data: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", id);
-    if (data) return { status: 200, message: data.data };
+    if (!data) {
+      log.error("Couldn't find user in database but session is valid", {
+        meta: { userId },
+      });
+      throw new HttpException(404, "User not found");
+    }
 
-    const doc: { email: string; data: SavedGameData } = {
-      data: { main: [], custom: {} },
-      email: email,
-    };
-    await db.createDocument("users", id, doc);
+    if (data.data) {
+      return { status: 200, message: data.data };
+    }
 
-    return {
-      status: 201,
-      message: doc.data,
-    };
+    // User document has no game data
+    const defaultData = { main: [], custom: {} };
+    await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+      data: defaultData,
+    });
+    return { status: 200, message: defaultData };
   }
 
   /**
    * Update a user's saved data
    *
-   * @param userId the user id to get the data of
+   * @param userId the user id (Google sub)
    * @param bodyData the data to save for the user
-   * @param accessToken auth access token
-   * @param idToken auth id token
-   * @param refreshToken auth refresh token
-   * @throws AccessDeniedException if bad access or id token
    * @returns the user's saved data
    */
   static async updateUserData(
     userId: string,
     bodyData: SavedGameData,
-    accessToken: string,
-    idToken: string,
-    refreshToken: string
   ): Promise<{ status: number; message: SavedGameData }> {
-    doesAccessIdTokenExist(accessToken, idToken, refreshToken);
-    await getIdTokenAuthStatus(idToken);
-    const { email, id } = await getAccessTokenAuthStatus(accessToken, userId);
+    const savedData = await db.getDocument<FirebaseUser>("users", userId);
 
-    const savedData: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", id);
-    let gameData: SavedGameData | undefined = savedData?.data;
-    if (!gameData) {
-      gameData = { main: [], custom: {} };
-      await db.createDocument("users", id, {
-        data: gameData,
-        email: email,
+    if (!savedData) {
+      log.error("Couldn't find user in database but session is valid", {
+        meta: { userId },
       });
+      throw new HttpException(404, "User not found");
     }
 
-    if (_.isEqual(gameData, bodyData))
-      return { status: 200, message: gameData };
+    const gameData = savedData.data;
 
-    const doc: { email: string; data: SavedGameData } = {
-      data: mergeGameData(gameData, bodyData),
-      email: email,
-    };
-    await db.updateDocument("users", id, doc);
-    return {
-      status: 201,
-      message: doc.data,
-    };
+    // User does not have any data saved
+    if (!gameData) {
+      const defaultData = { main: [], custom: {} };
+      // Update existing document with default data
+      await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+        data: defaultData,
+      });
+      return { status: 200, message: defaultData };
+    }
+
+    // User already has data saved and it is the same as the data to save
+    if (_.isEqual(gameData, bodyData)) {
+      return { status: 200, message: gameData };
+    }
+
+    // User already has data saved and it is different from the data to save
+    const mergedData = mergeGameData(gameData, bodyData);
+    await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+      data: mergedData,
+    });
+    return { status: 201, message: mergedData };
   }
 }

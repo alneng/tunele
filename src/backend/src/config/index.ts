@@ -1,60 +1,192 @@
+/* Types */
+
+interface AppConfig {
+  env: string;
+  port: number;
+  clusterName: string;
+  version: string;
+
+  cors: Record<string, unknown>;
+  cookie: Record<string, unknown>;
+
+  spotify: {
+    clientKey: string;
+  };
+
+  firebase: {
+    serviceAccountKey: string;
+  };
+
+  googleOAuth: {
+    clientId: string;
+    clientSecret: string;
+    redirectUri: string;
+  };
+
+  redis: {
+    url: string;
+  };
+
+  session: {
+    encryptionKey: string;
+    ttlSeconds: number;
+  };
+
+  grafana: {
+    lokiHost: string;
+    lokiUser: string;
+    lokiToken: string;
+  };
+
+  metrics: {
+    authToken: string;
+  };
+
+  logger: {
+    enableHttpLogPrinting: boolean;
+    logLevel: "info" | "debug" | "warn" | "error";
+  };
+}
+
+/* Helpers */
+
 class MissingEnvVariableError extends Error {
-  constructor(variableName: string) {
-    super(`Missing environment variable: ${variableName}`);
+  constructor(name: string) {
+    super(`Missing required environment variable: ${name}`);
     this.name = "MissingEnvVariableError";
   }
 }
 
-export const NODE_ENV = process.env.NODE_ENV || "development";
-
-// Throw if any required environment variables are missing
-if (NODE_ENV !== "test") {
-  if (!process.env.CORS_OPTIONS)
-    throw new MissingEnvVariableError("CORS_OPTIONS");
-  if (!process.env.COOKIE_SETTINGS)
-    throw new MissingEnvVariableError("COOKIE_SETTINGS");
-  if (!process.env.SPOTIFY_CLIENT_KEY)
-    throw new MissingEnvVariableError("SPOTIFY_CLIENT_KEY");
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-    throw new MissingEnvVariableError("FIREBASE_SERVICE_ACCOUNT_KEY");
+/**
+ * Reads an env var. If `fallback` is provided, returns it when the value is missing.
+ * Otherwise returns undefined when missing.
+ */
+function env(name: string, fallback: string): string;
+function env(name: string): string | undefined;
+function env(name: string, fallback?: string): string | undefined {
+  return process.env[name] ?? fallback;
 }
 
-export const PORT = process.env.PORT ? Number(process.env.PORT) : 7600;
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new MissingEnvVariableError(name);
+  return value;
+}
 
-export const CORS_OPTIONS = JSON.parse(process.env.CORS_OPTIONS || "{}");
-export const COOKIE_SETTINGS = JSON.parse(process.env.COOKIE_SETTINGS || "{}");
+function requireJson(name: string): Record<string, unknown> {
+  const raw = requireEnv(name);
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error(`Environment variable ${name} is not valid JSON`);
+  }
+}
 
-export const SPOTIFY_CLIENT_KEY = process.env.SPOTIFY_CLIENT_KEY;
+/* Validation */
+
+const REDIS_URL_REGEX =
+  /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
+
+function validateConfig(config: AppConfig): void {
+  if (!REDIS_URL_REGEX.test(config.redis.url)) {
+    throw new Error(`Invalid REDIS_URL format: ${config.redis.url}`);
+  }
+}
+
+/* Loaders */
+
+function loadTestConfig(): AppConfig {
+  const TEST_ENCRYPTION_KEY =
+    "6ce826c13ed5c151b8987bec062ad73fbd3e3d998442bd6209ae9852bc64cb4d";
+
+  return {
+    env: "test",
+    port: 7600,
+    clusterName: "tunele-test",
+    version: "test",
+    cors: {},
+    cookie: {},
+    spotify: { clientKey: "test-spotify-key" },
+    firebase: { serviceAccountKey: "{}" },
+    googleOAuth: { clientId: "", clientSecret: "", redirectUri: "" },
+    redis: { url: "redis://localhost:6379" },
+    session: { encryptionKey: TEST_ENCRYPTION_KEY, ttlSeconds: 604800 },
+    grafana: { lokiHost: "", lokiUser: "", lokiToken: "" },
+    metrics: { authToken: "" },
+    logger: { enableHttpLogPrinting: false, logLevel: "info" },
+  };
+}
+
+function loadConfig(): AppConfig {
+  const nodeEnv = env("NODE_ENV", "development");
+
+  if (nodeEnv === "test") return loadTestConfig();
+
+  const config: AppConfig = {
+    env: nodeEnv,
+    port: Number(env("PORT", "7600")),
+    clusterName: env("CLUSTER_NAME", "tunele-local"),
+    version: env("npm_package_version", "unknown"),
+
+    cors: requireJson("CORS_OPTIONS"),
+    cookie: requireJson("COOKIE_SETTINGS"),
+
+    spotify: {
+      clientKey: requireEnv("SPOTIFY_CLIENT_KEY"),
+    },
+
+    firebase: {
+      serviceAccountKey: requireEnv("FIREBASE_SERVICE_ACCOUNT_KEY"),
+    },
+
+    googleOAuth: {
+      clientId: requireEnv("GOOGLE_OAUTH_CLIENT_ID"),
+      clientSecret: requireEnv("GOOGLE_OAUTH_CLIENT_SECRET"),
+      redirectUri: requireEnv("REDIRECT_URI"),
+    },
+
+    redis: {
+      url: requireEnv("REDIS_URL"),
+    },
+
+    session: {
+      encryptionKey: requireEnv("SESSION_ENCRYPTION_KEY"),
+      ttlSeconds: parseInt(env("SESSION_TTL_SECONDS", "604800"), 10),
+    },
+
+    grafana: {
+      lokiHost: env("GRAFANA_LOKI_HOST") ?? "",
+      lokiUser: env("GRAFANA_LOKI_USER") ?? "",
+      lokiToken: env("GRAFANA_LOKI_TOKEN") ?? "",
+    },
+
+    metrics: {
+      authToken: env("METRICS_AUTH_TOKEN") ?? "",
+    },
+
+    logger: {
+      enableHttpLogPrinting: false,
+      logLevel: "info",
+    },
+  };
+
+  validateConfig(config);
+
+  return Object.freeze(config);
+}
+
+/* Singleton */
+
+let _config: AppConfig | null = null;
 
 /**
- * Must be defined if NODE_ENV is not "test"
+ * Returns the app config singleton, initializing it on first call.
  */
-export const FIREBASE_SERVICE_ACCOUNT_KEY =
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+export function getConfig(): AppConfig {
+  if (!_config) _config = loadConfig();
+  return _config;
+}
 
-export const GOOGLE_OAUTH_CONFIG = {
-  client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-  client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-  redirect_uri: process.env.REDIRECT_URI,
-};
+export default getConfig();
 
-export const loggerConfig = {
-  enableHttpLogPrinting: false, // Whether to print HTTP logs to console
-  logLevel: "info" as const, // Default log level
-};
-
-// Grafana Cloud configuration for observability
-export const GRAFANA_LOKI_HOST = process.env.GRAFANA_LOKI_HOST;
-export const GRAFANA_LOKI_USER = process.env.GRAFANA_LOKI_USER;
-export const GRAFANA_LOKI_TOKEN = process.env.GRAFANA_LOKI_TOKEN;
-export const CLUSTER_NAME = process.env.CLUSTER_NAME || "tunele-local";
-
-// Metrics endpoint authentication token (shared between API and Grafana Agent)
-export const METRICS_AUTH_TOKEN = process.env.METRICS_AUTH_TOKEN;
-
-// Redis configuration
-const redisUrlRegex =
-  /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
-export const REDIS_URL = process.env.REDIS_URL;
-if (!redisUrlRegex.test(REDIS_URL || "") && NODE_ENV !== "test")
-  throw new Error("Invalid REDIS_URL format");
+export type { AppConfig };

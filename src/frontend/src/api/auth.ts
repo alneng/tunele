@@ -1,37 +1,56 @@
 import api from "@/utils/axios";
 
 /**
- * Exchanges an OAuth code for an access token.
+ * Initiate OIDC flow by registering state and nonce with backend
  *
- * @param code the OAuth code
- * @param scope the OAuth scope
+ * @param state the state parameter (CSRF protection)
+ * @param nonce the nonce parameter
  */
-export const getAuthWithCode = async (
-  code: string,
-  scope: string
+export const initiateOIDC = async (
+  state: string,
+  nonce: string,
 ): Promise<void> => {
-  await api.post("/auth/code", { code, scope });
+  await api.post("/auth/initiate", {
+    state,
+    nonce,
+  });
 };
 
 /**
- * Exchanges a refresh token for an access token.
+ * OIDC authentication with code, state, nonce, and PKCE
+ *
+ * @param code the authorization code
+ * @param state the state parameter (CSRF protection)
+ * @param nonce the nonce parameter
+ * @param codeVerifier the PKCE code verifier
  */
-export const refreshUserSession = async () => {
-  await api.post("/auth/refresh-token");
+export const authenticate = async (
+  code: string,
+  state: string,
+  nonce: string,
+  codeVerifier: string,
+): Promise<void> => {
+  await api.post("/auth/callback", {
+    code,
+    state,
+    nonce,
+    code_verifier: codeVerifier,
+  });
 };
 
-export type AccessTokenResponse = {
+export type UserIdentity = {
   id: string;
   given_name: string;
+  email: string;
 };
 
 /**
- * Verifies the user's access token.
+ * Verifies the user's session.
  *
- * @returns the access token response
+ * @returns the user identity
  */
-export const verifyAccessToken = async (): Promise<AccessTokenResponse> => {
-  const response = await api.get<AccessTokenResponse>("/auth/vat");
+export const verifySession = async (): Promise<UserIdentity> => {
+  const response = await api.get<UserIdentity>("/auth/verify");
   return response.data;
 };
 

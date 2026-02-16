@@ -1,18 +1,19 @@
 import { Request, Response } from "express";
-import { METRICS_AUTH_TOKEN } from "../config";
+import config from "../config";
 import { getMetrics, getContentType } from "../metrics/registry";
 import { log } from "../utils/logger.utils";
 
 export default class MetricsController {
   static async getMetrics(req: Request, res: Response) {
-    // Require authentication if METRICS_AUTH_TOKEN is configured
-    if (METRICS_AUTH_TOKEN) {
+    const { authToken } = config.metrics;
+    // Require authentication if metrics auth token is configured
+    if (authToken) {
       const authHeader = req.headers.authorization;
       const token = authHeader?.startsWith("Bearer ")
         ? authHeader.slice(7)
         : null;
 
-      if (token !== METRICS_AUTH_TOKEN) {
+      if (token !== authToken) {
         res.status(401).end("Unauthorized");
         return;
       }

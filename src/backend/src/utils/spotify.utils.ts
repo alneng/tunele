@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 import { HttpException, PlaylistNotFoundException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
-import { SPOTIFY_CLIENT_KEY } from "../config";
+import config from "../config";
 import { log } from "./logger.utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "./redis.utils";
@@ -23,7 +23,7 @@ async function fetchAccessToken(): Promise<string> {
     const options = {
       method: "POST",
       headers: {
-        Authorization: `Basic ${SPOTIFY_CLIENT_KEY}`,
+        Authorization: `Basic ${config.spotify.clientKey}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       data: qs.stringify({ grant_type: "client_credentials" }),

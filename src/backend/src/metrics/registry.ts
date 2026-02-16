@@ -5,7 +5,7 @@ import {
   Gauge,
   collectDefaultMetrics,
 } from "prom-client";
-import { NODE_ENV } from "../config";
+import config from "../config";
 
 /**
  * Histogram bucket presets for different use cases
@@ -27,7 +27,7 @@ export const registry = new Registry();
 // Set default labels - cluster will be added by Grafana Agent
 registry.setDefaultLabels({
   app: "tunele-api",
-  env: NODE_ENV,
+  env: config.env,
 });
 
 // Collect default Node.js metrics
@@ -99,7 +99,7 @@ const appInfo = new Gauge({
 
 appInfo.set(
   {
-    version: process.env.npm_package_version || "unknown",
+    version: config.version,
     node_version: process.version,
   },
   1,

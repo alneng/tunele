@@ -2,7 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { createRateLimiter } from "./utils/middleware";
+import { createRateLimiter } from "./middleware/rate-limit.middleware";
 import { log } from "./utils/logger.utils";
 import { errorHandler } from "./utils/errors.utils";
 import {
@@ -10,7 +10,7 @@ import {
   metricsMiddleware,
 } from "./middleware/http.middleware";
 import { correlationMiddleware } from "./middleware/correlation.middleware";
-import { CORS_OPTIONS, PORT } from "./config";
+import config from "./config";
 import apiRouter from "./api";
 import {
   connectToRedisWithRetry,
@@ -26,7 +26,7 @@ app.set("trust proxy", true);
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors(CORS_OPTIONS));
+app.use(cors(config.cors));
 app.use(correlationMiddleware);
 app.use(metricsMiddleware);
 app.use(createRateLimiter());
@@ -39,8 +39,9 @@ app.use("/api", apiRouter);
 app.use(errorHandler);
 
 // Start server and connect to Redis
-app.listen(PORT, "0.0.0.0", async () => {
-  log.info(`API running at http://localhost:${PORT}`);
+const { port } = config;
+app.listen(port, "0.0.0.0", async () => {
+  log.info(`API running at http://localhost:${port}`);
 
   try {
     await connectToRedisWithRetry();

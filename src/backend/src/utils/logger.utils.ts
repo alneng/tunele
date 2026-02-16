@@ -1,14 +1,7 @@
 import winston from "winston";
 import path from "path";
 import LokiTransport from "winston-loki";
-import {
-  loggerConfig,
-  NODE_ENV,
-  GRAFANA_LOKI_HOST,
-  GRAFANA_LOKI_USER,
-  GRAFANA_LOKI_TOKEN,
-  CLUSTER_NAME,
-} from "../config";
+import config from "../config";
 import { getCorrelationId } from "../middleware/correlation.middleware";
 
 const levels = {
@@ -46,7 +39,7 @@ const onlyHttpFilter = winston.format((info) => {
  */
 const conditionalHttpFilter = winston.format((info) => {
   if (info.level === "http") {
-    return loggerConfig.enableHttpLogPrinting ? info : false;
+    return config.logger.enableHttpLogPrinting ? info : false;
   }
   return info;
 });
@@ -107,19 +100,19 @@ function buildTransports(): winston.transport[] {
 
   // Add Loki transport for production
   if (
-    NODE_ENV === "production" &&
-    GRAFANA_LOKI_HOST &&
-    GRAFANA_LOKI_USER &&
-    GRAFANA_LOKI_TOKEN
+    config.env === "production" &&
+    config.grafana.lokiHost &&
+    config.grafana.lokiUser &&
+    config.grafana.lokiToken
   ) {
     transports.push(
       new LokiTransport({
-        host: GRAFANA_LOKI_HOST,
-        basicAuth: `${GRAFANA_LOKI_USER}:${GRAFANA_LOKI_TOKEN}`,
+        host: config.grafana.lokiHost,
+        basicAuth: `${config.grafana.lokiUser}:${config.grafana.lokiToken}`,
         labels: {
           app: "tunele-api",
-          env: NODE_ENV,
-          cluster: CLUSTER_NAME,
+          env: config.env,
+          cluster: config.clusterName,
         },
         json: true,
         format: winston.format.combine(
@@ -128,7 +121,9 @@ function buildTransports(): winston.transport[] {
         ),
         replaceTimestamp: true,
         onConnectionError: (err) => {
-          console.error("Loki connection error:", err);
+          log.error("Loki connection error:", {
+            meta: { error: JSON.stringify(err) },
+          });
         },
       }),
     );

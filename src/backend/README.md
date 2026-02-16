@@ -2,6 +2,30 @@
 
 Express.js API server for Tunele.
 
+## Authentication
+
+The backend uses **OpenID Connect (OIDC)** for user authentication with Google. Key security features:
+
+- **CSRF Protection:** `state` stored server-side (Redis), validated and consumed once on callback
+- **PKCE:** Proof Key for Code Exchange (S256)
+- **Nonce:** Prevents ID token replay attacks
+- **Session-based Auth:** Server-side sessions with HttpOnly cookies
+- **Two-tier Storage:** Redis cache + Firestore persistence; Google refresh token encrypted at rest
+
+### Auth Flow
+
+1. Frontend generates state/nonce/PKCE, calls `POST /api/auth/initiate`; backend stores state/nonce in Redis
+2. Frontend redirects to Google; user signs in; Google redirects back to frontend callback
+3. Frontend sends code + state + nonce + code_verifier to `POST /api/auth/callback`; backend validates, exchanges code, verifies ID token, creates session
+4. Session cookie used for authenticated requests; logout deletes session and clears cookie
+
+### Endpoints
+
+- `POST /api/auth/initiate` - Register state/nonce before redirect to Google
+- `POST /api/auth/callback` - OIDC authentication callback
+- `GET /api/auth/verify` - Verify session
+- `GET /api/auth/logout` - Logout
+
 ## Local Development
 
 ### Quick Start
@@ -133,6 +157,8 @@ FIREBASE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...}'
 GOOGLE_OAUTH_CLIENT_ID='your_client_id'
 GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
 REDIRECT_URI='https://yourdomain.com/auth/callback'
+SESSION_ENCRYPTION_KEY='<32-byte-hex-string>'
+SESSION_TTL_SECONDS='604800'
 REDIS_URL='redis://redis:6379'
 REDIS_PASSWORD='your_secure_redis_password'
 ```
