@@ -15,14 +15,14 @@ const ENCRYPTED_DELIMITER = ":";
 const DEFAULT_RANDOM_LENGTH = 32;
 
 /**
- * Convert a Buffer to a Uint8Array (zero-copy)
+ * Convert a Buffer to a Uint8Array (zero-copy).
  */
 function toUint8Array(buf: Buffer): Uint8Array {
   return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
 }
 
 /**
- * Get encryption key from config
+ * Get encryption key from config.
  */
 function getEncryptionKey(): Uint8Array {
   const buf = crypto.pbkdf2Sync(
@@ -36,7 +36,7 @@ function getEncryptionKey(): Uint8Array {
 }
 
 /**
- * Encrypt a string value
+ * Encrypt a string value.
  *
  * @param text the plaintext to encrypt
  * @returns encrypted string in format: iv:authTag:encryptedData (all hex-encoded)
@@ -57,7 +57,7 @@ export function encrypt(text: string): string {
 }
 
 /**
- * Decrypt an encrypted string
+ * Decrypt an encrypted string.
  *
  * @param encryptedText the encrypted text in format: iv:authTag:encryptedData
  * @returns decrypted plaintext
@@ -84,7 +84,7 @@ export function decrypt(encryptedText: string): string {
 }
 
 /**
- * Generate a cryptographically secure random string
+ * Generate a cryptographically secure random string.
  *
  * @param length the length of the random string (in bytes, will be hex-encoded so output is 2x)
  * @returns random hex string
@@ -96,41 +96,7 @@ export function generateRandomString(
 }
 
 /**
- * Generate a cryptographically secure random string using URL-safe base64
- * (suitable for PKCE code_verifier)
- *
- * @param length the length in bytes (default 32 for 43 base64 characters)
- * @returns random URL-safe base64 string
- */
-export function generateRandomBase64Url(
-  length: number = DEFAULT_RANDOM_LENGTH,
-): string {
-  return crypto
-    .randomBytes(length)
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-}
-
-/**
- * Generate a SHA256 hash of a string
- *
- * @param text the text to hash
- * @returns base64url-encoded hash
- */
-export function sha256Base64Url(text: string): string {
-  return crypto
-    .createHash(HASH_ALGORITHM)
-    .update(text)
-    .digest("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-}
-
-/**
- * Generate a UUID v4
+ * Generate a UUID v4.
  *
  * @returns UUID string
  */
