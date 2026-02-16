@@ -1,10 +1,5 @@
-import {
-  encrypt,
-  decrypt,
-  generateRandomString,
-  generateUUID,
-} from "../src/utils/crypto.utils";
-import { hexLengthForBytes, UUID_V4_PATTERN } from "./fixtures/patterns";
+import { encrypt, decrypt, generateUUID } from "../src/utils/crypto.utils";
+import { UUID_V4_PATTERN } from "./fixtures/patterns";
 
 describe("Crypto Utils", () => {
   describe("encrypt and decrypt", () => {
@@ -50,32 +45,6 @@ describe("Crypto Utils", () => {
       parts[2] = tamperedChar + ciphertext.slice(1);
 
       expect(() => decrypt(parts.join(":"))).toThrow();
-    });
-  });
-
-  describe("generateRandomString", () => {
-    it("should generate random hex string of correct length", () => {
-      const byteLength = 32;
-      const random = generateRandomString(byteLength);
-
-      expect(random).toHaveLength(hexLengthForBytes(byteLength));
-      expect(random).toMatch(/^[0-9a-f]+$/);
-    });
-
-    it("should generate unique values", () => {
-      const random1 = generateRandomString(32);
-      const random2 = generateRandomString(32);
-
-      expect(random1).not.toBe(random2);
-    });
-
-    it("should handle different lengths", () => {
-      const byteLengths = [16, 64] as const;
-
-      for (const byteLength of byteLengths) {
-        const random = generateRandomString(byteLength);
-        expect(random).toHaveLength(hexLengthForBytes(byteLength));
-      }
     });
   });
 

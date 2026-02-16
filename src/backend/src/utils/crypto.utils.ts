@@ -12,7 +12,6 @@ const PBKDF2_ITERATIONS = 100000;
 const PBKDF2_SALT = "tunele-session-salt";
 const ENCRYPTED_PARTS_COUNT = 3;
 const ENCRYPTED_DELIMITER = ":";
-const DEFAULT_RANDOM_LENGTH = 32;
 
 /**
  * Convert a Buffer to a Uint8Array (zero-copy).
@@ -81,18 +80,6 @@ export function decrypt(encryptedText: string): string {
   decrypted += decipher.final("utf8");
 
   return decrypted;
-}
-
-/**
- * Generate a cryptographically secure random string.
- *
- * @param length the length of the random string (in bytes, will be hex-encoded so output is 2x)
- * @returns random hex string
- */
-export function generateRandomString(
-  length: number = DEFAULT_RANDOM_LENGTH,
-): string {
-  return crypto.randomBytes(length).toString("hex");
 }
 
 /**
