@@ -9,20 +9,14 @@ export default class UserController {
   static async getUserData(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;
-      const session = req.session;
-
-      if (!session) {
-        throw new AccessDeniedException(401, "No session", false);
-      }
+      const session = req.session!; // Session is guaranteed to be present by requireAuth middleware
 
       // Verify user is accessing their own data
       if (session.userId !== userId) {
         throw new AccessDeniedException(401, "Unauthorized", false);
       }
 
-      const { status, message } = await UserService.getUserDataWithSession(
-        userId,
-      );
+      const { status, message } = await UserService.getUserData(userId);
       return res.status(status).json(message);
     } catch (error) {
       next(error);
@@ -32,34 +26,24 @@ export default class UserController {
   /**
    * Update user data (session-based auth)
    */
-  static async updateUserData(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  static async updateUserData(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;
-      const session = req.session;
+      const session = req.session!; // Session is guaranteed to be present by requireAuth middleware
       const bodyData = req.body;
-
-      if (!session) {
-        throw new AccessDeniedException(401, "No session", false);
-      }
 
       // Verify user is accessing their own data
       if (session.userId !== userId) {
         throw new AccessDeniedException(401, "Unauthorized", false);
       }
 
-      const { status, message } = await UserService.updateUserDataWithSession(
+      const { status, message } = await UserService.updateUserData(
         userId,
         bodyData,
-        session.email,
       );
       return res.status(status).json(message);
     } catch (error) {
       next(error);
     }
   }
-
 }

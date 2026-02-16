@@ -1,4 +1,5 @@
-import { TrackMetadata } from ".";
+import { TrackMetadata } from "./track.types";
+import { SavedGameData } from "./game.types";
 
 export type FirebaseTrack = {
   artists: string[];
@@ -37,4 +38,11 @@ export type MainGameSnapshot = { id: string; data: FirebaseMainPlaylist };
 export type PlaylistResetStatus = {
   resetAt: string; // In the format yyyy-MM-dd
   spotifySnapshotId?: string; // The Spotify snapshot ID of the playlist at the time of reset
+};
+
+export type FirebaseUser = {
+  email: string;
+  data: SavedGameData;
+  googleSub: string;
+  lastLoginAt: string;
 };

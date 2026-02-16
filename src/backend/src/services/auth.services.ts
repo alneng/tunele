@@ -13,6 +13,7 @@ import {
 import { UserIdentity, RequestMetadata } from "../types/session.types";
 import db from "../lib/firebase";
 import { GoogleTokenResponse } from "../types/google-api.types";
+import { FirebaseUser } from "../types/firebase.types";
 
 export default class AuthService {
   static get authClientCredentials() {
@@ -201,7 +202,7 @@ export default class AuthService {
 
     if (existingUser) {
       // Update last login time
-      await db.updateDocument("users", sub, {
+      await db.updateDocument<Partial<FirebaseUser>>("users", sub, {
         googleSub: sub,
         lastLoginAt: new Date().toISOString(),
       });
@@ -210,7 +211,7 @@ export default class AuthService {
     }
 
     // Create new user
-    await db.createDocument("users", sub, {
+    await db.createDocument<FirebaseUser>("users", sub, {
       email,
       data: { main: [], custom: {} },
       googleSub: sub,

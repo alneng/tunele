@@ -1,7 +1,8 @@
 import _ from "lodash";
 import db from "../lib/firebase";
 import { mergeGameData } from "../utils/user.utils";
-import { SavedGameData } from "../types";
+import { SavedGameData } from "../types/game.types";
+import { FirebaseUser } from "../types/firebase.types";
 import { HttpException } from "../utils/errors.utils";
 
 export default class UserService {
@@ -11,7 +12,7 @@ export default class UserService {
    * @param userId the user id (Google sub)
    * @returns the user's saved data
    */
-  static async getUserDataWithSession(
+  static async getUserData(
     userId: string,
   ): Promise<{ status: number; message: SavedGameData }> {
     const data: { email: string; data: SavedGameData } | null =
@@ -37,48 +38,40 @@ export default class UserService {
    *
    * @param userId the user id (Google sub)
    * @param bodyData the data to save for the user
-   * @param email the user's email from session
    * @returns the user's saved data
    */
-  static async updateUserDataWithSession(
+  static async updateUserData(
     userId: string,
     bodyData: SavedGameData,
-    email: string,
   ): Promise<{ status: number; message: SavedGameData }> {
-    const savedData: { email: string; data: SavedGameData } | null =
-      await db.getDocument("users", userId);
+    const savedData = await db.getDocument<FirebaseUser>("users", userId);
 
-    let gameData: SavedGameData | undefined = savedData?.data;
-
-    if (!gameData) {
-      gameData = { main: [], custom: {} };
-      if (!savedData) {
-        // Create new user document
-        await db.createDocument("users", userId, {
-          data: gameData,
-          email: email,
-          googleSub: userId,
-          lastLoginAt: new Date().toISOString(),
-        });
-      } else {
-        // Update existing document with data field
-        await db.updateDocument("users", userId, {
-          data: gameData,
-        });
-      }
+    if (!savedData) {
+      throw new HttpException(404, "User not found");
     }
 
+    const gameData = savedData.data;
+
+    // User does not have any data saved
+    if (!gameData) {
+      const defaultData = { main: [], custom: {} };
+      // Update existing document with default data
+      await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+        data: defaultData,
+      });
+      return { status: 200, message: defaultData };
+    }
+
+    // User already has data saved and it is the same as the data to save
     if (_.isEqual(gameData, bodyData)) {
       return { status: 200, message: gameData };
     }
 
+    // User already has data saved and it is different from the data to save
     const mergedData = mergeGameData(gameData, bodyData);
-    await db.updateDocument("users", userId, { data: mergedData });
-
-    return {
-      status: 201,
-      message: mergedData,
-    };
+    await db.updateDocument<Partial<FirebaseUser>>("users", userId, {
+      data: mergedData,
+    });
+    return { status: 201, message: mergedData };
   }
-
 }
