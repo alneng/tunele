@@ -47,7 +47,6 @@ async function fetchAccessToken(): Promise<string> {
 
     Logger.error("Failed to fetch access token", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: fetchAccessToken.name,
     });
     throw new HttpException(500, "Failed to fetch server access token");
@@ -98,7 +97,6 @@ export async function fetchPlaylist(
 
     Logger.error("Failed to fetch playlist", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: fetchPlaylist.name,
       data: { playlistId },
     });
@@ -140,7 +138,6 @@ async function fetchTracks(
 
     Logger.error("Failed to fetch tracks", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: fetchTracks.name,
       data: { nextUrl },
     });

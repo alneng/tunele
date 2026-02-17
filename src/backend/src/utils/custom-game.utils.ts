@@ -159,7 +159,6 @@ export async function chooseNewGameTrack(
   } catch (error) {
     Logger.error("Failed to choose new game track", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: chooseNewGameTrack.name,
       data: { playlistId, playlist, localDate },
     });
@@ -296,7 +295,6 @@ function sortPlaylistResponse(
   } catch (error) {
     Logger.error("Failed to sort playlist response", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: sortPlaylistResponse.name,
       data: { response, pastGameTracks },
     });

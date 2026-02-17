@@ -169,16 +169,15 @@ export default class MainGameService {
         "gameTracks",
         localDate,
       );
-      if (todaysGameTrack) {
-        todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
-        todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
-        await db.updateDocument("gameTracks", localDate, todaysGameTrack);
-        return { success: true };
-      } else throw Error();
+      if (!todaysGameTrack) throw Error("Game track not found");
+
+      todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
+      todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
+      await db.updateDocument("gameTracks", localDate, todaysGameTrack);
+      return { success: true };
     } catch (error) {
       Logger.error("Failed to post stats", {
         error,
-        stack: error instanceof Error ? error.stack : undefined,
         method: MainGameService.postStats.name,
         data: { localDate, score },
       });

@@ -60,7 +60,6 @@ export class SessionService {
     Logger.info("Session created", {
       sessionId,
       userId: userIdentity.sub,
-      email: userIdentity.email,
       expiresAt: expiresAt.toISOString(),
       requestMetadata: metadata,
     });

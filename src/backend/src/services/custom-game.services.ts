@@ -116,7 +116,7 @@ export default class CustomGameService {
       "customPlaylists",
       playlistId,
     );
-    if (!playlistObject) throw Error();
+    if (!playlistObject) throw Error("Playlist not found");
 
     try {
       let foundTrack = false;
@@ -138,7 +138,6 @@ export default class CustomGameService {
     } catch (error) {
       Logger.error("Failed to post stats", {
         error,
-        stack: error instanceof Error ? error.stack : undefined,
         method: CustomGameService.postStats.name,
         data: { playlistId, localDate, score, playlistObject },
       });

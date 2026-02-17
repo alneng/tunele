@@ -35,7 +35,6 @@ export function mergeGameData(
   } catch (error) {
     Logger.error("Failed to merge game data", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: mergeArrays.name,
       data: { existingData, newData },
     });
@@ -68,7 +67,6 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
   } catch (error) {
     Logger.error("Failed to merge game arrays", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       method: mergeArrays.name,
       data: { existingArray, newArray },
     });

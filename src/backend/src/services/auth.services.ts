@@ -106,7 +106,6 @@ export default class AuthService {
     } catch (error) {
       Logger.error("Failed to exchange code for tokens", {
         error,
-        stack: error instanceof Error ? error.stack : undefined,
         method: AuthService.authenticateWithCode.name,
         requestMetadata: metadata,
       });
@@ -133,7 +132,6 @@ export default class AuthService {
     } catch (error) {
       Logger.error("Failed to verify ID token", {
         error,
-        stack: error instanceof Error ? error.stack : undefined,
         method: AuthService.authenticateWithCode.name,
         requestMetadata: metadata,
       });

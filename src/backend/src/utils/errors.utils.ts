@@ -99,7 +99,6 @@ export const errorHandler: ErrorRequestHandler = (
   } else {
     Logger.error("errorHandler encountered unexpected error", {
       error,
-      stack: error instanceof Error ? error.stack : undefined,
       path: req.path,
       method: req.method,
     });
