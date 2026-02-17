@@ -37,136 +37,11 @@
             "mode": "absolute",
             "steps": [{ "color": "green", "value": null }]
           },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
-      "id": 2,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(rate(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[5m])) or vector(0)",
-          "refId": "A"
-        }
-      ],
-      "title": "Request Rate",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "red", "value": 5 }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
-      "id": 3,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "(sum(rate(tunele_spotify_api_requests_total{cluster=\"$cluster\", status=\"error\"}[5m])) or vector(0)) / (sum(rate(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[5m])) > 0) * 100",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.5 },
-              { "color": "red", "value": 2 }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "histogram_quantile(0.95, sum(rate(tunele_spotify_api_duration_seconds_bucket{cluster=\"$cluster\"}[5m])) by (le))",
-          "refId": "A"
-        }
-      ],
-      "title": "P95 Latency",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [{ "color": "green", "value": null }]
-          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "gridPos": { "h": 4, "w": 5, "x": 0, "y": 1 },
       "id": 50,
       "options": {
         "colorMode": "value",
@@ -201,6 +76,49 @@
             "mode": "absolute",
             "steps": [
               { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 5, "x": 5, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "sum(increase(tunele_spotify_api_requests_total{cluster=\"$cluster\", status=\"error\"}[$__range])) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Count",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
               { "color": "yellow", "value": 0.2 },
               { "color": "red", "value": 1 }
             ]
@@ -209,7 +127,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "gridPos": { "h": 4, "w": 5, "x": 10, "y": 1 },
       "id": 51,
       "options": {
         "colorMode": "value",
@@ -231,6 +149,49 @@
         }
       ],
       "title": "P50 Latency",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 2 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 5, "x": 15, "y": 1 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "histogram_quantile(0.95, sum(rate(tunele_spotify_api_duration_seconds_bucket{cluster=\"$cluster\"}[5m])) by (le))",
+          "refId": "A"
+        }
+      ],
+      "title": "P95 Latency",
       "type": "stat"
     },
     {
@@ -357,7 +318,7 @@
             "mode": "absolute",
             "steps": [{ "color": "green", "value": null }]
           },
-          "unit": "reqps"
+          "unit": "short"
         },
         "overrides": [
           {
@@ -394,12 +355,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(rate(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[5m])) by (endpoint, status)",
+          "expr": "sum(increase(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[$__rate_interval])) by (endpoint, status)",
           "legendFormat": "{{endpoint}} - {{status}}",
           "refId": "A"
         }
       ],
-      "title": "Requests by Endpoint & Status",
+      "title": "Request Count by Endpoint & Status",
       "type": "timeseries"
     },
     {
@@ -479,18 +440,14 @@
             "showPoints": "never",
             "spanNulls": true,
             "stacking": { "group": "A", "mode": "none" },
-            "thresholdsStyle": { "mode": "line+area" }
+            "thresholdsStyle": { "mode": "off" }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              { "color": "transparent", "value": null },
-              { "color": "red", "value": 5 }
-            ]
+            "steps": [{ "color": "green", "value": null }]
           },
-          "unit": "percent"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -498,7 +455,7 @@
       "id": 53,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -508,12 +465,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "(sum by (endpoint) (rate(tunele_spotify_api_requests_total{cluster=\"$cluster\", status=\"error\"}[5m])) or (sum by (endpoint) (rate(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[5m])) * 0)) / (sum by (endpoint) (rate(tunele_spotify_api_requests_total{cluster=\"$cluster\"}[5m])) > 0) * 100",
+          "expr": "sum by (endpoint) (increase(tunele_spotify_api_requests_total{cluster=\"$cluster\", status=\"error\"}[$__rate_interval]))",
           "legendFormat": "{{endpoint}}",
           "refId": "A"
         }
       ],
-      "title": "Error Rate by Endpoint",
+      "title": "Error Count by Endpoint",
       "type": "timeseries"
     },
     {
@@ -535,136 +492,11 @@
             "mode": "absolute",
             "steps": [{ "color": "green", "value": null }]
           },
-          "unit": "ops"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 22 },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(rate(tunele_redis_operations_total{cluster=\"$cluster\"}[5m])) or vector(0)",
-          "refId": "A"
-        }
-      ],
-      "title": "Operations Rate",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "red", "value": 5 }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 22 },
-      "id": 9,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "(sum(rate(tunele_redis_operations_total{cluster=\"$cluster\", status=\"error\"}[5m])) or vector(0)) / (sum(rate(tunele_redis_operations_total{cluster=\"$cluster\"}[5m])) > 0) * 100",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.01 },
-              { "color": "red", "value": 0.1 }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 22 },
-      "id": 10,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "histogram_quantile(0.95, sum(rate(tunele_redis_operation_duration_seconds_bucket{cluster=\"$cluster\"}[5m])) by (le))",
-          "refId": "A"
-        }
-      ],
-      "title": "P95 Latency",
-      "type": "stat"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [{ "color": "green", "value": null }]
-          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 22 },
+      "gridPos": { "h": 4, "w": 5, "x": 0, "y": 22 },
       "id": 54,
       "options": {
         "colorMode": "value",
@@ -699,6 +531,49 @@
             "mode": "absolute",
             "steps": [
               { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 5, "x": 5, "y": 22 },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "sum(increase(tunele_redis_operations_total{cluster=\"$cluster\", status=\"error\"}[$__range])) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Count",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
               { "color": "yellow", "value": 0.005 },
               { "color": "red", "value": 0.05 }
             ]
@@ -707,7 +582,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 22 },
+      "gridPos": { "h": 4, "w": 5, "x": 10, "y": 22 },
       "id": 55,
       "options": {
         "colorMode": "value",
@@ -729,6 +604,49 @@
         }
       ],
       "title": "P50 Latency",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.1 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 5, "x": 15, "y": 22 },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "histogram_quantile(0.95, sum(rate(tunele_redis_operation_duration_seconds_bucket{cluster=\"$cluster\"}[5m])) by (le))",
+          "refId": "A"
+        }
+      ],
+      "title": "P95 Latency",
       "type": "stat"
     },
     {
@@ -855,7 +773,7 @@
             "mode": "absolute",
             "steps": [{ "color": "green", "value": null }]
           },
-          "unit": "ops"
+          "unit": "short"
         },
         "overrides": [
           {
@@ -892,12 +810,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(rate(tunele_redis_operations_total{cluster=\"$cluster\"}[5m])) by (operation, status)",
+          "expr": "sum(increase(tunele_redis_operations_total{cluster=\"$cluster\"}[$__rate_interval])) by (operation, status)",
           "legendFormat": "{{operation}} - {{status}}",
           "refId": "A"
         }
       ],
-      "title": "Operations by Type & Status",
+      "title": "Operation Count by Type & Status",
       "type": "timeseries"
     },
     {
@@ -1363,11 +1281,11 @@
       }
     ]
   },
-  "time": { "from": "now-24h", "to": "now" },
+  "time": { "from": "now-1h", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
   "title": "Tunele Dependencies",
   "uid": "tunele-dependencies",
-  "version": 2,
+  "version": 5,
   "weekStart": ""
 }
