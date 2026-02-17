@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { SessionService } from "../lib/session.service";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 import { verifySession } from "../utils/auth.utils";
 
 /**
@@ -24,9 +24,7 @@ export async function requireAuth(
 
     // Update last accessed time (async, don't await to avoid blocking)
     SessionService.updateLastAccessed(session).catch((error) => {
-      log.error("Failed to update session last accessed", {
-        meta: { error: JSON.stringify(error) },
-      });
+      Logger.error("Failed to update session last accessed", { error });
     });
 
     next();

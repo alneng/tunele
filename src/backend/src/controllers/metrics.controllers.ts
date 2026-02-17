@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import config from "../config";
 import { getMetrics, getContentType } from "../metrics/registry";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 
 export default class MetricsController {
   static async getMetrics(req: Request, res: Response) {
@@ -23,7 +23,7 @@ export default class MetricsController {
       res.set("Content-Type", getContentType());
       res.end(await getMetrics());
     } catch (error) {
-      log.error("Error collecting metrics", { meta: { error } });
+      Logger.error("Error collecting metrics", { error });
       res.status(500).end("Error collecting metrics");
     }
   }

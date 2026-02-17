@@ -1,5 +1,5 @@
 import { GameResult, SavedGameData } from "../types";
-import { log } from "./logger.utils";
+import Logger from "./logger.utils";
 import { HttpException } from "./errors.utils";
 
 /**
@@ -33,13 +33,11 @@ export function mergeGameData(
     }
     return existingData;
   } catch (error) {
-    log.error("Failed to merge game data", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: mergeArrays.name,
-        data: { existingData, newData },
-      },
+    Logger.error("Failed to merge game data", {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      method: mergeArrays.name,
+      data: { existingData, newData },
     });
     throw new HttpException(500, "Failed to merge game data");
   }
@@ -68,13 +66,11 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
     );
     return sorted_array;
   } catch (error) {
-    log.error("Failed to merge game arrays", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: mergeArrays.name,
-        data: { existingArray, newArray },
-      },
+    Logger.error("Failed to merge game arrays", {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      method: mergeArrays.name,
+      data: { existingArray, newArray },
     });
     throw new HttpException(500, "Failed to merge game arrays");
   }

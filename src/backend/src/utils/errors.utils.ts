@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
-import { log } from "./logger.utils";
+import Logger from "./logger.utils";
 
 /**
  * Custom Error type that has a status code and a message.
@@ -97,13 +97,11 @@ export const errorHandler: ErrorRequestHandler = (
       .status(error.status)
       .json({ ...additionalErrorInfo, message: error.message });
   } else {
-    log.error("errorHandler encountered unexpected error", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        path: req.path,
-        method: req.method,
-      },
+    Logger.error("errorHandler encountered unexpected error", {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      path: req.path,
+      method: req.method,
     });
     res.status(500).json({ message: JSON.stringify(error) });
     throw error;

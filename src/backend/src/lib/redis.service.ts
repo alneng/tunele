@@ -4,7 +4,7 @@ import {
   HttpException,
   InternalServerErrorException,
 } from "../utils/errors.utils";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 import { redisMetrics } from "../metrics/redis.metrics";
 import { startTimer } from "../metrics/registry";
 
@@ -49,7 +49,7 @@ export class RedisService {
    */
   static async connect(): Promise<void> {
     if (this.isRedisConnected()) {
-      log.warn("Redis is already connected");
+      Logger.warn("Redis is already connected");
       return;
     }
 
@@ -57,11 +57,11 @@ export class RedisService {
       await client.connect();
       this.isConnected = true;
       redisMetrics.setConnectionStatus(true);
-      log.info("Redis connected successfully");
+      Logger.info("Redis connected successfully");
     } catch (error) {
       this.isConnected = false;
       redisMetrics.setConnectionStatus(false);
-      log.error("Failed to connect to Redis:", { meta: { error } });
+      Logger.error("Failed to connect to Redis", { error });
       if (config.env === "production") throw new InternalServerErrorException();
       throw new HttpException(500, "Failed to connect to Redis");
     }
@@ -72,7 +72,7 @@ export class RedisService {
    */
   static async disconnect(): Promise<void> {
     if (!this.isRedisConnected()) {
-      log.warn("Redis is already disconnected");
+      Logger.warn("Redis is already disconnected");
       return;
     }
 
@@ -80,11 +80,11 @@ export class RedisService {
       await client.quit();
       this.isConnected = false;
       redisMetrics.setConnectionStatus(false);
-      log.info("Redis disconnected successfully");
+      Logger.info("Redis disconnected successfully");
     } catch (error) {
       this.isConnected = false;
       redisMetrics.setConnectionStatus(false);
-      log.error("Failed to disconnect from Redis:", error);
+      Logger.error("Failed to disconnect from Redis", { error });
     }
   }
 
@@ -115,7 +115,7 @@ export class RedisService {
           await client.set(key, value);
         }
       } catch (error) {
-        log.error(`Error setting string for key ${key}:`, error);
+        Logger.error(`Error setting string for key ${key}`, { error });
         if (config.env === "production") throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set string for key ${key}`);
       }
@@ -135,7 +135,7 @@ export class RedisService {
         try {
           return await client.get(key);
         } catch (error) {
-          log.error(`Error getting string for key ${key}:`, error);
+          Logger.error(`Error getting string for key ${key}`, { error });
           if (config.env === "production")
             throw new InternalServerErrorException();
           throw new HttpException(500, `Failed to get string for key ${key}`);
@@ -165,7 +165,7 @@ export class RedisService {
           await client.set(key, jsonString);
         }
       } catch (error) {
-        log.error(`Error setting JSON for key ${key}:`, error);
+        Logger.error(`Error setting JSON for key ${key}`, { error });
         if (config.env === "production") throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set JSON for key ${key}`);
       }
@@ -187,7 +187,7 @@ export class RedisService {
           if (!jsonString) return null;
           return JSON.parse(jsonString) as T;
         } catch (error) {
-          log.error(`Error getting JSON for key ${key}:`, error);
+          Logger.error(`Error getting JSON for key ${key}`, { error });
           if (config.env === "production")
             throw new InternalServerErrorException();
           throw new HttpException(500, `Failed to get JSON for key ${key}`);
@@ -212,7 +212,7 @@ export class RedisService {
         const result = await client.del(key);
         return result > 0;
       } catch (error) {
-        log.error(`Error deleting key ${key}:`, error);
+        Logger.error(`Error deleting key ${key}`, { error });
         if (config.env === "production") throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to delete key ${key}`);
       }
@@ -231,7 +231,7 @@ export class RedisService {
         const result = await client.exists(key);
         return result === 1;
       } catch (error) {
-        log.error(`Error checking existence of key ${key}:`, error);
+        Logger.error(`Error checking existence of key ${key}`, { error });
         if (config.env === "production") throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to check existence of key ${key}`);
       }
@@ -250,7 +250,7 @@ export class RedisService {
       try {
         return await client.expire(key, seconds);
       } catch (error) {
-        log.error(`Error setting expiration for key ${key}:`, error);
+        Logger.error(`Error setting expiration for key ${key}`, { error });
         if (config.env === "production") throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set expiration for key ${key}`);
       }

@@ -15,7 +15,7 @@ import {
   GameTrack,
   Track,
 } from "../types";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 import { fetchPlaylist } from "../utils/spotify.utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "../utils/redis.utils";
@@ -136,13 +136,11 @@ export default class CustomGameService {
       }
       if (!foundTrack) throw Error();
     } catch (error) {
-      log.error("Failed to post stats", {
-        meta: {
-          error,
-          stack: error instanceof Error ? error.stack : undefined,
-          method: CustomGameService.postStats.name,
-          data: { playlistId, localDate, score, playlistObject },
-        },
+      Logger.error("Failed to post stats", {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        method: CustomGameService.postStats.name,
+        data: { playlistId, localDate, score, playlistObject },
       });
       throw new HttpException(400, "Failed to post stats");
     }

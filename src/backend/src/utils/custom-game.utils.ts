@@ -10,7 +10,7 @@ import {
   FirebaseGameTrack,
 } from "../types";
 import { EmptyPlaylistException, HttpException } from "./errors.utils";
-import { log } from "./logger.utils";
+import Logger from "./logger.utils";
 import { currentDateTimeString } from "./utils";
 import { getPreview } from "spotify-audio-previews";
 import { DateTime } from "luxon";
@@ -157,13 +157,11 @@ export async function chooseNewGameTrack(
       localDate
     );
   } catch (error) {
-    log.error("Failed to choose new game track", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: chooseNewGameTrack.name,
-        data: { playlistId, playlist, localDate },
-      },
+    Logger.error("Failed to choose new game track", {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      method: chooseNewGameTrack.name,
+      data: { playlistId, playlist, localDate },
     });
     throw new HttpException(500, "Failed to choose new game track");
   }
@@ -296,13 +294,11 @@ function sortPlaylistResponse(
 
     return result;
   } catch (error) {
-    log.error("Failed to sort playlist response", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: sortPlaylistResponse.name,
-        data: { response, pastGameTracks },
-      },
+    Logger.error("Failed to sort playlist response", {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      method: sortPlaylistResponse.name,
+      data: { response, pastGameTracks },
     });
     throw new HttpException(500, "Failed to sort playlist response");
   }

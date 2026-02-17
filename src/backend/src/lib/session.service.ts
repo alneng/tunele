@@ -7,7 +7,7 @@ import {
   RequestMetadata,
 } from "../types/session.types";
 import { encrypt, decrypt, generateUUID } from "../utils/crypto.utils";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { CacheKeys } from "../utils/redis.utils";
 import config from "../config";
@@ -57,14 +57,12 @@ export class SessionService {
     // Then cache in Redis for fast lookups
     await this.cacheSessionInRedis(sessionData);
 
-    log.info("Session created", {
-      meta: {
-        sessionId,
-        userId: userIdentity.sub,
-        email: userIdentity.email,
-        expiresAt: expiresAt.toISOString(),
-        requestMetadata: metadata,
-      },
+    Logger.info("Session created", {
+      sessionId,
+      userId: userIdentity.sub,
+      email: userIdentity.email,
+      expiresAt: expiresAt.toISOString(),
+      requestMetadata: metadata,
     });
 
     return {
@@ -101,8 +99,8 @@ export class SessionService {
       // Re-cache in Redis for future requests
       await this.cacheSessionInRedis(firestoreSession);
 
-      log.info("Session recovered from Firestore and cached in Redis", {
-        meta: { sessionId },
+      Logger.info("Session recovered from Firestore and cached in Redis", {
+        sessionId,
       });
 
       return firestoreSession;
@@ -139,7 +137,7 @@ export class SessionService {
       this.deleteSessionFromFirestore(sessionId),
     ]);
 
-    log.info("Session deleted", { meta: { sessionId } });
+    Logger.info("Session deleted", { sessionId });
   }
 
   /**
@@ -159,12 +157,10 @@ export class SessionService {
     try {
       return decrypt(session.googleRefreshToken);
     } catch (error) {
-      log.error("Failed to decrypt Google refresh token", {
-        meta: {
-          error,
-          sessionId,
-          stack: error instanceof Error ? error.stack : undefined,
-        },
+      Logger.error("Failed to decrypt Google refresh token", {
+        error,
+        sessionId,
+        stack: error instanceof Error ? error.stack : undefined,
       });
       throw new AccessDeniedException(
         500,

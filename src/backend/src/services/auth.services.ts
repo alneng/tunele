@@ -3,7 +3,7 @@ import qs from "qs";
 import { LoginTicket, OAuth2Client } from "google-auth-library";
 import { HttpException } from "../utils/errors.utils";
 import config from "../config";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 import { SessionService } from "../lib/session.service";
 import {
   storeOIDCState,
@@ -41,8 +41,9 @@ export default class AuthService {
     metadata?: RequestMetadata,
   ): Promise<void> {
     await storeOIDCState(state, nonce, metadata);
-    log.info("OIDC flow initiated", {
-      meta: { state, requestMetadata: metadata },
+    Logger.info("OIDC flow initiated", {
+      state,
+      requestMetadata: metadata,
     });
   }
 
@@ -78,12 +79,10 @@ export default class AuthService {
 
     // Verify nonce matches what we stored
     if (stored.nonce !== nonce) {
-      log.error("Nonce mismatch - possible replay attack", {
-        meta: {
-          storedNonce: stored.nonce,
-          providedNonce: nonce,
-          requestMetadata: metadata,
-        },
+      Logger.error("Nonce mismatch - possible replay attack", {
+        storedNonce: stored.nonce,
+        providedNonce: nonce,
+        requestMetadata: metadata,
       });
       throw new HttpException(401, "Nonce validation failed");
     }
@@ -105,13 +104,11 @@ export default class AuthService {
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
       );
     } catch (error) {
-      log.error("Failed to exchange code for tokens", {
-        meta: {
-          error,
-          stack: error instanceof Error ? error.stack : undefined,
-          method: AuthService.authenticateWithCode.name,
-          requestMetadata: metadata,
-        },
+      Logger.error("Failed to exchange code for tokens", {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        method: AuthService.authenticateWithCode.name,
+        requestMetadata: metadata,
       });
       throw new HttpException(401, "Failed to exchange authorization code");
     }
@@ -119,11 +116,9 @@ export default class AuthService {
     const { id_token, refresh_token } = tokenResponse.data;
 
     if (!id_token) {
-      log.error("No ID token in response", {
-        meta: {
-          method: AuthService.authenticateWithCode.name,
-          requestMetadata: metadata,
-        },
+      Logger.error("No ID token in response", {
+        method: AuthService.authenticateWithCode.name,
+        requestMetadata: metadata,
       });
       throw new HttpException(401, "No ID token received");
     }
@@ -136,13 +131,11 @@ export default class AuthService {
         audience: config.googleOAuth.clientId,
       });
     } catch (error) {
-      log.error("Failed to verify ID token", {
-        meta: {
-          error,
-          stack: error instanceof Error ? error.stack : undefined,
-          method: AuthService.authenticateWithCode.name,
-          requestMetadata: metadata,
-        },
+      Logger.error("Failed to verify ID token", {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        method: AuthService.authenticateWithCode.name,
+        requestMetadata: metadata,
       });
       throw new HttpException(401, "Invalid ID token");
     }
@@ -163,11 +156,9 @@ export default class AuthService {
       email_verified: payload.email_verified,
     };
 
-    log.info("User authenticated via OIDC", {
-      meta: {
-        userId: userIdentity.sub,
-        requestMetadata: metadata,
-      },
+    Logger.info("User authenticated via OIDC", {
+      userId: userIdentity.sub,
+      requestMetadata: metadata,
     });
 
     // Create or update user in Firestore
@@ -203,7 +194,7 @@ export default class AuthService {
         googleSub: sub,
         lastLoginAt: new Date().toISOString(),
       });
-      log.info("Updated existing user", { meta: { userId: sub } });
+      Logger.info("Updated existing user", { userId: sub });
       return;
     }
 
@@ -215,6 +206,6 @@ export default class AuthService {
       lastLoginAt: new Date().toISOString(),
     });
 
-    log.info("Created new user", { meta: { userId: sub, email } });
+    Logger.info("Created new user", { userId: sub, email });
   }
 }

@@ -4,149 +4,223 @@ import LokiTransport from "winston-loki";
 import config from "../config";
 import { getCorrelationId } from "../middleware/correlation.middleware";
 
-const levels = {
-  error: 0,
-  warn: 1,
-  info: 2,
-  http: 3,
-} as const;
-export type LogLevel = keyof typeof levels;
-
-const colors: { [key in LogLevel]: string } = {
-  error: "red",
-  warn: "yellow",
-  info: "white",
-  http: "magenta",
-};
-winston.addColors(colors);
+/** Flat key-value metadata passed to Logger methods. */
+export type LogMeta = Record<string, unknown>;
+export type LogLevel = "error" | "warn" | "info" | "http";
 
 /**
- * Create a filter for non-HTTP logs.
+ * Structured application logger backed by Winston.
+ *
+ * Metadata is passed as a flat object and automatically namespaced under
+ * `{ meta }` for the transport layer. When no metadata is provided the key
+ * is omitted entirely, keeping log output clean.
+ *
+ * @example
+ * Logger.info("Server started", { port: 3000 });
+ * Logger.error("Request failed", { error: err, requestId: "abc" });
+ * Logger.warn("Slow query detected");  // no meta — field omitted
  */
-const excludeHttpFilter = winston.format((info) => {
-  return info.level === "http" ? false : info;
-});
+export default class Logger {
+  private static readonly LOGS_DIR = "logs";
 
-/**
- * Create a filter for only HTTP logs.
- */
-const onlyHttpFilter = winston.format((info) => {
-  return info.level === "http" ? info : false;
-});
+  private static readonly LEVELS: Record<LogLevel, number> = {
+    error: 0,
+    warn: 1,
+    info: 2,
+    http: 3,
+  };
 
-/**
- * Create a filter to conditionally show HTTP logs based on config.
- */
-const conditionalHttpFilter = winston.format((info) => {
-  if (info.level === "http") {
-    return config.logger.enableHttpLogPrinting ? info : false;
+  private static readonly COLORS: Record<LogLevel, string> = {
+    error: "red",
+    warn: "yellow",
+    info: "white",
+    http: "magenta",
+  };
+
+  private static readonly instance: winston.Logger = Logger.init();
+
+  private constructor() {} // Not instantiable
+
+  // Public API
+
+  static error(message: string, meta?: LogMeta): void {
+    Logger.instance.error(message, Logger.buildPayload(meta));
   }
-  return info;
-});
 
-/**
- * Format that adds correlation ID to log entries
- */
-const correlationIdFormat = winston.format((info) => {
-  const correlationId = getCorrelationId();
-  if (correlationId) {
-    info.correlationId = correlationId;
+  static warn(message: string, meta?: LogMeta): void {
+    Logger.instance.warn(message, Logger.buildPayload(meta));
   }
-  return info;
-});
 
-/**
- * Build transports array based on environment
- */
-function buildTransports(): winston.transport[] {
-  const transports: winston.transport[] = [
-    // Handles printing logs to console
-    new winston.transports.Console({
+  static info(message: string, meta?: LogMeta): void {
+    Logger.instance.info(message, Logger.buildPayload(meta));
+  }
+
+  static http(message: string, meta?: LogMeta): void {
+    Logger.instance.http(message, Logger.buildPayload(meta));
+  }
+
+  // Initialization
+
+  private static init(): winston.Logger {
+    winston.addColors(Logger.COLORS);
+
+    return winston.createLogger({
+      level: "http",
+      levels: Logger.LEVELS,
       format: winston.format.combine(
-        conditionalHttpFilter(),
-        winston.format.colorize({ all: true }),
-        winston.format.printf((info) => {
-          const correlationId = info.correlationId
-            ? ` [${info.correlationId}]`
-            : "";
-          return `[${info.timestamp}]${correlationId} ${info.level}: ${info.message}`;
+        Logger.correlationIdFormat(),
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.errors({ stack: true }),
+        winston.format.json(),
+      ),
+      transports: Logger.buildTransports(),
+      exceptionHandlers: [
+        new winston.transports.File({
+          filename: path.join(Logger.LOGS_DIR, "exceptions.log"),
         }),
-      ),
-    }),
-    // Separate log file for error logs
-    new winston.transports.File({
-      filename: path.join("logs", "error.log"),
-      level: "error",
-    }),
-    // Separate log file for HTTP logs
-    new winston.transports.File({
-      filename: path.join("logs", "http.log"),
-      format: winston.format.combine(
-        onlyHttpFilter(),
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        winston.format.json(),
-      ),
-    }),
-    // Combined log file for all other logs (excluding HTTP logs)
-    new winston.transports.File({
-      filename: path.join("logs", "combined.log"),
-      format: winston.format.combine(
-        excludeHttpFilter(),
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        winston.format.json(),
-      ),
-    }),
-  ];
+      ],
+      rejectionHandlers: [
+        new winston.transports.File({
+          filename: path.join(Logger.LOGS_DIR, "rejections.log"),
+        }),
+      ],
+    });
+  }
 
-  // Add Loki transport for production
-  if (
-    config.env === "production" &&
-    config.grafana.lokiHost &&
-    config.grafana.lokiUser &&
-    config.grafana.lokiToken
-  ) {
-    transports.push(
-      new LokiTransport({
-        host: config.grafana.lokiHost,
-        basicAuth: `${config.grafana.lokiUser}:${config.grafana.lokiToken}`,
-        labels: {
-          app: "tunele-api",
-          env: config.env,
-          cluster: config.clusterName,
-        },
-        json: true,
+  // Transports
+
+  private static buildTransports(): winston.transport[] {
+    const transports: winston.transport[] = [
+      new winston.transports.Console({ format: Logger.consoleFormat() }),
+
+      new winston.transports.File({
+        filename: path.join(Logger.LOGS_DIR, "error.log"),
+        level: "error",
+      }),
+
+      new winston.transports.File({
+        filename: path.join(Logger.LOGS_DIR, "http.log"),
         format: winston.format.combine(
-          correlationIdFormat(),
-          winston.format.json(),
+          Logger.onlyHttp(),
+          Logger.jsonWithTimestamp(),
         ),
-        replaceTimestamp: true,
-        onConnectionError: (err) => {
-          log.error("Loki connection error:", {
-            meta: { error: JSON.stringify(err) },
-          });
-        },
+      }),
+
+      new winston.transports.File({
+        filename: path.join(Logger.LOGS_DIR, "combined.log"),
+        format: winston.format.combine(
+          Logger.excludeHttp(),
+          Logger.jsonWithTimestamp(),
+        ),
+      }),
+    ];
+
+    if (
+      config.env === "production" &&
+      config.grafana.lokiHost &&
+      config.grafana.lokiUser &&
+      config.grafana.lokiToken
+    ) {
+      transports.push(
+        new LokiTransport({
+          host: config.grafana.lokiHost,
+          basicAuth: `${config.grafana.lokiUser}:${config.grafana.lokiToken}`,
+          labels: {
+            app: "tunele-api",
+            env: config.env,
+            cluster: config.clusterName,
+          },
+          json: true,
+          format: winston.format.combine(
+            Logger.correlationIdFormat(),
+            winston.format.json(),
+          ),
+          replaceTimestamp: true,
+          onConnectionError: (err: Error) =>
+            console.error("Loki connection error:", err),
+        }),
+      );
+    }
+
+    return transports;
+  }
+
+  // Formats
+
+  private static correlationIdFormat() {
+    return winston.format((info) => {
+      const id = getCorrelationId();
+      if (id) info.correlationId = id;
+      return info;
+    })();
+  }
+
+  private static excludeHttp() {
+    return winston.format((info) => (info.level === "http" ? false : info))();
+  }
+
+  private static onlyHttp() {
+    return winston.format((info) => (info.level === "http" ? info : false))();
+  }
+
+  private static conditionalHttp() {
+    return winston.format((info) => {
+      if (info.level === "http")
+        return config.logger.enableHttpLogPrinting ? info : false;
+      return info;
+    })();
+  }
+
+  private static jsonWithTimestamp() {
+    return winston.format.combine(
+      winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+      winston.format.json(),
+    );
+  }
+
+  private static consoleFormat() {
+    return winston.format.combine(
+      Logger.conditionalHttp(),
+      winston.format.colorize({ all: true }),
+      winston.format.printf((info) => {
+        const cid = info.correlationId ? ` [${info.correlationId}]` : "";
+        const meta = info.meta ? ` ${JSON.stringify(info.meta)}` : "";
+        return `[${info.timestamp}]${cid} ${info.level}: ${info.message}${meta}`;
       }),
     );
   }
 
-  return transports;
+  // Metadata helpers
+
+  private static buildPayload(
+    meta?: LogMeta,
+  ): { meta: Record<string, unknown> } | undefined {
+    if (!meta || Object.keys(meta).length === 0) return undefined;
+
+    const sanitized: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(meta)) {
+      sanitized[key] = Logger.sanitizeValue(value);
+    }
+    return { meta: sanitized };
+  }
+
+  private static sanitizeValue(value: unknown): unknown {
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        ...(value.stack ? { stack: value.stack } : {}),
+      };
+    }
+
+    if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+      const sanitized: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(value)) {
+        sanitized[k] = Logger.sanitizeValue(v);
+      }
+      return sanitized;
+    }
+
+    return value;
+  }
 }
-
-const logger = winston.createLogger({
-  level: "http",
-  levels,
-  format: winston.format.combine(
-    correlationIdFormat(),
-    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    winston.format.errors({ stack: true }),
-    winston.format.json(),
-  ),
-  transports: buildTransports(),
-});
-
-export const log = {
-  error: (message: string, meta?: unknown) => logger.error(message, meta),
-  warn: (message: string, meta?: unknown) => logger.warn(message, meta),
-  info: (message: string, meta?: unknown) => logger.info(message, meta),
-  http: (message: string, meta?: unknown) => logger.http(message, meta),
-} as const;

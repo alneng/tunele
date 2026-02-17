@@ -6,7 +6,7 @@ import {
 } from "../metrics/http.metrics";
 import { startTimer } from "../metrics/registry";
 import morgan from "morgan";
-import { log } from "../utils/logger.utils";
+import Logger from "../utils/logger.utils";
 
 /**
  * Operational endpoints: tracked in metrics but excluded from logs.
@@ -138,10 +138,10 @@ export const httpRequestLogger = morgan(
     stream: {
       write: (message: string) => {
         try {
-          log.http("Incoming Request", JSON.parse(message));
+          Logger.http("Incoming Request", JSON.parse(message));
         } catch (error) {
-          log.error("Failed to parse HTTP log message", { meta: { error } });
-          log.http(message.trim());
+          Logger.error("Failed to parse HTTP log message", { error });
+          Logger.http(message.trim());
         }
       },
     },
