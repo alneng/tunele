@@ -159,7 +159,6 @@ export class SessionService {
       Logger.error("Failed to decrypt Google refresh token", {
         error,
         sessionId,
-        stack: error instanceof Error ? error.stack : undefined,
       });
       throw new AccessDeniedException(
         500,
