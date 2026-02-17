@@ -1,5 +1,5 @@
 import { RedisService } from "../lib/redis.service";
-import { log } from "./logger.utils";
+import Logger from "../lib/logger";
 import { HttpException } from "./errors.utils";
 import { CacheKeys } from "./redis.utils";
 import { OIDCFlowState, RequestMetadata } from "../types/session.types";
@@ -54,8 +54,9 @@ export async function consumeOIDCState(
   const data = await RedisService.getJSON<OIDCFlowState>(key);
 
   if (!data) {
-    log.warn("OIDC state not found or expired", {
-      meta: { state, requestMetadata: metadata },
+    Logger.warn("OIDC state not found or expired", {
+      state,
+      requestMetadata: metadata,
     });
     return null;
   }
@@ -81,8 +82,9 @@ export function validateNonce(
   storedNonce: string,
 ): void {
   if (!tokenNonce || tokenNonce !== storedNonce) {
-    log.error("Nonce validation failed", {
-      meta: { tokenNonce, storedNonce },
+    Logger.error("Nonce validation failed", {
+      tokenNonce,
+      storedNonce,
     });
     throw new HttpException(401, "Invalid nonce in ID token");
   }

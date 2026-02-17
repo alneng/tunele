@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AuthService from "../services/auth.services";
 import { SessionService } from "../lib/session.service";
 import config from "../config";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { getRequestMetadata } from "../utils/request.utils";
 
 export default class AuthController {
@@ -91,8 +91,9 @@ export default class AuthController {
       // Delete session if it exists
       if (sessionId) {
         await SessionService.deleteSession(sessionId);
-        log.info("User logged out", {
-          meta: { sessionId, requestMetadata: getRequestMetadata(req) },
+        Logger.info("User logged out", {
+          sessionId,
+          requestMetadata: getRequestMetadata(req),
         });
       }
 

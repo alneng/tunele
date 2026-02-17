@@ -3,7 +3,7 @@ import qs from "qs";
 import { HttpException, PlaylistNotFoundException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
 import config from "../config";
-import { log } from "./logger.utils";
+import Logger from "../lib/logger";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "./redis.utils";
 import { spotifyMetrics } from "../metrics/spotify.metrics";
@@ -45,12 +45,9 @@ async function fetchAccessToken(): Promise<string> {
   } catch (error) {
     spotifyMetrics.recordRequest("token", "error", end());
 
-    log.error("Failed to fetch access token", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: fetchAccessToken.name,
-      },
+    Logger.error("Failed to fetch access token", {
+      error,
+      method: fetchAccessToken.name,
     });
     throw new HttpException(500, "Failed to fetch server access token");
   }
@@ -98,13 +95,10 @@ export async function fetchPlaylist(
         throw new PlaylistNotFoundException();
     }
 
-    log.error("Failed to fetch playlist", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: fetchPlaylist.name,
-        data: { playlistId },
-      },
+    Logger.error("Failed to fetch playlist", {
+      error,
+      method: fetchPlaylist.name,
+      data: { playlistId },
     });
     throw new HttpException(500, "Failed to fetch playlist");
   }
@@ -142,13 +136,10 @@ async function fetchTracks(
   } catch (error) {
     spotifyMetrics.recordRequest("tracks", "error", end());
 
-    log.error("Failed to fetch tracks", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: fetchTracks.name,
-        data: { nextUrl },
-      },
+    Logger.error("Failed to fetch tracks", {
+      error,
+      method: fetchTracks.name,
+      data: { nextUrl },
     });
     return [];
   }

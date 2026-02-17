@@ -1,5 +1,5 @@
 import { RedisService } from "../lib/redis.service";
-import { log } from "./logger.utils";
+import Logger from "../lib/logger";
 
 /**
  * Attempts to connect to Redis with exponential backoff retry.
@@ -9,31 +9,31 @@ import { log } from "./logger.utils";
  */
 export async function connectToRedisWithRetry(
   maxRetries = 5,
-  baseDelay = 1000
+  baseDelay = 1000,
 ) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      log.info(
-        `Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`
+      Logger.info(
+        `Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`,
       );
       await RedisService.connect();
-      log.info("Successfully connected to Redis");
+      Logger.info("Successfully connected to Redis");
       return;
     } catch (error) {
-      log.error(`Redis connection attempt ${attempt} failed`, {
-        meta: { error },
+      Logger.error(`Redis connection attempt ${attempt} failed`, {
+        error,
       });
 
       if (attempt === maxRetries) {
-        log.error(
-          "Max Redis connection attempts reached. Shutting down application."
+        Logger.error(
+          "Max Redis connection attempts reached. Shutting down application.",
         );
         process.exit(1);
       }
 
       // Exponential backoff: delay = baseDelay * 2^(attempt-1)
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      log.info(`Retrying Redis connection in ${delay}ms...`);
+      Logger.info(`Retrying Redis connection in ${delay}ms...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
@@ -45,13 +45,13 @@ export async function connectToRedisWithRetry(
  * @param signal the signal that triggered the shutdown (e.g., SIGTERM, SIGINT)
  */
 export const gracefulShutdown = async (signal: string) => {
-  log.info(`Received ${signal}. Starting graceful shutdown...`);
+  Logger.info(`Received ${signal}. Starting graceful shutdown...`);
 
   try {
     await RedisService.disconnect();
-    log.info("Redis connection closed.");
+    Logger.info("Redis connection closed.");
   } catch (error) {
-    log.error("Error during Redis shutdown:", { meta: { error } });
+    Logger.error("Error during Redis shutdown", { error });
   }
 
   process.exit(0);

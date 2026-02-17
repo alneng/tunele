@@ -4,7 +4,7 @@ import { mergeGameData } from "../utils/user.utils";
 import { SavedGameData } from "../types/game.types";
 import { FirebaseUser } from "../types/firebase.types";
 import { HttpException } from "../utils/errors.utils";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 export default class UserService {
   /**
@@ -19,8 +19,8 @@ export default class UserService {
     const data = await db.getDocument<FirebaseUser>("users", userId);
 
     if (!data) {
-      log.error("Couldn't find user in database but session is valid", {
-        meta: { userId },
+      Logger.error("Couldn't find user in database but session is valid", {
+        userId,
       });
       throw new HttpException(404, "User not found");
     }
@@ -51,8 +51,8 @@ export default class UserService {
     const savedData = await db.getDocument<FirebaseUser>("users", userId);
 
     if (!savedData) {
-      log.error("Couldn't find user in database but session is valid", {
-        meta: { userId },
+      Logger.error("Couldn't find user in database but session is valid", {
+        userId,
       });
       throw new HttpException(404, "User not found");
     }

@@ -6,80 +6,106 @@ import {
 } from "../metrics/http.metrics";
 import { startTimer } from "../metrics/registry";
 import morgan from "morgan";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 /**
- * Normalize route path to avoid high cardinality metrics.
- * Replaces dynamic segments with placeholders.
- *
- * @param req Express request object
- * @returns Normalized route path
+ * Operational endpoints: tracked in metrics but excluded from logs.
+ * - /api/metrics: avoid self-referential log noise from Grafana Agent scrapes
+ * - /api/health: avoid noise from Docker health checks
  */
-function normalizeRoutePath(req: Request): string {
-  // Use the matched route pattern if available (Express populates this)
-  if (req.route?.path) {
-    return req.baseUrl + req.route.path;
-  }
+const OPERATIONAL_PATHS = ["/api/metrics", "/api/health"];
 
-  // Fallback: normalize common dynamic patterns
-  let path = req.path;
+/**
+ * All routes that should be tracked in metrics (operational + application).
+ * Everything else is unrecognized traffic (bots, scanners) and is silently ignored.
+ */
+const KNOWN_ROUTE_PREFIXES = [
+  ...OPERATIONAL_PATHS,
+  "/api/dailySong",
+  "/api/allSongs",
+  "/api/stats",
+  "/api/playlist",
+  "/api/auth",
+  "/api/user",
+];
 
-  // Replace UUIDs
-  path = path.replace(
-    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
-    ":id",
+// Helpers
+
+function getFullPath(req: Request): string {
+  return (req.baseUrl || "") + (req.path || "");
+}
+
+function isKnownRoute(fullPath: string): boolean {
+  return KNOWN_ROUTE_PREFIXES.some(
+    (prefix) => fullPath === prefix || fullPath.startsWith(prefix + "/"),
   );
+}
 
-  // Replace Spotify playlist IDs (22 alphanumeric characters)
-  path = path.replace(/\/[A-Za-z0-9]{22}(?=\/|$)/g, "/:playlistId");
-
-  // Replace numeric IDs
-  path = path.replace(/\/\d+(?=\/|$)/g, "/:id");
-
-  // Replace date patterns (YYYY-MM-DD)
-  path = path.replace(/\/\d{4}-\d{2}-\d{2}(?=\/|$)/g, "/:date");
-
-  return path;
+function isOperationalRoute(fullPath: string): boolean {
+  return OPERATIONAL_PATHS.some(
+    (prefix) => fullPath === prefix || fullPath.startsWith(prefix + "/"),
+  );
 }
 
 /**
- * Middleware to collect HTTP request metrics.
- * Tracks request count, duration, and in-flight requests.
+ * Replace dynamic path segments with placeholders.
+ */
+function normalizeDynamicSegments(path: string): string {
+  return path
+    .replace(
+      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
+      ":id",
+    )
+    .replace(/\/[A-Za-z0-9]{22}(?=\/|$)/g, "/:playlistId")
+    .replace(/\/\d{4}-\d{2}-\d{2}(?=\/|$)/g, "/:date")
+    .replace(/\/\d+(?=\/|$)/g, "/:id");
+}
+
+/**
+ * Normalize route path for metrics labels.
+ * Uses Express matched route when available, falls back to prefix
+ * matching with dynamic segment normalization.
+ */
+function normalizeRoutePath(req: Request): string {
+  if (req.route?.path) {
+    return req.baseUrl + req.route.path;
+  }
+  return normalizeDynamicSegments(getFullPath(req));
+}
+
+// Middleware
+
+/**
+ * Collect HTTP request metrics: count, duration, and in-flight gauge.
+ *
+ * Behavior by route type:
+ * - Known application routes → full metrics
+ * - Operational routes (/health, /metrics) → full metrics (but no logs, see morgan)
+ * - Unrecognized routes (bot/scanner traffic) → skipped entirely
  */
 export function metricsMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
 ): void {
-  // Skip metrics endpoint to avoid self-referential metrics
-  if (req.path === "/api/metrics") {
-    return next();
-  }
+  const fullPath = getFullPath(req);
+
+  // Unrecognized traffic — no metrics at all
+  if (!isKnownRoute(fullPath)) return next();
 
   const end = startTimer();
-
   httpRequestsInFlight.inc();
 
   res.on("finish", () => {
     const route = normalizeRoutePath(req);
-    const method = req.method;
-    const statusCode = res.statusCode.toString();
-
-    httpRequestsTotal.inc({
-      method,
+    const labels = {
+      method: req.method,
       route,
-      status_code: statusCode,
-    });
+      status_code: res.statusCode.toString(),
+    };
 
-    httpRequestDuration.observe(
-      {
-        method,
-        route,
-        status_code: statusCode,
-      },
-      end(),
-    );
-
+    httpRequestsTotal.inc(labels);
+    httpRequestDuration.observe(labels, end());
     httpRequestsInFlight.dec();
   });
 
@@ -87,7 +113,9 @@ export function metricsMiddleware(
 }
 
 /**
- * Morgan middleware for logging HTTP requests.
+ * Morgan middleware for structured HTTP request logging.
+ * Skips operational endpoints (health/metrics) and unrecognized routes.
+ * Only application endpoints produce log output.
  */
 export const httpRequestLogger = morgan(
   (tokens, req, res) => {
@@ -103,17 +131,17 @@ export const httpRequestLogger = morgan(
     });
   },
   {
+    skip: (req: Request) => {
+      const fullPath = getFullPath(req);
+      return !isKnownRoute(fullPath) || isOperationalRoute(fullPath);
+    },
     stream: {
       write: (message: string) => {
         try {
-          const data = JSON.parse(message);
-          log.http("Incoming Request", data);
+          Logger.http("Incoming Request", JSON.parse(message));
         } catch (error) {
-          log.error(
-            "Error parsing HTTP request log message, defaulting to raw message",
-            { meta: { error } },
-          );
-          log.http(message.trim());
+          Logger.error("Failed to parse HTTP log message", { error });
+          Logger.http(message.trim());
         }
       },
     },

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import redisClient from "../lib/redis.client";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 export default class HealthController {
   static async getHealth(_req: Request, res: Response) {
@@ -13,7 +13,7 @@ export default class HealthController {
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      log.error("Health check failed", { meta: { error } });
+      Logger.error("Health check failed", { error });
       res.status(503).json({
         status: "unhealthy",
       });

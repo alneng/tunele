@@ -13,7 +13,7 @@ import {
   Track,
 } from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { currentDateTimeString } from "../utils/utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "../utils/redis.utils";
@@ -49,13 +49,11 @@ export default class MainGameService {
       await db.getLastDocument("allTracks");
 
     if (!mostRecentTracksSnapshot) {
-      log.info("Could not find a game snapshot", {
-        meta: {
-          detail:
-            "mostRecentTracksSnapshot is null. Has the database been seeded?",
-          method: MainGameService.getDailySong.name,
-          data: { localDate },
-        },
+      Logger.info("Could not find a game snapshot", {
+        detail:
+          "mostRecentTracksSnapshot is null. Has the database been seeded?",
+        method: MainGameService.getDailySong.name,
+        data: { localDate },
       });
       throw new HttpException(404, "Could not find a game snapshot");
     }
@@ -148,11 +146,9 @@ export default class MainGameService {
       await db.getLastDocument("allTracks");
 
     if (!snapshot) {
-      log.info("Could not find a game snapshot", {
-        meta: {
-          detail: "snapshot is null. Has the database been seeded?",
-          method: MainGameService.getDailySong.name,
-        },
+      Logger.info("Could not find a game snapshot", {
+        detail: "snapshot is null. Has the database been seeded?",
+        method: MainGameService.getDailySong.name,
       });
       return [];
     }
@@ -173,20 +169,17 @@ export default class MainGameService {
         "gameTracks",
         localDate,
       );
-      if (todaysGameTrack) {
-        todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
-        todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
-        await db.updateDocument("gameTracks", localDate, todaysGameTrack);
-        return { success: true };
-      } else throw Error();
+      if (!todaysGameTrack) throw Error("Game track not found");
+
+      todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
+      todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
+      await db.updateDocument("gameTracks", localDate, todaysGameTrack);
+      return { success: true };
     } catch (error) {
-      log.error("Failed to post stats", {
-        meta: {
-          error,
-          stack: error instanceof Error ? error.stack : undefined,
-          method: MainGameService.postStats.name,
-          data: { localDate, score },
-        },
+      Logger.error("Failed to post stats", {
+        error,
+        method: MainGameService.postStats.name,
+        data: { localDate, score },
       });
       throw new HttpException(400, "Failed to post stats");
     }
