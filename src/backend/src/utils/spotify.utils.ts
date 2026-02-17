@@ -3,7 +3,7 @@ import qs from "qs";
 import { HttpException, PlaylistNotFoundException } from "./errors.utils";
 import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
 import config from "../config";
-import Logger from "./logger.utils";
+import Logger from "../lib/logger";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "./redis.utils";
 import { spotifyMetrics } from "../metrics/spotify.metrics";

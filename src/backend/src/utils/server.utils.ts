@@ -1,5 +1,5 @@
 import { RedisService } from "../lib/redis.service";
-import Logger from "./logger.utils";
+import Logger from "../lib/logger";
 
 /**
  * Attempts to connect to Redis with exponential backoff retry.
@@ -9,12 +9,12 @@ import Logger from "./logger.utils";
  */
 export async function connectToRedisWithRetry(
   maxRetries = 5,
-  baseDelay = 1000
+  baseDelay = 1000,
 ) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       Logger.info(
-        `Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`
+        `Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`,
       );
       await RedisService.connect();
       Logger.info("Successfully connected to Redis");
@@ -26,7 +26,7 @@ export async function connectToRedisWithRetry(
 
       if (attempt === maxRetries) {
         Logger.error(
-          "Max Redis connection attempts reached. Shutting down application."
+          "Max Redis connection attempts reached. Shutting down application.",
         );
         process.exit(1);
       }

@@ -4,7 +4,7 @@ import {
   HttpException,
   InternalServerErrorException,
 } from "../utils/errors.utils";
-import Logger from "../utils/logger.utils";
+import Logger from "./logger";
 import { redisMetrics } from "../metrics/redis.metrics";
 import { startTimer } from "../metrics/registry";
 
@@ -116,7 +116,8 @@ export class RedisService {
         }
       } catch (error) {
         Logger.error(`Error setting string for key ${key}`, { error });
-        if (config.env === "production") throw new InternalServerErrorException();
+        if (config.env === "production")
+          throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set string for key ${key}`);
       }
     });
@@ -166,7 +167,8 @@ export class RedisService {
         }
       } catch (error) {
         Logger.error(`Error setting JSON for key ${key}`, { error });
-        if (config.env === "production") throw new InternalServerErrorException();
+        if (config.env === "production")
+          throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set JSON for key ${key}`);
       }
     });
@@ -213,7 +215,8 @@ export class RedisService {
         return result > 0;
       } catch (error) {
         Logger.error(`Error deleting key ${key}`, { error });
-        if (config.env === "production") throw new InternalServerErrorException();
+        if (config.env === "production")
+          throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to delete key ${key}`);
       }
     });
@@ -232,7 +235,8 @@ export class RedisService {
         return result === 1;
       } catch (error) {
         Logger.error(`Error checking existence of key ${key}`, { error });
-        if (config.env === "production") throw new InternalServerErrorException();
+        if (config.env === "production")
+          throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to check existence of key ${key}`);
       }
     });
@@ -251,7 +255,8 @@ export class RedisService {
         return await client.expire(key, seconds);
       } catch (error) {
         Logger.error(`Error setting expiration for key ${key}`, { error });
-        if (config.env === "production") throw new InternalServerErrorException();
+        if (config.env === "production")
+          throw new InternalServerErrorException();
         throw new HttpException(500, `Failed to set expiration for key ${key}`);
       }
     });

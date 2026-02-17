@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AuthService from "../services/auth.services";
 import { SessionService } from "../lib/session.service";
 import config from "../config";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { getRequestMetadata } from "../utils/request.utils";
 
 export default class AuthController {

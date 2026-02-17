@@ -15,7 +15,7 @@ import {
   GameTrack,
   Track,
 } from "../types";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { fetchPlaylist } from "../utils/spotify.utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "../utils/redis.utils";
@@ -32,11 +32,11 @@ export default class CustomGameService {
   static async getDailySong(
     playlistId: string,
     localDate: string,
-    refreshFlag: boolean
+    refreshFlag: boolean,
   ): Promise<GameTrack> {
     // Check if the track is cached in Redis
     const track = await RedisService.getJSON<FirebaseGameTrack>(
-      CacheKeys.PLAYLIST_GAME_TRACK(playlistId, localDate)
+      CacheKeys.PLAYLIST_GAME_TRACK(playlistId, localDate),
     );
     if (track) return gameTrackTransformer(track);
 
@@ -44,7 +44,7 @@ export default class CustomGameService {
     const spotifyPlaylist = await fetchPlaylist(playlistId);
     let playlist = await db.getDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
-      playlistId
+      playlistId,
     );
 
     // If the playlist does not exist or needs to be refreshed, refresh it
@@ -63,7 +63,7 @@ export default class CustomGameService {
       await RedisService.setJSON<FirebaseGameTrack>(
         CacheKeys.PLAYLIST_GAME_TRACK(playlistId, localDate),
         gameTrack,
-        24 * 60 * 60 // Cache for 24 hours
+        24 * 60 * 60, // Cache for 24 hours
       );
       return gameTrackTransformer(gameTrack);
     }
@@ -72,14 +72,14 @@ export default class CustomGameService {
     const newGameTrack = await chooseNewGameTrack(
       playlistId,
       playlist,
-      localDate
+      localDate,
     );
 
     // Cache the new game track in Redis
     await RedisService.setJSON<FirebaseGameTrack>(
       CacheKeys.PLAYLIST_GAME_TRACK(playlistId, localDate),
       newGameTrack,
-      24 * 60 * 60 // Cache for 24 hours
+      24 * 60 * 60, // Cache for 24 hours
     );
 
     // Return the new game track
@@ -95,7 +95,7 @@ export default class CustomGameService {
   static async getAllSongs(playlistId: string): Promise<Track[]> {
     const allTracks = await db.getDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
-      playlistId
+      playlistId,
     );
 
     if (!allTracks) return [];
@@ -114,7 +114,7 @@ export default class CustomGameService {
   static async postStats(playlistId: string, localDate: string, score: number) {
     const playlistObject: FirebaseCustomPlaylist | null = await db.getDocument(
       "customPlaylists",
-      playlistId
+      playlistId,
     );
     if (!playlistObject) throw Error();
 
@@ -129,7 +129,7 @@ export default class CustomGameService {
           await db.updateDocument(
             "customPlaylists",
             playlistId,
-            playlistObject
+            playlistObject,
           );
           return { success: true };
         }

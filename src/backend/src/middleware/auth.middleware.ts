@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { SessionService } from "../lib/session.service";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { verifySession } from "../utils/auth.utils";
 
 /**

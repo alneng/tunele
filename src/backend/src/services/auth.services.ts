@@ -3,7 +3,7 @@ import qs from "qs";
 import { LoginTicket, OAuth2Client } from "google-auth-library";
 import { HttpException } from "../utils/errors.utils";
 import config from "../config";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { SessionService } from "../lib/session.service";
 import {
   storeOIDCState,

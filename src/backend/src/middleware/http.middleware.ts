@@ -6,7 +6,7 @@ import {
 } from "../metrics/http.metrics";
 import { startTimer } from "../metrics/registry";
 import morgan from "morgan";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 /**
  * Operational endpoints: tracked in metrics but excluded from logs.

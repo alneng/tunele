@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import config from "../config";
 import { getMetrics, getContentType } from "../metrics/registry";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 export default class MetricsController {
   static async getMetrics(req: Request, res: Response) {

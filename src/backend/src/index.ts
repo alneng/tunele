@@ -3,7 +3,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { createRateLimiter } from "./middleware/rate-limit.middleware";
-import Logger from "./utils/logger.utils";
+import Logger from "./lib/logger";
 import { errorHandler } from "./utils/errors.utils";
 import {
   httpRequestLogger,

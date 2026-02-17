@@ -7,7 +7,7 @@ import {
   RequestMetadata,
 } from "../types/session.types";
 import { encrypt, decrypt, generateUUID } from "../utils/crypto.utils";
-import Logger from "../utils/logger.utils";
+import Logger from "./logger";
 import { AccessDeniedException } from "../utils/errors.utils";
 import { CacheKeys } from "../utils/redis.utils";
 import config from "../config";

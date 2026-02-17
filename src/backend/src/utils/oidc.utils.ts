@@ -1,5 +1,5 @@
 import { RedisService } from "../lib/redis.service";
-import Logger from "./logger.utils";
+import Logger from "../lib/logger";
 import { HttpException } from "./errors.utils";
 import { CacheKeys } from "./redis.utils";
 import { OIDCFlowState, RequestMetadata } from "../types/session.types";

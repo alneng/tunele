@@ -13,7 +13,7 @@ import {
   Track,
 } from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { currentDateTimeString } from "../utils/utils";
 import { RedisService } from "../lib/redis.service";
 import { CacheKeys } from "../utils/redis.utils";

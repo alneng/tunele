@@ -1,5 +1,5 @@
 import { GameResult, SavedGameData } from "../types";
-import Logger from "./logger.utils";
+import Logger from "../lib/logger";
 import { HttpException } from "./errors.utils";
 
 /**
@@ -12,7 +12,7 @@ import { HttpException } from "./errors.utils";
  */
 export function mergeGameData(
   existingData: SavedGameData,
-  newData: SavedGameData
+  newData: SavedGameData,
 ): SavedGameData {
   try {
     existingData.main = mergeArrays(existingData.main, newData.main);
@@ -26,7 +26,7 @@ export function mergeGameData(
         } else {
           existingData.custom[key] = mergeArrays(
             existingData.custom[key],
-            newData.custom[key]
+            newData.custom[key],
           );
         }
       }
@@ -57,12 +57,12 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
 
     const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
     const newData = newArray.filter(
-      (game: GameResult) => !uniqueIds.has(game.id)
+      (game: GameResult) => !uniqueIds.has(game.id),
     );
 
     const concat_array = existingArray.concat(newData);
     const sorted_array = concat_array.sort(
-      (a: GameResult, b: GameResult) => a.id - b.id
+      (a: GameResult, b: GameResult) => a.id - b.id,
     );
     return sorted_array;
   } catch (error) {

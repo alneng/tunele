@@ -4,7 +4,7 @@ import { mergeGameData } from "../utils/user.utils";
 import { SavedGameData } from "../types/game.types";
 import { FirebaseUser } from "../types/firebase.types";
 import { HttpException } from "../utils/errors.utils";
-import Logger from "../utils/logger.utils";
+import Logger from "../lib/logger";
 
 export default class UserService {
   /**
