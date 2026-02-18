@@ -16,7 +16,7 @@
     "@grafana/faro-web-sdk": "^2.2.0",
     "@grafana/faro-web-tracing": "^2.2.0",
     "@mui/material": "^5.14.13",
-    "axios": "^1.7.9",
+    "axios": "^1.13.5",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "react": "^18.2.0",
