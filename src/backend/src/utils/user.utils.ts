@@ -1,5 +1,5 @@
 import { GameResult, SavedGameData } from "../types";
-import { log } from "./logger.utils";
+import Logger from "../lib/logger";
 import { HttpException } from "./errors.utils";
 
 /**
@@ -12,7 +12,7 @@ import { HttpException } from "./errors.utils";
  */
 export function mergeGameData(
   existingData: SavedGameData,
-  newData: SavedGameData
+  newData: SavedGameData,
 ): SavedGameData {
   try {
     existingData.main = mergeArrays(existingData.main, newData.main);
@@ -26,20 +26,17 @@ export function mergeGameData(
         } else {
           existingData.custom[key] = mergeArrays(
             existingData.custom[key],
-            newData.custom[key]
+            newData.custom[key],
           );
         }
       }
     }
     return existingData;
   } catch (error) {
-    log.error("Failed to merge game data", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: mergeArrays.name,
-        data: { existingData, newData },
-      },
+    Logger.error("Failed to merge game data", {
+      error,
+      method: mergeArrays.name,
+      data: { existingData, newData },
     });
     throw new HttpException(500, "Failed to merge game data");
   }
@@ -59,22 +56,19 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
 
     const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
     const newData = newArray.filter(
-      (game: GameResult) => !uniqueIds.has(game.id)
+      (game: GameResult) => !uniqueIds.has(game.id),
     );
 
     const concat_array = existingArray.concat(newData);
     const sorted_array = concat_array.sort(
-      (a: GameResult, b: GameResult) => a.id - b.id
+      (a: GameResult, b: GameResult) => a.id - b.id,
     );
     return sorted_array;
   } catch (error) {
-    log.error("Failed to merge game arrays", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: mergeArrays.name,
-        data: { existingArray, newArray },
-      },
+    Logger.error("Failed to merge game arrays", {
+      error,
+      method: mergeArrays.name,
+      data: { existingArray, newArray },
     });
     throw new HttpException(500, "Failed to merge game arrays");
   }

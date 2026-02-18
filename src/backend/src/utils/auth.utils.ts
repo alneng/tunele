@@ -1,78 +1,50 @@
-import { Response } from "express";
 import { AccessDeniedException } from "../utils/errors.utils";
-import { verifyAccessToken, verifyIdToken } from "./tokens.utils";
-import { COOKIE_SETTINGS } from "../config";
+import { SessionService } from "../lib/session.service";
+import { SessionData } from "../types/session.types";
 
 /**
- * Creates a cookie
+ * Verify session is valid.
  *
- * @param res Express Response
- * @param cookieName the cookie name
- * @param cookieValue the value of the cookie
- * @param maxAge the max age of the cookie in ms
+ * @param sessionId session ID from cookie
+ * @throws AccessDeniedException if no session provided
+ * @throws AccessDeniedException if session is invalid
+ * @throws AccessDeniedException if session is expired
+ * @returns session data
  */
-export const createCookie = (
-  res: Response,
-  cookieName: string,
-  cookieValue: string,
-  maxAge: number
-) => {
-  res.cookie(cookieName, cookieValue, {
-    ...COOKIE_SETTINGS,
-    maxAge,
-  });
-};
-
-/**
- * Checks if user access and id token exist
- *
- * @param accessToken auth access token
- * @param idToken auth id token
- * @param refreshToken auth refresh token
- * @throws AccessDeniedException if no access or id token
- */
-export const doesAccessIdTokenExist = (
-  accessToken: string,
-  idToken: string,
-  refreshToken: string
-) => {
-  if (!accessToken || !idToken) {
-    throw new AccessDeniedException(
-      401,
-      `Invalid access token or id token${
-        refreshToken ? ". Retry with refresh token" : ""
-      }`,
-      refreshToken ? true : false
-    );
+export const verifySession = async (
+  sessionId: string | undefined,
+): Promise<SessionData> => {
+  if (!sessionId) {
+    throw new AccessDeniedException(401, "No session provided", false);
   }
+
+  const session = await SessionService.getSession(sessionId);
+
+  if (!session) {
+    throw new AccessDeniedException(401, "Invalid session", false);
+  }
+
+  // Check if session is expired
+  if (new Date(session.expiresAt) < new Date()) {
+    await SessionService.deleteSession(sessionId);
+    throw new AccessDeniedException(401, "Session expired", false);
+  }
+
+  return session;
 };
 
 /**
- * Gets the auth status of a user's id token
+ * Verify session is valid for the given user ID.
  *
- * @param idToken auth id token
- * @throws AccessDeniedException if bad id token
+ * @param session session data
+ * @param userId user ID to verify against
+ * @throws AccessDeniedException if session and user id mismatch
  */
-export const getIdTokenAuthStatus = async (idToken: string) => {
-  await verifyIdToken(idToken);
-};
-
-/**
- * Gets the auth status of a user's access token
- *
- * @param accessToken auth access token
- * @param userId a user id to verify against the access token
- * @throws AccessDeniedException if bad access token
- * @returns status of the access token
- */
-export const getAccessTokenAuthStatus = async (
-  accessToken: string,
-  userId?: string
-) => {
-  const accessTokenStatus = await verifyAccessToken(accessToken);
-
-  if (userId && accessTokenStatus.id !== userId)
+export const verifySessionForUserId = async (
+  session: SessionData,
+  userId: string,
+): Promise<void> => {
+  if (session.userId !== userId) {
     throw new AccessDeniedException(401, "Unauthorized", false);
-
-  return accessTokenStatus;
+  }
 };

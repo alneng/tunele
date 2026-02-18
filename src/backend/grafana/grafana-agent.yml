@@ -1,0 +1,35 @@
+# Grafana Agent Configuration for Tunele
+# This agent scrapes Prometheus metrics from the API and pushes to Grafana Cloud
+
+server:
+  log_level: info
+
+metrics:
+  global:
+    scrape_interval: 30s
+    external_labels:
+      cluster: ${CLUSTER_NAME:-tunele-local}
+
+  configs:
+    - name: tunele
+      scrape_configs:
+        # Scrape the Tunele API metrics endpoint
+        - job_name: tunele-api
+          static_configs:
+            - targets: ["${API_HOST:-api}:${API_PORT:-7600}"]
+          metrics_path: /api/metrics
+          scheme: http
+          authorization:
+            type: Bearer
+            credentials: ${METRICS_AUTH_TOKEN}
+
+      remote_write:
+        - url: ${GRAFANA_CLOUD_PROMETHEUS_URL}
+          basic_auth:
+            username: ${GRAFANA_CLOUD_PROMETHEUS_USERNAME}
+            password: ${GRAFANA_CLOUD_API_KEY}
+
+integrations:
+  # Enable built-in Node.js exporter for additional metrics
+  node_exporter:
+    enabled: false

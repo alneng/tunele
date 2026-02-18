@@ -37,6 +37,27 @@ services:
       timeout: 10s
       retries: 5
 
+  grafana-agent:
+    image: grafana/agent:latest
+    container_name: tunele-grafana-agent
+    restart: unless-stopped
+    volumes:
+      - ./grafana-agent.yml:/etc/agent/agent.yaml:ro
+    environment:
+      - CLUSTER_NAME=${CLUSTER_NAME}
+      - API_HOST=api
+      - API_PORT=7600
+      - METRICS_AUTH_TOKEN=${METRICS_AUTH_TOKEN}
+      - GRAFANA_CLOUD_PROMETHEUS_URL=${GRAFANA_PROMETHEUS_URL}
+      - GRAFANA_CLOUD_PROMETHEUS_USERNAME=${GRAFANA_PROMETHEUS_USER}
+      - GRAFANA_CLOUD_API_KEY=${GRAFANA_PROMETHEUS_TOKEN}
+    command: ["-config.file=/etc/agent/agent.yaml", "-config.expand-env"]
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - tunele-network
+
 networks:
   tunele-network:
     driver: bridge

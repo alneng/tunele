@@ -1,9 +1,15 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { logout, verifyAccessToken } from "@/api/auth";
+import { logout, verifySession, initiateOIDC } from "@/api/auth";
 import { fetchUserData, syncUserData } from "@/api/user";
 import { useGameStore } from "./game.store";
 import { AxiosApiError } from "@/types";
+import {
+  generateRandomString,
+  generateCodeVerifier,
+  generateCodeChallenge,
+  storeOIDCParams,
+} from "@/utils/oidc.utils";
 
 interface UserState {
   // User authentication state
@@ -56,11 +62,11 @@ export const useUserStore = create<UserState>()(
         set(
           { isLoading: true, error: null, init: true },
           undefined,
-          "checkAuth/init"
+          "checkAuth/init",
         );
 
         try {
-          const userData = await verifyAccessToken();
+          const userData = await verifySession();
 
           if (userData) {
             const { given_name, id } = userData;
@@ -71,7 +77,7 @@ export const useUserStore = create<UserState>()(
                 id,
               },
               undefined,
-              "checkAuth/success"
+              "checkAuth/success",
             );
           } else {
             set(
@@ -81,7 +87,7 @@ export const useUserStore = create<UserState>()(
                 id: "",
               },
               undefined,
-              "checkAuth/noUser"
+              "checkAuth/noUser",
             );
           }
         } catch (error) {
@@ -93,27 +99,53 @@ export const useUserStore = create<UserState>()(
               error: error as AxiosApiError,
             },
             undefined,
-            "checkAuth/error"
+            "checkAuth/error",
           );
         } finally {
           set({ isLoading: false }, undefined, "checkAuth/done");
         }
       },
 
-      login: () => {
-        const baseUrl = "https://accounts.google.com";
-        const endpoint = "/o/oauth2/v2/auth";
-        const queryParams = {
-          redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
-          client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
-          prompt: "consent",
-          response_type: "code",
-          scope: "email profile",
-          access_type: "offline",
-        };
-        const url = new URL(endpoint, baseUrl);
-        url.search = new URLSearchParams(queryParams).toString();
-        window.location.href = url.href;
+      login: async () => {
+        try {
+          // Generate OIDC parameters
+          const state = generateRandomString(32);
+          const nonce = generateRandomString(32);
+          const codeVerifier = generateCodeVerifier();
+          const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+          // Register state and nonce with backend (enables server-side validation)
+          await initiateOIDC(state, nonce);
+
+          // Store parameters in sessionStorage for callback
+          storeOIDCParams(state, nonce, codeVerifier);
+
+          // Build authorization URL with OIDC parameters
+          const baseUrl = "https://accounts.google.com";
+          const endpoint = "/o/oauth2/v2/auth";
+          const queryParams = {
+            redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+            client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+            prompt: "consent",
+            response_type: "code",
+            scope: "openid email profile",
+            state,
+            nonce,
+            code_challenge: codeChallenge,
+            code_challenge_method: "S256",
+            access_type: "offline",
+          };
+          const url = new URL(endpoint, baseUrl);
+          url.search = new URLSearchParams(queryParams).toString();
+          window.location.href = url.href;
+        } catch (error) {
+          console.error("Failed to initiate OIDC flow:", error);
+          set(
+            { error: error as AxiosApiError },
+            undefined,
+            "login/initiate-error",
+          );
+        }
       },
 
       logout: async () => {
@@ -129,7 +161,7 @@ export const useUserStore = create<UserState>()(
               isLoading: false,
             },
             undefined,
-            "logout/success"
+            "logout/success",
           );
         } catch (error) {
           set(
@@ -138,7 +170,7 @@ export const useUserStore = create<UserState>()(
               error: error as AxiosApiError,
             },
             undefined,
-            "logout/error"
+            "logout/error",
           );
         } finally {
           set({ isLoading: false }, undefined, "logout/done");
@@ -158,7 +190,7 @@ export const useUserStore = create<UserState>()(
           set(
             { error: error as AxiosApiError },
             undefined,
-            "syncDataFromServer/error"
+            "syncDataFromServer/error",
           );
           throw error;
         }
@@ -177,12 +209,12 @@ export const useUserStore = create<UserState>()(
           set(
             { error: error as AxiosApiError },
             undefined,
-            "syncDataToServer/error"
+            "syncDataToServer/error",
           );
           throw error;
         }
       },
     }),
-    { name: "tunele-user-auth-store", enabled: import.meta.env.DEV }
-  )
+    { name: "tunele-user-auth-store", enabled: import.meta.env.DEV },
+  ),
 );

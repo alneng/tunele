@@ -2,10 +2,15 @@ import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { createRateLimiter } from "./utils/middleware";
-import { httpRequestLogger, log } from "./utils/logger.utils";
+import { createRateLimiter } from "./middleware/rate-limit.middleware";
+import Logger from "./lib/logger";
 import { errorHandler } from "./utils/errors.utils";
-import { CORS_OPTIONS, PORT } from "./config";
+import {
+  httpRequestLogger,
+  metricsMiddleware,
+} from "./middleware/http.middleware";
+import { correlationMiddleware } from "./middleware/correlation.middleware";
+import config from "./config";
 import apiRouter from "./api";
 import {
   connectToRedisWithRetry,
@@ -21,7 +26,9 @@ app.set("trust proxy", true);
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors(CORS_OPTIONS));
+app.use(cors(config.cors));
+app.use(correlationMiddleware);
+app.use(metricsMiddleware);
 app.use(createRateLimiter());
 app.use(httpRequestLogger);
 
@@ -32,13 +39,14 @@ app.use("/api", apiRouter);
 app.use(errorHandler);
 
 // Start server and connect to Redis
-app.listen(PORT, "0.0.0.0", async () => {
-  log.info(`API running at http://localhost:${PORT}`);
+const { port } = config;
+app.listen(port, "0.0.0.0", async () => {
+  Logger.info(`API running at http://localhost:${port}`);
 
   try {
     await connectToRedisWithRetry();
   } catch (error) {
-    log.error("Failed to establish Redis connection:", { meta: { error } });
+    Logger.error("Failed to establish Redis connection", { error });
     process.exit(1);
   }
 });
@@ -49,10 +57,10 @@ process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 
 // Handle uncaught exceptions and unhandled rejections
 process.on("uncaughtException", (error) => {
-  log.error("Uncaught Exception:", { meta: { error, stack: error.stack } });
+  Logger.error("Uncaught Exception", { error, stack: error.stack });
   process.exit(1);
 });
 process.on("unhandledRejection", (reason, promise) => {
-  log.error("Unhandled Rejection:", { meta: { reason, promise } });
+  Logger.error("Unhandled Rejection", { reason, promise });
   process.exit(1);
 });

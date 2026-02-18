@@ -10,7 +10,7 @@ import {
   FirebaseGameTrack,
 } from "../types";
 import { EmptyPlaylistException, HttpException } from "./errors.utils";
-import { log } from "./logger.utils";
+import Logger from "../lib/logger";
 import { currentDateTimeString } from "./utils";
 import { getPreview } from "spotify-audio-previews";
 import { DateTime } from "luxon";
@@ -26,7 +26,7 @@ import { DateTime } from "luxon";
 export async function refreshPlaylist(
   playlistId: string,
   playlist: FirebaseCustomPlaylist | null,
-  refreshFlag: boolean
+  refreshFlag: boolean,
 ): Promise<FirebaseCustomPlaylist> {
   const response = await fetchPlaylist(playlistId, { fetchAllTracks: true });
   const sortedSongs = sortPlaylistResponse(response, playlist);
@@ -48,14 +48,14 @@ export async function refreshPlaylist(
     return await db.updateDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
       playlistId,
-      updatedPlaylist
+      updatedPlaylist,
     );
   } else {
     // Create a new playlist
     return await db.createDocument<FirebaseCustomPlaylist>(
       "customPlaylists",
       playlistId,
-      updatedPlaylist
+      updatedPlaylist,
     );
   }
 }
@@ -69,10 +69,10 @@ export async function refreshPlaylist(
  */
 export function getExistingGameTrack(
   playlist: FirebaseCustomPlaylist,
-  localDate: string
+  localDate: string,
 ): FirebaseGameTrack | null {
   const tracks = playlist.gameTracks.filter(
-    (track) => track.date === localDate
+    (track) => track.date === localDate,
   );
   return tracks.length > 0 ? tracks[0] : null;
 }
@@ -88,7 +88,7 @@ export function getExistingGameTrack(
 export async function chooseNewGameTrack(
   playlistId: string,
   playlist: FirebaseCustomPlaylist,
-  localDate: string
+  localDate: string,
 ): Promise<FirebaseGameTrack> {
   try {
     let allTracksList = playlist.tracklist;
@@ -128,7 +128,7 @@ export async function chooseNewGameTrack(
         playlistId,
         playlist,
         allTracksList,
-        localDate
+        localDate,
       );
     }
     // Otherwise, try to get the preview
@@ -141,7 +141,7 @@ export async function chooseNewGameTrack(
       const updatedPlaylist = await db.updateDocument(
         "customPlaylists",
         playlistId,
-        playlist
+        playlist,
       );
       return chooseNewGameTrack(playlistId, updatedPlaylist, localDate);
     }
@@ -154,16 +154,13 @@ export async function chooseNewGameTrack(
       playlistId,
       playlist,
       allTracksList,
-      localDate
+      localDate,
     );
   } catch (error) {
-    log.error("Failed to choose new game track", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: chooseNewGameTrack.name,
-        data: { playlistId, playlist, localDate },
-      },
+    Logger.error("Failed to choose new game track", {
+      error,
+      method: chooseNewGameTrack.name,
+      data: { playlistId, playlist, localDate },
     });
     throw new HttpException(500, "Failed to choose new game track");
   }
@@ -186,7 +183,7 @@ async function createAndSaveGameTrack(
   playlistId: string,
   playlist: FirebaseCustomPlaylist,
   allTracksList: FirebaseTrack[],
-  localDate: string
+  localDate: string,
 ): Promise<FirebaseGameTrack> {
   const gameNumber = playlist.gameTracks.length;
   const newGameTrack: FirebaseGameTrack = {
@@ -219,7 +216,7 @@ async function createAndSaveGameTrack(
   await db.updateDocument<FirebaseCustomPlaylist>(
     "customPlaylists",
     playlistId,
-    playlist
+    playlist,
   );
   return newGameTrack;
 }
@@ -237,7 +234,7 @@ async function createAndSaveGameTrack(
  */
 function sortPlaylistResponse(
   response: SpotifyPlaylistObject,
-  playlist: FirebaseCustomPlaylist | null
+  playlist: FirebaseCustomPlaylist | null,
 ): FirebaseTrack[] {
   const tracklist = playlist?.tracklist || [];
   const pastGameTracks = playlist?.gameTracks || [];
@@ -278,7 +275,7 @@ function sortPlaylistResponse(
       const gameTracks = gameTracksMap.get(externalUrl) || [];
       const playedBefore = recentResetDate
         ? gameTracks.some(
-            (t) => DateTime.fromFormat(t.date, "yyyy-MM-dd") >= recentResetDate
+            (t) => DateTime.fromFormat(t.date, "yyyy-MM-dd") >= recentResetDate,
           )
         : gameTracks.length > 0;
 
@@ -296,13 +293,10 @@ function sortPlaylistResponse(
 
     return result;
   } catch (error) {
-    log.error("Failed to sort playlist response", {
-      meta: {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        method: sortPlaylistResponse.name,
-        data: { response, pastGameTracks },
-      },
+    Logger.error("Failed to sort playlist response", {
+      error,
+      method: sortPlaylistResponse.name,
+      data: { response, pastGameTracks },
     });
     throw new HttpException(500, "Failed to sort playlist response");
   }
@@ -316,7 +310,7 @@ function sortPlaylistResponse(
  * @returns the new track list of reset statuses
  */
 function resetTrackListPlayedBeforeStatus(
-  trackList: FirebaseTrack[]
+  trackList: FirebaseTrack[],
 ): FirebaseTrack[] {
   return trackList.map((track: FirebaseTrack) => ({
     ...track,

@@ -4,13 +4,13 @@ A Heardle clone after the game shut down on May 5th, 2023
 
 ## Architecture Overview
 
-| Component | Technology | Location |
-|-----------|------------|----------|
-| Frontend | React + Vite + Tailwind | `src/frontend/` |
-| Backend | Node.js + Express + TypeScript | `src/backend/` |
-| Database | Firebase Firestore | Cloud |
-| Cache | Redis | Docker container |
-| Auth | Google OAuth 2.0 | Cloud |
+| Component | Technology                     | Location         |
+| --------- | ------------------------------ | ---------------- |
+| Frontend  | React + Vite + Tailwind        | `src/frontend/`  |
+| Backend   | Node.js + Express + TypeScript | `src/backend/`   |
+| Database  | Firebase Firestore             | Cloud            |
+| Cache     | Redis                          | Docker container |
+| Auth      | Google OAuth 2.0               | Cloud            |
 
 ## Quick Start
 
@@ -72,24 +72,41 @@ A Heardle clone after the game shut down on May 5th, 2023
 
 ### Backend (`src/backend/.env`)
 
-| Variable | Description |
-|----------|-------------|
-| `PORT` | Server port (default: 7600) |
-| `CORS_OPTIONS` | CORS configuration JSON |
-| `COOKIE_SETTINGS` | Cookie configuration JSON |
-| `SPOTIFY_CLIENT_KEY` | Base64 encoded `client_id:client_secret` |
-| `FIREBASE_SERVICE_ACCOUNT_KEY` | Firebase service account JSON (inline) |
-| `GOOGLE_OAUTH_CLIENT_ID` | Google OAuth 2.0 client ID |
-| `GOOGLE_OAUTH_CLIENT_SECRET` | Google OAuth 2.0 client secret |
-| `REDIRECT_URI` | OAuth redirect URI |
-| `REDIS_URL` | Redis connection URL |
-| `REDIS_PASSWORD` | Redis password (required in production) |
+| Variable                       | Description                              |
+| ------------------------------ | ---------------------------------------- |
+| `PORT`                         | Server port (default: 7600)              |
+| `CORS_OPTIONS`                 | CORS configuration JSON                  |
+| `COOKIE_SETTINGS`              | Cookie configuration JSON                |
+| `SPOTIFY_CLIENT_KEY`           | Base64 encoded `client_id:client_secret` |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Firebase service account JSON (inline)   |
+| `GOOGLE_OAUTH_CLIENT_ID`       | Google OAuth 2.0 client ID               |
+| `GOOGLE_OAUTH_CLIENT_SECRET`   | Google OAuth 2.0 client secret           |
+| `REDIRECT_URI`                 | OAuth redirect URI                       |
+| `SESSION_ENCRYPTION_KEY`       | Session encryption key                   |
+| `SESSION_TTL_SECONDS`          | Session TTL in seconds (default: 7 days) |
+| `REDIS_URL`                    | Redis connection URL                     |
+| `REDIS_PASSWORD`               | Redis password (required in production)  |
+
+### Backend - Observability (`src/backend/.env`)
+
+| Variable                        | Description                          |
+| ------------------------------- | ------------------------------------ |
+| `METRICS_AUTH_TOKEN` (optional) | Metrics authentication token         |
+| `CLUSTER_NAME` (optional)       | Cluster name for metrics and logging |
+| `GRAFANA_LOKI_HOST`             | Grafana Loki host                    |
+| `GRAFANA_LOKI_USER`             | Grafana Loki user                    |
+| `GRAFANA_LOKI_TOKEN`            | Grafana Loki token                   |
+| `GRAFANA_PROMETHEUS_URL`        | Grafana Prometheus URL               |
+| `GRAFANA_PROMETHEUS_USER`       | Grafana Prometheus user              |
+| `GRAFANA_PROMETHEUS_TOKEN`      | Grafana Prometheus token             |
 
 ### Frontend (`src/frontend/.env`)
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_OAUTH_CLIENT_ID` | Same as `GOOGLE_OAUTH_CLIENT_ID` |
+| Variable                             | Description                            |
+| ------------------------------------ | -------------------------------------- |
+| `VITE_OAUTH_CLIENT_ID`               | Same as `GOOGLE_OAUTH_CLIENT_ID`       |
+| `VITE_FARO_COLLECTOR_URL` (optional) | Grafana Faro collector url for metrics |
+| `VITE_FARO_APP_NAME` (optional)      | Grafana Faro app name for metrics      |
 
 ## Development
 
@@ -107,12 +124,12 @@ This starts both the API and Redis containers.
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
+| Command      | Description                                    |
+| ------------ | ---------------------------------------------- |
 | `yarn start` | Start frontend and backend in development mode |
-| `yarn redis` | Start Redis container (auto-removes on stop) |
-| `yarn lint` | Run ESLint across all packages |
-| `yarn test` | Run test suites |
+| `yarn redis` | Start Redis container (auto-removes on stop)   |
+| `yarn lint`  | Run ESLint across all packages                 |
+| `yarn test`  | Run test suites                                |
 
 ## Deployment
 
@@ -126,10 +143,10 @@ See [`src/backend/README.md`](src/backend/README.md) for detailed deployment doc
 
 ### Environments
 
-| Environment | Branch | Port | Compose File |
-|-------------|--------|------|--------------|
-| Production | `master` | 7600 | `docker-compose.prod.yml` |
-| Preview | `develop` | 7601 | `docker-compose.preview.yml` |
+| Environment | Branch    | Port | Compose File                 |
+| ----------- | --------- | ---- | ---------------------------- |
+| Production  | `master`  | 7600 | `docker-compose.prod.yml`    |
+| Preview     | `develop` | 7601 | `docker-compose.preview.yml` |
 
 ## Project Structure
 

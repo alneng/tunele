@@ -1,76 +1,105 @@
 import { Request, Response, NextFunction } from "express";
 import AuthService from "../services/auth.services";
-import { createCookie } from "../utils/auth.utils";
+import { SessionService } from "../lib/session.service";
+import config from "../config";
+import Logger from "../lib/logger";
+import { getRequestMetadata } from "../utils/request.utils";
 
 export default class AuthController {
-  static async getAuthWithCode(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  /**
+   * Initiate OIDC flow
+   * Stores state and nonce in Redis for server-side validation
+   */
+  static async initiateOIDC(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code, scope } = req.body;
+      const { state, nonce } = req.body;
 
-      const { refreshToken, idToken, accessToken, expiresIn } =
-        await AuthService.getAuthWithCode(code, scope);
+      await AuthService.initiateOIDCFlow(state, nonce, getRequestMetadata(req));
 
-      createCookie(res, "accessToken", accessToken, expiresIn * 1000);
-      createCookie(res, "idToken", idToken, expiresIn * 1000);
-      createCookie(
-        res,
-        "refreshToken",
-        refreshToken,
-        180 * 24 * 60 * 60 * 1000
-      );
       return res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }
   }
 
-  static async getAuthWithRefreshToken(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  /**
+   * OIDC authentication endpoint
+   * Validates code, state, nonce, and PKCE, then creates a session
+   */
+  static async authenticate(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.cookies;
+      const { code, state, nonce, code_verifier } = req.body;
 
-      const { idToken, accessToken, expiresIn } =
-        await AuthService.getAuthWithRefreshToken(refreshToken);
+      const { sessionId, expiresIn } = await AuthService.authenticateWithCode(
+        code,
+        state,
+        nonce,
+        code_verifier,
+        getRequestMetadata(req),
+      );
 
-      createCookie(res, "accessToken", accessToken, expiresIn * 1000);
-      createCookie(res, "idToken", idToken, expiresIn * 1000);
+      // Set session cookie (HttpOnly, Secure, SameSite)
+      res.cookie("session", sessionId, {
+        ...config.cookie,
+        maxAge: expiresIn * 1000,
+        httpOnly: true, // Prevents JavaScript access
+        secure: config.env === "production", // HTTPS only in production
+        sameSite: "lax", // CSRF protection
+      });
+
       return res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }
   }
 
-  static async verifyAccessToken(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  /**
+   * Verify session (OIDC-based auth)
+   */
+  static async verifySession(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accessToken, idToken, refreshToken } = req.cookies;
+      const sessionId = req.cookies.session;
 
-      const status = await AuthService.verifyAccessToken(
-        accessToken,
-        idToken,
-        refreshToken
-      );
-      return res.status(200).json(status);
+      if (!sessionId) {
+        return res.status(401).json({ error: "No session cookie" });
+      }
+
+      const session = await SessionService.getSession(sessionId);
+
+      if (!session) {
+        return res.status(401).json({ error: "Invalid or expired session" });
+      }
+
+      // Update last accessed time
+      await SessionService.updateLastAccessed(session);
+
+      // Return user identity
+      return res.status(200).json({
+        id: session.userId,
+        given_name: session.name,
+        email: session.email,
+      });
     } catch (error) {
       next(error);
     }
   }
 
-  static async logout(_req: Request, res: Response, next: NextFunction) {
+  static async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      res.clearCookie("refreshToken", { path: "/" });
-      res.clearCookie("accessToken", { path: "/" });
-      res.clearCookie("idToken", { path: "/" });
+      const sessionId = req.cookies.session;
+
+      // Delete session if it exists
+      if (sessionId) {
+        await SessionService.deleteSession(sessionId);
+        Logger.info("User logged out", {
+          sessionId,
+          requestMetadata: getRequestMetadata(req),
+        });
+      }
+
+      // Clear session cookie
+      res.clearCookie("session", { path: "/" });
+
       return res.status(200).send();
     } catch (error) {
       next(error);

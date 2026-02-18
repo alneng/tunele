@@ -13,6 +13,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@grafana/faro-web-sdk": "^2.2.0",
+    "@grafana/faro-web-tracing": "^2.2.0",
     "@mui/material": "^5.14.13",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@grafana/faro-rollup-plugin": "^0.8.2",
     "@types/node": "^20.11.5",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -45,6 +48,6 @@
     "vite": "^6.1.1"
   },
   "engines": {
-    "node": "18.x || 20.x || 22.x"
+    "node": "20.x || 22.x"
   }
 }

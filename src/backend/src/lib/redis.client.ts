@@ -1,9 +1,9 @@
 import { createClient } from "redis";
-import { REDIS_URL } from "../config";
-import { log } from "../utils/logger.utils";
+import config from "../config";
+import Logger from "./logger";
 
 const client = createClient({
-  url: REDIS_URL,
+  url: config.redis.url,
   socket: {
     // Disable automatic reconnection
     reconnectStrategy: false,
@@ -15,23 +15,23 @@ const client = createClient({
 });
 
 client.on("error", (error) => {
-  log.error("Redis Client Error:", { meta: { error } });
+  Logger.error("Redis Client Error", { error });
 });
 
 client.on("connect", () => {
-  log.info("Redis client attempting connection");
+  Logger.info("Redis client attempting connection");
 });
 
 client.on("ready", () => {
-  log.info("Connected to Redis and ready");
+  Logger.info("Connected to Redis and ready");
 });
 
 client.on("end", () => {
-  log.info("Redis client connection ended");
+  Logger.info("Redis client connection ended");
 });
 
 client.on("reconnecting", () => {
-  log.info("Redis client reconnecting");
+  Logger.info("Redis client reconnecting");
 });
 
 export default client;

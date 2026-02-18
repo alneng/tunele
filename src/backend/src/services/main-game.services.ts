@@ -13,8 +13,10 @@ import {
   Track,
 } from "../types";
 import { resetAllMainGameTracks } from "../utils/main-game.utils";
-import { log } from "../utils/logger.utils";
+import Logger from "../lib/logger";
 import { currentDateTimeString } from "../utils/utils";
+import { RedisService } from "../lib/redis.service";
+import { CacheKeys } from "../utils/redis.utils";
 
 export default class MainGameService {
   /**
@@ -24,23 +26,34 @@ export default class MainGameService {
    * @returns the daily song
    */
   static async getDailySong(localDate: string): Promise<GameTrack> {
+    // Check if the track is cached in Redis
+    const track = await RedisService.getJSON<FirebaseGameTrack>(
+      CacheKeys.MAIN_GAME_TRACK(localDate),
+    );
+    if (track) return gameTrackTransformer(track);
+
     const dailyGameTrack: FirebaseGameTrack | null = await db.getDocument(
       "gameTracks",
-      localDate
+      localDate,
     );
-    if (dailyGameTrack) return gameTrackTransformer(dailyGameTrack);
+    if (dailyGameTrack) {
+      await RedisService.setJSON<FirebaseGameTrack>(
+        CacheKeys.MAIN_GAME_TRACK(localDate),
+        dailyGameTrack,
+        24 * 60 * 60, // Cache for 24 hours
+      );
+      return gameTrackTransformer(dailyGameTrack);
+    }
 
     let mostRecentTracksSnapshot: MainGameSnapshot | null =
       await db.getLastDocument("allTracks");
 
     if (!mostRecentTracksSnapshot) {
-      log.info("Could not find a game snapshot", {
-        meta: {
-          detail:
-            "mostRecentTracksSnapshot is null. Has the database been seeded?",
-          method: MainGameService.getDailySong.name,
-          data: { localDate },
-        },
+      Logger.info("Could not find a game snapshot", {
+        detail:
+          "mostRecentTracksSnapshot is null. Has the database been seeded?",
+        method: MainGameService.getDailySong.name,
+        data: { localDate },
       });
       throw new HttpException(404, "Could not find a game snapshot");
     }
@@ -50,12 +63,12 @@ export default class MainGameService {
 
     // If all tracks have been played, reset all tracks
     let unplayedTracks = mostRecentTracksTracklist.filter(
-      (track) => !track.playedBefore
+      (track) => !track.playedBefore,
     );
     if (unplayedTracks.length === 0) {
       await resetAllMainGameTracks();
       mostRecentTracksSnapshot = (await db.getLastDocument(
-        "allTracks"
+        "allTracks",
       )) as MainGameSnapshot;
       mostRecentTracksTracklist = mostRecentTracksSnapshot.data.tracklist;
       unplayedTracks = mostRecentTracksSnapshot.data.tracklist;
@@ -67,7 +80,7 @@ export default class MainGameService {
 
     // Update the tracklist to mark the chosen track as played
     const chosenTrackIndex = mostRecentTracksTracklist.findIndex(
-      (track) => track.trackPreview === chosenTrack.trackPreview
+      (track) => track.trackPreview === chosenTrack.trackPreview,
     );
     mostRecentTracksTracklist[chosenTrackIndex].playedBefore = true;
 
@@ -110,7 +123,14 @@ export default class MainGameService {
     await db.updateDocument(
       "allTracks",
       mostRecentTracksSnapshot.id,
-      updatedDoc
+      updatedDoc,
+    );
+
+    // Cache the new game track in Redis
+    await RedisService.setJSON<FirebaseGameTrack>(
+      CacheKeys.MAIN_GAME_TRACK(localDate),
+      newGameTrack,
+      24 * 60 * 60, // Cache for 24 hours
     );
 
     return gameTrackTransformer(newGameTrack);
@@ -122,16 +142,13 @@ export default class MainGameService {
    * @returns List of song objects {song: String, artists: String[]}
    */
   static async getAllSongs(): Promise<Track[]> {
-    const snapshot: MainGameSnapshot | null = await db.getLastDocument(
-      "allTracks"
-    );
+    const snapshot: MainGameSnapshot | null =
+      await db.getLastDocument("allTracks");
 
     if (!snapshot) {
-      log.info("Could not find a game snapshot", {
-        meta: {
-          detail: "snapshot is null. Has the database been seeded?",
-          method: MainGameService.getDailySong.name,
-        },
+      Logger.info("Could not find a game snapshot", {
+        detail: "snapshot is null. Has the database been seeded?",
+        method: MainGameService.getDailySong.name,
       });
       return [];
     }
@@ -150,22 +167,19 @@ export default class MainGameService {
     try {
       const todaysGameTrack: FirebaseGameTrack | null = await db.getDocument(
         "gameTracks",
-        localDate
+        localDate,
       );
-      if (todaysGameTrack) {
-        todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
-        todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
-        await db.updateDocument("gameTracks", localDate, todaysGameTrack);
-        return { success: true };
-      } else throw Error();
+      if (!todaysGameTrack) throw Error("Game track not found");
+
+      todaysGameTrack.stats[score] = todaysGameTrack.stats[score] + 1;
+      todaysGameTrack.totalPlays = todaysGameTrack.totalPlays + 1;
+      await db.updateDocument("gameTracks", localDate, todaysGameTrack);
+      return { success: true };
     } catch (error) {
-      log.error("Failed to post stats", {
-        meta: {
-          error,
-          stack: error instanceof Error ? error.stack : undefined,
-          method: MainGameService.postStats.name,
-          data: { localDate, score },
-        },
+      Logger.error("Failed to post stats", {
+        error,
+        method: MainGameService.postStats.name,
+        data: { localDate, score },
       });
       throw new HttpException(400, "Failed to post stats");
     }
