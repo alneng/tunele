@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
-import Logger from "../lib/logger";
+import Logger from "@/lib/logger";
 
 /**
  * Custom Error type that has a status code and a message.

@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { requireAuth } from "../src/middleware/auth.middleware";
-import { SessionService } from "../src/lib/session.service";
+import { requireAuth } from "@/middleware/auth.middleware";
+import { SessionService } from "@/lib/session.service";
 import {
   createExpiredSession,
   createMockSession,
-} from "./fixtures/session.fixtures";
+} from "@test/fixtures/session.fixtures";
 
-jest.mock("../src/lib/session.service");
+jest.mock("@/lib/session.service");
 
 describe("Auth Middleware", () => {
   let mockRequest: Partial<Request>;

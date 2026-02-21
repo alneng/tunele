@@ -1,4 +1,4 @@
-import { createMetrics, BUCKET_PRESETS } from "../metrics/registry";
+import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
 
 /**
  * Create Spotify API metrics using the factory pattern

@@ -1,13 +1,13 @@
 import axios from "axios";
 import qs from "qs";
-import { HttpException, PlaylistNotFoundException } from "./errors.utils";
-import { SpotifyPlaylistObject, PlaylistTrackObject } from "../types";
-import config from "../config";
-import Logger from "../lib/logger";
-import { RedisService } from "../lib/redis.service";
-import { CacheKeys } from "./redis.utils";
-import { spotifyMetrics } from "../metrics/spotify.metrics";
-import { startTimer } from "../metrics/registry";
+import { HttpException, PlaylistNotFoundException } from "@/utils/errors.utils";
+import { SpotifyPlaylistObject, PlaylistTrackObject } from "@/types";
+import config from "@/config";
+import Logger from "@/lib/logger";
+import { RedisService } from "@/lib/redis.service";
+import { CacheKeys } from "@/utils/redis.utils";
+import { spotifyMetrics } from "@/metrics/spotify.metrics";
+import { startTimer } from "@/metrics/registry";
 
 /**
  * Produces a Spotify access token

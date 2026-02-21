@@ -3,10 +3,10 @@ import {
   httpRequestsTotal,
   httpRequestDuration,
   httpRequestsInFlight,
-} from "../metrics/http.metrics";
-import { startTimer } from "../metrics/registry";
+} from "@/metrics/http.metrics";
+import { startTimer } from "@/metrics/registry";
 import morgan from "morgan";
-import Logger from "../lib/logger";
+import Logger from "@/lib/logger";
 
 /**
  * Operational endpoints: tracked in metrics but excluded from logs.

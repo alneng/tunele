@@ -1,4 +1,4 @@
-import { createMetrics, BUCKET_PRESETS } from "./registry";
+import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
 
 /**
  * Create HTTP metrics using the factory pattern

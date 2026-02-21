@@ -1,4 +1,4 @@
-import { createMetrics, BUCKET_PRESETS } from "../metrics/registry";
+import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
 
 /**
  * Create Redis metrics using the factory pattern

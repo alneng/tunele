@@ -1,4 +1,4 @@
-import { FirebaseGameTrack, FirebaseTrack, GameTrack, Track } from "../types";
+import { FirebaseGameTrack, FirebaseTrack, GameTrack, Track } from "@/types";
 
 export const gameTrackTransformer = (
   gameTrack: FirebaseGameTrack

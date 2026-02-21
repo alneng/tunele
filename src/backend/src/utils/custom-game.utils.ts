@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
-import db from "../lib/firebase";
-import { fetchPlaylist } from "./spotify.utils";
+import db from "@/lib/firebase";
+import { fetchPlaylist } from "@/utils/spotify.utils";
 import {
   SpotifyPlaylistObject,
   PlaylistTrackObject,
@@ -8,10 +8,10 @@ import {
   FirebaseTrack,
   FirebaseCustomPlaylist,
   FirebaseGameTrack,
-} from "../types";
-import { EmptyPlaylistException, HttpException } from "./errors.utils";
-import Logger from "../lib/logger";
-import { currentDateTimeString } from "./utils";
+} from "@/types";
+import { EmptyPlaylistException, HttpException } from "@/utils/errors.utils";
+import Logger from "@/lib/logger";
+import { currentDateTimeString } from "@/utils/utils";
 import { getPreview } from "spotify-audio-previews";
 import { DateTime } from "luxon";
 

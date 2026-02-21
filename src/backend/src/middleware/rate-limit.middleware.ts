@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { RateLimitException } from "../utils/errors.utils";
-import config from "../config";
+import { RateLimitException } from "@/utils/errors.utils";
+import config from "@/config";
 import rateLimit from "express-rate-limit";
 
 const rateLimitHandler = (

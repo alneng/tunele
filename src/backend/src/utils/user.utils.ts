@@ -1,6 +1,6 @@
-import { GameResult, SavedGameData } from "../types";
-import Logger from "../lib/logger";
-import { HttpException } from "./errors.utils";
+import { GameResult, SavedGameData } from "@/types";
+import Logger from "@/lib/logger";
+import { HttpException } from "@/utils/errors.utils";
 
 /**
  * Merges user data stored in the server with incoming data from the client.

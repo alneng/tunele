@@ -1,20 +1,20 @@
-import { SessionService } from "../src/lib/session.service";
-import { RedisService } from "../src/lib/redis.service";
-import db from "../src/lib/firebase";
-import { CacheKeys } from "../src/utils/redis.utils";
+import { SessionService } from "@/lib/session.service";
+import { RedisService } from "@/lib/redis.service";
+import db from "@/lib/firebase";
+import { CacheKeys } from "@/utils/redis.utils";
 import {
   MOCK_SESSION_ID,
   TEST_USER_IDENTITY,
   TEST_REFRESH_TOKEN,
   ENCRYPTED_REFRESH_TOKEN,
   sessionServiceFixtures,
-} from "./fixtures/session.fixtures";
+} from "@test/fixtures/session.fixtures";
 
 const SESSIONS_COLLECTION = "sessions";
 
-jest.mock("../src/lib/redis.service");
-jest.mock("../src/lib/firebase");
-jest.mock("../src/utils/crypto.utils", () => ({
+jest.mock("@/lib/redis.service");
+jest.mock("@/lib/firebase");
+jest.mock("@/utils/crypto.utils", () => ({
   encrypt: jest.fn((text: string) => `encrypted_${text}`),
   decrypt: jest.fn((text: string) => text.replace("encrypted_", "")),
   generateUUID: jest.fn(() => MOCK_SESSION_ID),

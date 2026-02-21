@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import db from "../lib/firebase";
-import { FirebaseMainPlaylist, MainGameSnapshot } from "../types";
-import { currentDateTimeString } from "./utils";
+import db from "@/lib/firebase";
+import { FirebaseMainPlaylist, MainGameSnapshot } from "@/types";
+import { currentDateTimeString } from "@/utils/utils";
 
 /**
  * Resets all of the tracks in the main game to unplayed.

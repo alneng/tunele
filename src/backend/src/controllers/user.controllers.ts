@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import UserService from "../services/user.services";
-import { verifySessionForUserId } from "../utils/auth.utils";
+import UserService from "@/services/user.services";
+import { verifySessionForUserId } from "@/utils/auth.utils";
 
 export default class UserController {
   /**

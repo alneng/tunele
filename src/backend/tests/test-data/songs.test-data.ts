@@ -1,4 +1,4 @@
-import { FirebaseCustomPlaylist } from "../../src/types";
+import { FirebaseCustomPlaylist } from "@/types";
 
 export const gameTrackDocumentExtras = {
   date: "2024-01-27",

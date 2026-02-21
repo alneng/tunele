@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { DateTime } from "luxon";
-import CustomGameService from "../services/custom-game.services";
+import CustomGameService from "@/services/custom-game.services";
 
 export default class CustomGameController {
   static async getDailySong(req: Request, res: Response, next: NextFunction) {

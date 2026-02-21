@@ -3,8 +3,8 @@ import { body } from "express-validator";
 import {
   isValidTimezoneString,
   validateInputs,
-} from "../utils/validation.utils";
-import MainGameController from "../controllers/main-game.controllers";
+} from "@/utils/validation.utils";
+import MainGameController from "@/controllers/main-game.controllers";
 
 const router = express.Router();
 

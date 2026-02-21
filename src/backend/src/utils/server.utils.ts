@@ -1,5 +1,5 @@
-import { RedisService } from "../lib/redis.service";
-import Logger from "../lib/logger";
+import { RedisService } from "@/lib/redis.service";
+import Logger from "@/lib/logger";
 
 /**
  * Attempts to connect to Redis with exponential backoff retry.

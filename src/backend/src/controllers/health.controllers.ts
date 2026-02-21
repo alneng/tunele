@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import redisClient from "../lib/redis.client";
-import Logger from "../lib/logger";
+import redisClient from "@/lib/redis.client";
+import Logger from "@/lib/logger";
 
 export default class HealthController {
   static async getHealth(_req: Request, res: Response) {
