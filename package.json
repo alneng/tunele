@@ -17,7 +17,13 @@
     "frontend:preview": "yarn workspace frontend preview",
     "test": "yarn workspace backend test",
     "test:watch": "yarn workspace backend test:watch",
-    "lint": "yarn workspace backend lint && yarn workspace frontend lint"
+    "lint": "yarn workspace backend lint && yarn workspace frontend lint",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
   },
   "keywords": [
     "Heardle",
@@ -31,6 +37,9 @@
     "node": "20.x || 22.x"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1"
   }
 }
