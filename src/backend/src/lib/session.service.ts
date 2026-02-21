@@ -1,16 +1,16 @@
-import { RedisService } from "./redis.service";
-import db from "./firebase";
+import { RedisService } from "@/lib/redis.service";
+import db from "@/lib/firebase";
 import {
   SessionData,
   FirestoreSessionData,
   UserIdentity,
   RequestMetadata,
-} from "../types/session.types";
-import { encrypt, decrypt, generateUUID } from "../utils/crypto.utils";
-import Logger from "./logger";
-import { AccessDeniedException } from "../utils/errors.utils";
-import { CacheKeys } from "../utils/redis.utils";
-import config from "../config";
+} from "@/types/session.types";
+import { encrypt, decrypt, generateUUID } from "@/utils/crypto.utils";
+import Logger from "@/lib/logger";
+import { AccessDeniedException } from "@/utils/errors.utils";
+import { CacheKeys } from "@/utils/redis.utils";
+import config from "@/config";
 
 /**
  * SessionService manages user sessions with two-tier storage:

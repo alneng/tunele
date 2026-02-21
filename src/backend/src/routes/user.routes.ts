@@ -4,9 +4,9 @@ import {
   isValidJsonBody,
   isValidUserId,
   validateInputs,
-} from "../utils/validation.utils";
-import UserController from "../controllers/user.controllers";
-import { requireAuth } from "../middleware/auth.middleware";
+} from "@/utils/validation.utils";
+import UserController from "@/controllers/user.controllers";
+import { requireAuth } from "@/middleware/auth.middleware";
 
 const router = express.Router();
 

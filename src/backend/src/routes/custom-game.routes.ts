@@ -1,11 +1,11 @@
 import express from "express";
 import { body, param } from "express-validator";
-import { validateInputs } from "../utils/validation.utils";
+import { validateInputs } from "@/utils/validation.utils";
 import {
   isValidPlaylistId,
   isValidTimezoneString,
-} from "../utils/validation.utils";
-import CustomGameController from "../controllers/custom-game.controllers";
+} from "@/utils/validation.utils";
+import CustomGameController from "@/controllers/custom-game.controllers";
 
 const router = express.Router();
 

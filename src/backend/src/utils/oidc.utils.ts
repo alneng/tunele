@@ -1,8 +1,8 @@
-import { RedisService } from "../lib/redis.service";
-import Logger from "../lib/logger";
-import { HttpException } from "./errors.utils";
-import { CacheKeys } from "./redis.utils";
-import { OIDCFlowState, RequestMetadata } from "../types/session.types";
+import { RedisService } from "@/lib/redis.service";
+import Logger from "@/lib/logger";
+import { HttpException } from "@/utils/errors.utils";
+import { CacheKeys } from "@/utils/redis.utils";
+import { OIDCFlowState, RequestMetadata } from "@/types/session.types";
 
 /**
  * OIDC state TTL in seconds (10 minutes - enough for user to complete auth flow)

@@ -1,8 +1,8 @@
 import winston from "winston";
 import path from "path";
 import LokiTransport from "winston-loki";
-import config from "../config";
-import { getCorrelationId } from "../middleware/correlation.middleware";
+import config from "@/config";
+import { getCorrelationId } from "@/middleware/correlation.middleware";
 
 /** Flat key-value metadata passed to Logger methods. */
 export type LogMeta = Record<string, unknown>;

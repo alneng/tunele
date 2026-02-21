@@ -2,17 +2,17 @@ import {
   storeOIDCState,
   consumeOIDCState,
   validateNonce,
-} from "../src/utils/oidc.utils";
-import { RedisService } from "../src/lib/redis.service";
-import { CacheKeys } from "../src/utils/redis.utils";
+} from "@/utils/oidc.utils";
+import { RedisService } from "@/lib/redis.service";
+import { CacheKeys } from "@/utils/redis.utils";
 import {
   createStoredOIDCData,
   OIDC_STATE_TTL_SECONDS,
   TEST_NONCE,
   TEST_STATE,
-} from "./fixtures/oidc.fixtures";
+} from "@test/fixtures/oidc.fixtures";
 
-jest.mock("../src/lib/redis.service");
+jest.mock("@/lib/redis.service");
 
 describe("OIDC Utils", () => {
   beforeEach(() => {

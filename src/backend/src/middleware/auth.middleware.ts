@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { SessionService } from "../lib/session.service";
-import Logger from "../lib/logger";
-import { verifySession } from "../utils/auth.utils";
+import { SessionService } from "@/lib/session.service";
+import Logger from "@/lib/logger";
+import { verifySession } from "@/utils/auth.utils";
 
 /**
  * Middleware to require authentication via session

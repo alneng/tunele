@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import config from "../config";
+import config from "@/config";
 
 class FirestoreSDK {
   private db!: admin.firestore.Firestore;

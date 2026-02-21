@@ -1,5 +1,5 @@
-import { TrackMetadata } from "./track.types";
-import { SavedGameData } from "./game.types";
+import { TrackMetadata } from "@/types/track.types";
+import { SavedGameData } from "@/types/game.types";
 
 export type FirebaseTrack = {
   artists: string[];

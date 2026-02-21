@@ -1,6 +1,6 @@
-import { AccessDeniedException } from "../utils/errors.utils";
-import { SessionService } from "../lib/session.service";
-import { SessionData } from "../types/session.types";
+import { AccessDeniedException } from "@/utils/errors.utils";
+import { SessionService } from "@/lib/session.service";
+import { SessionData } from "@/types/session.types";
 
 /**
  * Verify session is valid.

@@ -1,9 +1,9 @@
-import { HttpException } from "../utils/errors.utils";
-import db from "../lib/firebase";
+import { HttpException } from "@/utils/errors.utils";
+import db from "@/lib/firebase";
 import {
   tracksTransformer,
   gameTrackTransformer,
-} from "../transformers/track.transformers";
+} from "@/transformers/track.transformers";
 import {
   FirebaseGameTrack,
   FirebaseMainPlaylist,
@@ -11,12 +11,12 @@ import {
   GameTrack,
   MainGameSnapshot,
   Track,
-} from "../types";
-import { resetAllMainGameTracks } from "../utils/main-game.utils";
-import Logger from "../lib/logger";
-import { currentDateTimeString } from "../utils/utils";
-import { RedisService } from "../lib/redis.service";
-import { CacheKeys } from "../utils/redis.utils";
+} from "@/types";
+import { resetAllMainGameTracks } from "@/utils/main-game.utils";
+import Logger from "@/lib/logger";
+import { currentDateTimeString } from "@/utils/utils";
+import { RedisService } from "@/lib/redis.service";
+import { CacheKeys } from "@/utils/redis.utils";
 
 export default class MainGameService {
   /**

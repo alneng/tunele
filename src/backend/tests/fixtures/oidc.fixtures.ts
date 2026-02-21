@@ -1,4 +1,4 @@
-import { RequestMetadata } from "../../src/types/session.types";
+import { RequestMetadata } from "@/types/session.types";
 
 /** Default state value for OIDC tests */
 export const TEST_STATE = "test-state";

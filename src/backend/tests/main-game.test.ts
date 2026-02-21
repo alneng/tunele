@@ -1,16 +1,16 @@
-import MainGameService from "../src/services/main-game.services";
-import db from "../src/lib/firebase";
-import { HttpException } from "../src/utils/errors.utils";
+import MainGameService from "@/services/main-game.services";
+import db from "@/lib/firebase";
+import { HttpException } from "@/utils/errors.utils";
 import {
   gameTrackDocumentExtras,
   NeverGonna,
   TalkThatTalk,
   allTracks,
-} from "./test-data/songs.test-data";
-import { RedisService } from "../src/lib/redis.service";
+} from "@test/test-data/songs.test-data";
+import { RedisService } from "@/lib/redis.service";
 
-jest.mock("../src/lib/firebase");
-jest.mock("../src/lib/redis.service");
+jest.mock("@/lib/firebase");
+jest.mock("@/lib/redis.service");
 
 describe("Main Game Tests", () => {
   beforeEach(() => {

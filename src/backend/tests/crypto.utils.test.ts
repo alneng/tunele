@@ -1,5 +1,5 @@
-import { encrypt, decrypt, generateUUID } from "../src/utils/crypto.utils";
-import { UUID_V4_PATTERN } from "./fixtures/patterns";
+import { encrypt, decrypt, generateUUID } from "@/utils/crypto.utils";
+import { UUID_V4_PATTERN } from "@test/fixtures/patterns";
 
 describe("Crypto Utils", () => {
   describe("encrypt and decrypt", () => {

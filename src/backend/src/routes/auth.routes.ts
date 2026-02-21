@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
-import { validateInputs } from "../utils/validation.utils";
-import AuthController from "../controllers/auth.controllers";
+import { validateInputs } from "@/utils/validation.utils";
+import AuthController from "@/controllers/auth.controllers";
 
 const router = express.Router();
 

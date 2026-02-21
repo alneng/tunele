@@ -1,19 +1,19 @@
 import axios, { AxiosResponse } from "axios";
 import qs from "qs";
 import { LoginTicket, OAuth2Client } from "google-auth-library";
-import { HttpException } from "../utils/errors.utils";
-import config from "../config";
-import Logger from "../lib/logger";
-import { SessionService } from "../lib/session.service";
+import { HttpException } from "@/utils/errors.utils";
+import config from "@/config";
+import Logger from "@/lib/logger";
+import { SessionService } from "@/lib/session.service";
 import {
   storeOIDCState,
   consumeOIDCState,
   validateNonce,
-} from "../utils/oidc.utils";
-import { UserIdentity, RequestMetadata } from "../types/session.types";
-import db from "../lib/firebase";
-import { GoogleTokenResponse } from "../types/google-api.types";
-import { FirebaseUser } from "../types/firebase.types";
+} from "@/utils/oidc.utils";
+import { UserIdentity, RequestMetadata } from "@/types/session.types";
+import db from "@/lib/firebase";
+import { GoogleTokenResponse } from "@/types/google-api.types";
+import { FirebaseUser } from "@/types/firebase.types";
 
 export default class AuthService {
   static get authClientCredentials() {

@@ -5,7 +5,7 @@ import {
   Gauge,
   collectDefaultMetrics,
 } from "prom-client";
-import config from "../config";
+import config from "@/config";
 
 /**
  * Histogram bucket presets for different use cases
