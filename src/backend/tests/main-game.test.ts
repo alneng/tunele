@@ -37,7 +37,7 @@ describe("Main Game Tests", () => {
       expect(setJSONSpy).toHaveBeenCalledWith(
         expect.stringContaining("cache:main:game_track:2024-01-26"),
         NeverGonna,
-        expect.any(Number)
+        expect.any(Number),
       );
     });
 
@@ -61,7 +61,7 @@ describe("Main Game Tests", () => {
           song: TalkThatTalk.song,
           artists: TalkThatTalk.artists,
         }),
-        expect.any(Number)
+        expect.any(Number),
       );
     });
   });
@@ -78,7 +78,7 @@ describe("Main Game Tests", () => {
         [NeverGonna, TalkThatTalk].map(({ song, artists }) => ({
           song,
           artists,
-        }))
+        })),
       );
     });
   });
@@ -98,7 +98,7 @@ describe("Main Game Tests", () => {
       jest.spyOn(db, "getDocument").mockResolvedValue(null);
 
       await expect(MainGameService.postStats("2024-01-28", 1)).rejects.toThrow(
-        new HttpException(400, "Failed to post stats")
+        new HttpException(400, "Failed to post stats"),
       );
     });
   });

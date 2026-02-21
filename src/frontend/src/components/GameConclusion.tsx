@@ -26,8 +26,7 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
   const countdownTime = useCountdown(new Date().setHours(24, 0, 0, 0));
 
   useEffect(() => {
-    if (userGuesses.length === 6 && !userGuesses[5].isCorrect)
-      setUsedAttempts(0);
+    if (userGuesses.length === 6 && !userGuesses[5].isCorrect) setUsedAttempts(0);
     else setUsedAttempts(userGuesses.length);
 
     const songLimits: number[] = [1, 2, 4, 7, 11, 16];
@@ -59,8 +58,7 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
     let shareString = `Tunele #${id}\n${guessListSummary.join("")}\n${
       self.location.href.split("&")[0]
     }`;
-    if (self.location.search.includes("playlist"))
-      shareString = `Custom ${shareString}`;
+    if (self.location.search.includes("playlist")) shareString = `Custom ${shareString}`;
     navigator.clipboard.writeText(shareString);
   };
 
@@ -80,11 +78,7 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
     <>
       <div className="bg-[#131213] flex flex-col h-screen justify-center items-center text-white">
         <a href={externalUrl} target="_blank">
-          <img
-            src={albumCover}
-            alt="Album Cover"
-            className="w-full max-w-[300px] bg-gray-800"
-          />
+          <img src={albumCover} alt="Album Cover" className="w-full max-w-[300px] bg-gray-800" />
         </a>
 
         <div>
@@ -111,9 +105,7 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
               </p>
             )}
             {usedAttempts === 0 && (
-              <p>
-                Try again tomorrow for another chance to get the daily Tunele!
-              </p>
+              <p>Try again tomorrow for another chance to get the daily Tunele!</p>
             )}
           </div>
         </div>
@@ -128,9 +120,7 @@ const GameConclusion: React.FC<GameConclusionProps> = ({
       </div>
       <div className="text-gray-300 text-center fixed left-0 right-0 bottom-8 flex flex-col items-center countdown">
         <p>Come back for tomorrow's Tunele in:</p>
-        <p className="text-xl font-semibold">
-          {formatCountdown(countdownTime)}
-        </p>
+        <p className="text-xl font-semibold">{formatCountdown(countdownTime)}</p>
       </div>
     </>
   );

@@ -8,9 +8,7 @@ class FirestoreSDK {
     // For running tests, if there are no credentials, skip creating the firestore instance, as it will be mocked by jest
     if (config.env !== "test") {
       admin.initializeApp({
-        credential: admin.credential.cert(
-          JSON.parse(config.firebase.serviceAccountKey)
-        ),
+        credential: admin.credential.cert(JSON.parse(config.firebase.serviceAccountKey)),
       });
       this.db = admin.firestore();
       this.db.settings({ ignoreUndefinedProperties: true });
@@ -25,11 +23,7 @@ class FirestoreSDK {
    * @param document the document
    * @returns the created document
    */
-  async createDocument<T = object>(
-    collection: string,
-    id: string,
-    document: T
-  ): Promise<T> {
+  async createDocument<T = object>(collection: string, id: string, document: T): Promise<T> {
     const docRef = this.db.collection(collection).doc(id);
 
     await docRef.set(document as object);
@@ -44,10 +38,7 @@ class FirestoreSDK {
    * @param id the id of the document to get
    * @returns the returned document, or null if it doesn't exist
    */
-  async getDocument<T = object>(
-    collection: string,
-    id: string
-  ): Promise<T | null> {
+  async getDocument<T = object>(collection: string, id: string): Promise<T | null> {
     const docRef = this.db.collection(collection).doc(id);
     const doc = await docRef.get();
 
@@ -66,11 +57,7 @@ class FirestoreSDK {
    * @param newDocument the new document
    * @returns the updated document
    */
-  async updateDocument<T = object>(
-    collection: string,
-    id: string,
-    newDocument: T
-  ): Promise<T> {
+  async updateDocument<T = object>(collection: string, id: string, newDocument: T): Promise<T> {
     const docRef = this.db.collection(collection).doc(id);
 
     await docRef.update(newDocument as object);
@@ -99,7 +86,7 @@ class FirestoreSDK {
    */
   async getAllDocuments<T = object>(
     collection: string,
-    filter?: Record<string, object>
+    filter?: Record<string, object>,
   ): Promise<T | null> {
     const querySnapshot = await this.db.collection(collection).get();
     const documents: object[] = [];

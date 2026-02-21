@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  MusicIcon,
-  PenLineIcon,
-  ThumbsUpIcon,
-  Volume2Icon,
-} from "lucide-react";
+import { MusicIcon, PenLineIcon, ThumbsUpIcon, Volume2Icon } from "lucide-react";
 
 interface HelpModalProps {
   close: () => void;
@@ -37,10 +32,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ close }) => {
       </div>
       <div>
         {helpItems.map((item, index) => (
-          <div
-            key={index}
-            className="direction flex text-left items-center py-3"
-          >
+          <div key={index} className="direction flex text-left items-center py-3">
             <div className="pr-4">
               <item.icon size={28} strokeWidth={1.8} />
             </div>

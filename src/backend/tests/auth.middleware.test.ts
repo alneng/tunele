@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { requireAuth } from "@/middleware/auth.middleware";
 import { SessionService } from "@/lib/session.service";
-import {
-  createExpiredSession,
-  createMockSession,
-} from "@test/fixtures/session.fixtures";
+import { createExpiredSession, createMockSession } from "@test/fixtures/session.fixtures";
 
 jest.mock("@/lib/session.service");
 
@@ -25,15 +22,9 @@ describe("Auth Middleware", () => {
       const mockSession = createMockSession();
       mockRequest.cookies = { session: mockSession.sessionId };
       (SessionService.getSession as jest.Mock).mockResolvedValue(mockSession);
-      (SessionService.updateLastAccessed as jest.Mock).mockResolvedValue(
-        undefined,
-      );
+      (SessionService.updateLastAccessed as jest.Mock).mockResolvedValue(undefined);
 
-      await requireAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
+      await requireAuth(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockRequest.session).toEqual(mockSession);
       expect(mockRequest.userId).toBe(mockSession.userId);
@@ -42,11 +33,7 @@ describe("Auth Middleware", () => {
     });
 
     it("should throw AccessDeniedException if no session cookie", async () => {
-      await requireAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
+      await requireAuth(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({ status: 401, message: "No session provided" }),
@@ -58,11 +45,7 @@ describe("Auth Middleware", () => {
       mockRequest.cookies = { session: mockSession.sessionId };
       (SessionService.getSession as jest.Mock).mockResolvedValue(null);
 
-      await requireAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
+      await requireAuth(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -75,42 +58,26 @@ describe("Auth Middleware", () => {
     it("should throw AccessDeniedException if session is expired", async () => {
       const expiredSession = createExpiredSession();
       mockRequest.cookies = { session: expiredSession.sessionId };
-      (SessionService.getSession as jest.Mock).mockResolvedValue(
-        expiredSession,
-      );
+      (SessionService.getSession as jest.Mock).mockResolvedValue(expiredSession);
 
-      await requireAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
+      await requireAuth(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({ status: 401, message: "Session expired" }),
       );
-      expect(SessionService.deleteSession).toHaveBeenCalledWith(
-        expiredSession.sessionId,
-      );
+      expect(SessionService.deleteSession).toHaveBeenCalledWith(expiredSession.sessionId);
     });
 
     it("should update last accessed time", async () => {
       const mockSession = createMockSession();
       mockRequest.cookies = { session: mockSession.sessionId };
       (SessionService.getSession as jest.Mock).mockResolvedValue(mockSession);
-      (SessionService.updateLastAccessed as jest.Mock).mockResolvedValue(
-        undefined,
-      );
+      (SessionService.updateLastAccessed as jest.Mock).mockResolvedValue(undefined);
 
-      await requireAuth(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext,
-      );
+      await requireAuth(mockRequest as Request, mockResponse as Response, mockNext);
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      expect(SessionService.updateLastAccessed).toHaveBeenCalledWith(
-        mockSession,
-      );
+      expect(SessionService.updateLastAccessed).toHaveBeenCalledWith(mockSession);
     });
   });
 });

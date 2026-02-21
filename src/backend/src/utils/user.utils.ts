@@ -10,10 +10,7 @@ import { HttpException } from "@/utils/errors.utils";
  * @param clientData the data to be saved to the server
  * @returns the new merged server and client data
  */
-export function mergeGameData(
-  existingData: SavedGameData,
-  newData: SavedGameData,
-): SavedGameData {
+export function mergeGameData(existingData: SavedGameData, newData: SavedGameData): SavedGameData {
   try {
     existingData.main = mergeArrays(existingData.main, newData.main);
 
@@ -24,10 +21,7 @@ export function mergeGameData(
         if (!existingData.custom[key]) {
           existingData.custom[key] = newData.custom[key];
         } else {
-          existingData.custom[key] = mergeArrays(
-            existingData.custom[key],
-            newData.custom[key],
-          );
+          existingData.custom[key] = mergeArrays(existingData.custom[key], newData.custom[key]);
         }
       }
     }
@@ -55,14 +49,10 @@ function mergeArrays(existingArray: GameResult[], newArray: GameResult[]) {
     if (!newArray) return existingArray;
 
     const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
-    const newData = newArray.filter(
-      (game: GameResult) => !uniqueIds.has(game.id),
-    );
+    const newData = newArray.filter((game: GameResult) => !uniqueIds.has(game.id));
 
     const concat_array = existingArray.concat(newData);
-    const sorted_array = concat_array.sort(
-      (a: GameResult, b: GameResult) => a.id - b.id,
-    );
+    const sorted_array = concat_array.sort((a: GameResult, b: GameResult) => a.id - b.id);
     return sorted_array;
   } catch (error) {
     Logger.error("Failed to merge game arrays", {

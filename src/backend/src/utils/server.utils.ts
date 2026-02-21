@@ -7,15 +7,10 @@ import Logger from "@/lib/logger";
  * @param maxRetries the maximum number of retry attempts
  * @param baseDelay the base delay in milliseconds before retrying
  */
-export async function connectToRedisWithRetry(
-  maxRetries = 5,
-  baseDelay = 1000,
-) {
+export async function connectToRedisWithRetry(maxRetries = 5, baseDelay = 1000) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      Logger.info(
-        `Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`,
-      );
+      Logger.info(`Attempting to connect to Redis (attempt ${attempt}/${maxRetries})`);
       await RedisService.connect();
       Logger.info("Successfully connected to Redis");
       return;
@@ -25,9 +20,7 @@ export async function connectToRedisWithRetry(
       });
 
       if (attempt === maxRetries) {
-        Logger.error(
-          "Max Redis connection attempts reached. Shutting down application.",
-        );
+        Logger.error("Max Redis connection attempts reached. Shutting down application.");
         process.exit(1);
       }
 

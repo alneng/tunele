@@ -9,8 +9,7 @@ const PlaylistSearch = () => {
 
   const handlePlaylistSearch = () => {
     const playlistId = inputValue.split("/")[4].split("?")[0];
-    if (inputValue.length !== 0)
-      window.location.href = `/custom?playlist=${playlistId}`;
+    if (inputValue.length !== 0) window.location.href = `/custom?playlist=${playlistId}`;
   };
 
   return (

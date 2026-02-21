@@ -5,17 +5,11 @@ import cors from "cors";
 import { createRateLimiter } from "@/middleware/rate-limit.middleware";
 import Logger from "@/lib/logger";
 import { errorHandler } from "@/utils/errors.utils";
-import {
-  httpRequestLogger,
-  metricsMiddleware,
-} from "@/middleware/http.middleware";
+import { httpRequestLogger, metricsMiddleware } from "@/middleware/http.middleware";
 import { correlationMiddleware } from "@/middleware/correlation.middleware";
 import config from "@/config";
 import apiRouter from "@/api";
-import {
-  connectToRedisWithRetry,
-  gracefulShutdown,
-} from "@/utils/server.utils";
+import { connectToRedisWithRetry, gracefulShutdown } from "@/utils/server.utils";
 
 const app = express();
 

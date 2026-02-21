@@ -1,8 +1,4 @@
-import {
-  storeOIDCState,
-  consumeOIDCState,
-  validateNonce,
-} from "@/utils/oidc.utils";
+import { storeOIDCState, consumeOIDCState, validateNonce } from "@/utils/oidc.utils";
 import { RedisService } from "@/lib/redis.service";
 import { CacheKeys } from "@/utils/redis.utils";
 import {
@@ -77,15 +73,11 @@ describe("OIDC Utils", () => {
     });
 
     it("should throw if nonces do not match", () => {
-      expect(() => validateNonce("wrong-nonce", TEST_NONCE)).toThrow(
-        "Invalid nonce in ID token",
-      );
+      expect(() => validateNonce("wrong-nonce", TEST_NONCE)).toThrow("Invalid nonce in ID token");
     });
 
     it("should throw if token nonce is undefined", () => {
-      expect(() => validateNonce(undefined, TEST_NONCE)).toThrow(
-        "Invalid nonce in ID token",
-      );
+      expect(() => validateNonce(undefined, TEST_NONCE)).toThrow("Invalid nonce in ID token");
     });
   });
 });

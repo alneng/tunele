@@ -3,11 +3,7 @@ import { RateLimitException } from "@/utils/errors.utils";
 import config from "@/config";
 import rateLimit from "express-rate-limit";
 
-const rateLimitHandler = (
-  _req: Request,
-  _res: Response,
-  next: NextFunction,
-) => {
+const rateLimitHandler = (_req: Request, _res: Response, next: NextFunction) => {
   next(new RateLimitException());
 };
 

@@ -84,8 +84,7 @@ function requireJson(name: string): Record<string, unknown> {
 
 /* Validation */
 
-const REDIS_URL_REGEX =
-  /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
+const REDIS_URL_REGEX = /^redis(s)?:\/\/(?:(?:[^:@]+:)?[^:@]*@)?(?:[^:@]+)(?::\d+)?(?:\/\d+)?$/;
 
 function validateConfig(config: AppConfig): void {
   if (!REDIS_URL_REGEX.test(config.redis.url)) {
@@ -96,8 +95,7 @@ function validateConfig(config: AppConfig): void {
 /* Loaders */
 
 function loadTestConfig(): AppConfig {
-  const TEST_ENCRYPTION_KEY =
-    "6ce826c13ed5c151b8987bec062ad73fbd3e3d998442bd6209ae9852bc64cb4d";
+  const TEST_ENCRYPTION_KEY = "6ce826c13ed5c151b8987bec062ad73fbd3e3d998442bd6209ae9852bc64cb4d";
 
   return {
     env: "test",

@@ -6,10 +6,7 @@ import api from "@/utils/axios";
  * @param state the state parameter (CSRF protection)
  * @param nonce the nonce parameter
  */
-export const initiateOIDC = async (
-  state: string,
-  nonce: string,
-): Promise<void> => {
+export const initiateOIDC = async (state: string, nonce: string): Promise<void> => {
   await api.post("/auth/initiate", {
     state,
     nonce,

@@ -56,10 +56,7 @@ const UserAccountModal = () => {
 
       {!isLoading && !signedIn && (
         <div>
-          <p>
-            Sign in with one of our account providers to save your progress to
-            the cloud
-          </p>
+          <p>Sign in with one of our account providers to save your progress to the cloud</p>
           <div className="my-4">
             <button
               onClick={login}

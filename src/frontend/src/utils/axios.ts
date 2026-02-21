@@ -5,8 +5,7 @@ import { useUserStore } from "@/store/user.store";
 import { pushError } from "@/lib/faro";
 import { getStickyCorrelationId } from "@/utils/stickyCorrelationId";
 
-export const API_URL =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
+export const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:7600";
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,

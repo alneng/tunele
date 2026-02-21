@@ -1,13 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
-import {
-  GameResult,
-  SavedGameData,
-  TrackGuess,
-  GameTrack,
-  Track,
-  AxiosApiError,
-} from "@/types";
+import { GameResult, SavedGameData, TrackGuess, GameTrack, Track, AxiosApiError } from "@/types";
 import {
   fetchMainGame,
   fetchMainGameChoices,
@@ -117,7 +110,7 @@ export const useGameStore = create<GameState>()(
               },
             }),
             undefined,
-            "loadMainGame/loading"
+            "loadMainGame/loading",
           );
 
           try {
@@ -125,9 +118,7 @@ export const useGameStore = create<GameState>()(
 
             // Get existing game data and check if this game has been started/completed
             const { savedData } = get();
-            const existingGameData = savedData.main.find(
-              (game) => game.id === trackData.id
-            );
+            const existingGameData = savedData.main.find((game) => game.id === trackData.id);
 
             const choicesData = await fetchMainGameChoices();
 
@@ -144,7 +135,7 @@ export const useGameStore = create<GameState>()(
                 },
               }),
               undefined,
-              "loadMainGame/success"
+              "loadMainGame/success",
             );
           } catch (error) {
             set(
@@ -156,7 +147,7 @@ export const useGameStore = create<GameState>()(
                 },
               }),
               undefined,
-              "loadMainGame/error"
+              "loadMainGame/error",
             );
           }
         },
@@ -174,7 +165,7 @@ export const useGameStore = create<GameState>()(
                 },
               }),
               undefined,
-              "loadCustomGame/invalidPlaylist"
+              "loadCustomGame/invalidPlaylist",
             );
             return;
           }
@@ -189,7 +180,7 @@ export const useGameStore = create<GameState>()(
               },
             }),
             undefined,
-            "loadCustomGame/loading"
+            "loadCustomGame/loading",
           );
 
           try {
@@ -209,7 +200,7 @@ export const useGameStore = create<GameState>()(
                   },
                 }),
                 undefined,
-                "loadCustomGame/invalidTrack"
+                "loadCustomGame/invalidTrack",
               );
               return;
             }
@@ -217,9 +208,7 @@ export const useGameStore = create<GameState>()(
             // Get existing game data and check if this game has been started/completed
             const { savedData } = get();
             const playlistData = savedData.custom[playlistId] || [];
-            const existingGameData = playlistData.find(
-              (game) => game.id === trackData.id
-            );
+            const existingGameData = playlistData.find((game) => game.id === trackData.id);
 
             // Fetch the custom game choices
             const choicesData = await fetchCustomGameChoices(playlistId);
@@ -238,7 +227,7 @@ export const useGameStore = create<GameState>()(
                 },
               }),
               undefined,
-              "loadCustomGame/success"
+              "loadCustomGame/success",
             );
           } catch (error) {
             set(
@@ -250,7 +239,7 @@ export const useGameStore = create<GameState>()(
                 },
               }),
               undefined,
-              "loadCustomGame/error"
+              "loadCustomGame/error",
             );
           }
         },
@@ -263,8 +252,7 @@ export const useGameStore = create<GameState>()(
 
           // Check if game is finished with this update
           const isLastGuessCorrect =
-            newGuesses.length > 0 &&
-            newGuesses[newGuesses.length - 1].isCorrect;
+            newGuesses.length > 0 && newGuesses[newGuesses.length - 1].isCorrect;
           const isGameFinished = isLastGuessCorrect || newGuesses.length >= 6;
           const score = isLastGuessCorrect ? newGuesses.length : 0;
 
@@ -278,7 +266,7 @@ export const useGameStore = create<GameState>()(
               },
             }),
             undefined,
-            "updateMainGameGuesses/gameState"
+            "updateMainGameGuesses/gameState",
           );
 
           // Create today's game result object
@@ -297,9 +285,7 @@ export const useGameStore = create<GameState>()(
               const playlistData = [...savedData.main];
 
               // Replace or add the game result
-              const existingIndex = playlistData.findIndex(
-                (game) => game.id === currentTrack.id
-              );
+              const existingIndex = playlistData.findIndex((game) => game.id === currentTrack.id);
               if (existingIndex >= 0) {
                 playlistData[existingIndex] = todaysDataObject;
               } else {
@@ -316,7 +302,7 @@ export const useGameStore = create<GameState>()(
               return { savedData };
             },
             undefined,
-            "updateMainGameGuesses/persisted"
+            "updateMainGameGuesses/persisted",
           );
         },
 
@@ -328,8 +314,7 @@ export const useGameStore = create<GameState>()(
 
           // Check if game is finished with this update
           const isLastGuessCorrect =
-            newGuesses.length > 0 &&
-            newGuesses[newGuesses.length - 1].isCorrect;
+            newGuesses.length > 0 && newGuesses[newGuesses.length - 1].isCorrect;
           const isGameFinished = isLastGuessCorrect || newGuesses.length >= 6;
           const score = isLastGuessCorrect ? newGuesses.length : 0;
 
@@ -343,7 +328,7 @@ export const useGameStore = create<GameState>()(
               },
             }),
             undefined,
-            "updateCustomGameGuesses/gameState"
+            "updateCustomGameGuesses/gameState",
           );
 
           // Create today's game result object
@@ -367,9 +352,7 @@ export const useGameStore = create<GameState>()(
                 const playlistData = [...customData[playlistId]];
 
                 // Replace or add the game result
-                const existingIndex = playlistData.findIndex(
-                  (game) => game.id === currentTrack.id
-                );
+                const existingIndex = playlistData.findIndex((game) => game.id === currentTrack.id);
                 if (existingIndex >= 0) {
                   playlistData[existingIndex] = todaysDataObject;
                 } else {
@@ -389,7 +372,7 @@ export const useGameStore = create<GameState>()(
               return { savedData };
             },
             undefined,
-            "updateCustomGameGuesses/persisted"
+            "updateCustomGameGuesses/persisted",
           );
         },
 
@@ -427,8 +410,8 @@ export const useGameStore = create<GameState>()(
             savedData: migration,
           };
         },
-      }
+      },
     ),
-    { name: "tunele-game-store", enabled: import.meta.env.DEV }
-  )
+    { name: "tunele-game-store", enabled: import.meta.env.DEV },
+  ),
 );

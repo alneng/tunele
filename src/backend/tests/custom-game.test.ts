@@ -27,14 +27,12 @@ describe("Custom Game Tests", () => {
         ...allTracks,
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
-      jest
-        .spyOn(spotifyUtils, "fetchPlaylist")
-        .mockResolvedValue(mockSpotifyPlaylist);
+      jest.spyOn(spotifyUtils, "fetchPlaylist").mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
         "2024-01-27",
-        false
+        false,
       );
       expect(dailySong).toEqual(NeverGonna);
     });
@@ -44,14 +42,12 @@ describe("Custom Game Tests", () => {
         ...allTracks,
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
-      jest
-        .spyOn(spotifyUtils, "fetchPlaylist")
-        .mockResolvedValue(mockSpotifyPlaylist);
+      jest.spyOn(spotifyUtils, "fetchPlaylist").mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
         "2024-01-28",
-        false
+        false,
       );
       expect(dailySong).toEqual(TalkThatTalk);
     });
@@ -63,14 +59,12 @@ describe("Custom Game Tests", () => {
         ...singleTrackPlaylist,
         gameTracks: [{ ...NeverGonna, ...gameTrackDocumentExtras }],
       });
-      jest
-        .spyOn(spotifyUtils, "fetchPlaylist")
-        .mockResolvedValue(mockSpotifyPlaylist);
+      jest.spyOn(spotifyUtils, "fetchPlaylist").mockResolvedValue(mockSpotifyPlaylist);
 
       const dailySong = await CustomGameService.getDailySong(
         "37i9dQZEVXbLp5XoPON0wI",
         "2024-01-28",
-        false
+        false,
       );
       expect(dailySong).toEqual({ ...NeverGonna, id: 2 });
     });
@@ -83,14 +77,12 @@ describe("Custom Game Tests", () => {
         gameTracks: [],
       });
 
-      const allSongs = await CustomGameService.getAllSongs(
-        "37i9dQZEVXbLp5XoPON0wI"
-      );
+      const allSongs = await CustomGameService.getAllSongs("37i9dQZEVXbLp5XoPON0wI");
       expect(allSongs).toEqual(
         [NeverGonna, TalkThatTalk].map(({ song, artists }) => ({
           song,
           artists,
-        }))
+        })),
       );
     });
   });
@@ -102,11 +94,7 @@ describe("Custom Game Tests", () => {
         gameTracks: [{ ...TalkThatTalk, ...gameTrackDocumentExtras }],
       });
 
-      const status = await CustomGameService.postStats(
-        "37i9dQZEVXbLp5XoPON0wI",
-        "2024-01-27",
-        1
-      );
+      const status = await CustomGameService.postStats("37i9dQZEVXbLp5XoPON0wI", "2024-01-27", 1);
       expect(status).toEqual({ success: true });
     });
 
@@ -116,7 +104,7 @@ describe("Custom Game Tests", () => {
       });
 
       await expect(
-        CustomGameService.postStats("37i9dQZEVXbLp5XoPON0wI", "2024-01-27", 1)
+        CustomGameService.postStats("37i9dQZEVXbLp5XoPON0wI", "2024-01-27", 1),
       ).rejects.toThrow(new HttpException(400, "Failed to post stats"));
     });
 
@@ -127,7 +115,7 @@ describe("Custom Game Tests", () => {
       });
 
       await expect(
-        CustomGameService.postStats("37i9dQZEVXbLp5XoPON0wI", "2024-01-28", 1)
+        CustomGameService.postStats("37i9dQZEVXbLp5XoPON0wI", "2024-01-28", 1),
       ).rejects.toThrow(new HttpException(400, "Failed to post stats"));
     });
   });

@@ -12,20 +12,11 @@ import ErrorMessage from "@/components/ErrorMessage";
 import TuneleModal from "@/components/TuneleModal";
 
 const BaseGame = () => {
-  const { mainGame, loadMainGame, updateMainGameGuesses, savedData } =
-    useGameStore();
-  const {
-    isLoading,
-    error,
-    currentTrack,
-    tracklist,
-    userGuesses,
-    isGameFinished,
-  } = mainGame;
+  const { mainGame, loadMainGame, updateMainGameGuesses, savedData } = useGameStore();
+  const { isLoading, error, currentTrack, tracklist, userGuesses, isGameFinished } = mainGame;
 
   // Local state for modals
-  const [isUserAccountModalOpen, setUserAccountModalState] =
-    useState<boolean>(false);
+  const [isUserAccountModalOpen, setUserAccountModalState] = useState<boolean>(false);
   const [isHelpModalOpen, setHelpModalState] = useState<boolean>(false);
   const [isStatsModalOpen, setStatsModalState] = useState<boolean>(false);
 
@@ -80,16 +71,10 @@ const BaseGame = () => {
       )}
 
       {/* modals */}
-      <TuneleModal
-        isOpen={isHelpModalOpen}
-        onRequestClose={() => setHelpModalState(false)}
-      >
+      <TuneleModal isOpen={isHelpModalOpen} onRequestClose={() => setHelpModalState(false)}>
         <HelpModal close={() => setHelpModalState(false)} />
       </TuneleModal>
-      <TuneleModal
-        isOpen={isStatsModalOpen}
-        onRequestClose={() => setStatsModalState(false)}
-      >
+      <TuneleModal isOpen={isStatsModalOpen} onRequestClose={() => setStatsModalState(false)}>
         <StatsModal gameData={savedData.main} />
       </TuneleModal>
       <TuneleModal

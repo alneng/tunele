@@ -145,9 +145,7 @@ export class SessionService {
    * @param sessionId the session ID
    * @returns decrypted refresh token or null if session not found
    */
-  static async getGoogleRefreshToken(
-    sessionId: string,
-  ): Promise<string | null> {
+  static async getGoogleRefreshToken(sessionId: string): Promise<string | null> {
     const session = await this.getSession(sessionId);
     if (!session) {
       return null;
@@ -160,24 +158,16 @@ export class SessionService {
         error,
         sessionId,
       });
-      throw new AccessDeniedException(
-        500,
-        "Failed to decrypt refresh token",
-        false,
-      );
+      throw new AccessDeniedException(500, "Failed to decrypt refresh token", false);
     }
   }
 
   /**
    * Store session in Redis with TTL
    */
-  private static async cacheSessionInRedis(
-    session: SessionData,
-  ): Promise<void> {
+  private static async cacheSessionInRedis(session: SessionData): Promise<void> {
     const key = CacheKeys.SESSION(session.sessionId);
-    const ttlSeconds = Math.floor(
-      (session.expiresAt.getTime() - Date.now()) / 1000,
-    );
+    const ttlSeconds = Math.floor((session.expiresAt.getTime() - Date.now()) / 1000);
 
     if (ttlSeconds > 0) {
       await RedisService.setJSON(key, session, ttlSeconds);
@@ -187,9 +177,7 @@ export class SessionService {
   /**
    * Get session from Redis
    */
-  private static async getSessionFromRedis(
-    sessionId: string,
-  ): Promise<SessionData | null> {
+  private static async getSessionFromRedis(sessionId: string): Promise<SessionData | null> {
     const key = CacheKeys.SESSION(sessionId);
     const data = await RedisService.getJSON<SessionData>(key);
 
@@ -209,9 +197,7 @@ export class SessionService {
   /**
    * Delete session from Redis
    */
-  private static async deleteSessionFromRedis(
-    sessionId: string,
-  ): Promise<void> {
+  private static async deleteSessionFromRedis(sessionId: string): Promise<void> {
     const key = CacheKeys.SESSION(sessionId);
     await RedisService.delete(key);
   }
@@ -219,9 +205,7 @@ export class SessionService {
   /**
    * Store session in Firestore
    */
-  private static async storeSessionInFirestore(
-    session: SessionData,
-  ): Promise<void> {
+  private static async storeSessionInFirestore(session: SessionData): Promise<void> {
     const firestoreData: FirestoreSessionData = {
       sessionId: session.sessionId,
       userId: session.userId,
@@ -240,13 +224,8 @@ export class SessionService {
   /**
    * Get session from Firestore
    */
-  private static async getSessionFromFirestore(
-    sessionId: string,
-  ): Promise<SessionData | null> {
-    const data = await db.getDocument<FirestoreSessionData>(
-      "sessions",
-      sessionId,
-    );
+  private static async getSessionFromFirestore(sessionId: string): Promise<SessionData | null> {
+    const data = await db.getDocument<FirestoreSessionData>("sessions", sessionId);
 
     if (!data) {
       return null;
@@ -278,9 +257,7 @@ export class SessionService {
   /**
    * Delete session from Firestore
    */
-  private static async deleteSessionFromFirestore(
-    sessionId: string,
-  ): Promise<void> {
+  private static async deleteSessionFromFirestore(sessionId: string): Promise<void> {
     await db.deleteDocument("sessions", sessionId);
   }
 }

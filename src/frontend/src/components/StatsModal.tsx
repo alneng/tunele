@@ -1,10 +1,6 @@
 import React, { useMemo } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  calculateBarHeights,
-  calculateStatsBottom,
-  countScores,
-} from "@/utils/stats.utils";
+import { calculateBarHeights, calculateStatsBottom, countScores } from "@/utils/stats.utils";
 import { GameResult } from "@/types";
 
 const StatBar = ({
@@ -40,7 +36,7 @@ const StatsModal: React.FC<StatsModalProps> = ({ gameData }) => {
   const scores = useMemo(() => countScores(gameData), [gameData]);
   const statsBarHeights = useMemo(
     () => (gameData ? calculateBarHeights(gameData) : Array(7).fill(0)),
-    [gameData]
+    [gameData],
   );
   const { statsCorrectString, statsCorrectPercentageString } = useMemo(() => {
     if (gameData) return calculateStatsBottom(gameData);
@@ -85,9 +81,7 @@ const StatsModal: React.FC<StatsModalProps> = ({ gameData }) => {
           <div className="text-gray-300">Correct</div>
         </div>
         <div className="flex flex-col items-center w-1/2">
-          <div className="text-xl font-semibold">
-            {statsCorrectPercentageString}%
-          </div>
+          <div className="text-xl font-semibold">{statsCorrectPercentageString}%</div>
           <div className="text-gray-300">Correct %</div>
         </div>
       </div>

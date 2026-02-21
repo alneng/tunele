@@ -5,11 +5,7 @@ import { HttpException } from "@/utils/errors.utils";
 import config from "@/config";
 import Logger from "@/lib/logger";
 import { SessionService } from "@/lib/session.service";
-import {
-  storeOIDCState,
-  consumeOIDCState,
-  validateNonce,
-} from "@/utils/oidc.utils";
+import { storeOIDCState, consumeOIDCState, validateNonce } from "@/utils/oidc.utils";
 import { UserIdentity, RequestMetadata } from "@/types/session.types";
 import db from "@/lib/firebase";
 import { GoogleTokenResponse } from "@/types/google-api.types";
@@ -163,11 +159,7 @@ export default class AuthService {
     await this.createOrUpdateUser(userIdentity);
 
     // Create session
-    const session = await SessionService.createSession(
-      userIdentity,
-      refresh_token || "",
-      metadata,
-    );
+    const session = await SessionService.createSession(userIdentity, refresh_token || "", metadata);
 
     return session;
   }
@@ -178,9 +170,7 @@ export default class AuthService {
    *
    * @param userIdentity user identity from ID token
    */
-  private static async createOrUpdateUser(
-    userIdentity: UserIdentity,
-  ): Promise<void> {
+  private static async createOrUpdateUser(userIdentity: UserIdentity): Promise<void> {
     const { sub, email } = userIdentity;
 
     // Check if user already exists by Google sub

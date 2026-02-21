@@ -37,9 +37,7 @@ export const fetchCustomGame = async (data: {
   if (!data.playlist) return null;
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const response = await api.get<GameTrack>(
-    `/playlist/${data.playlist}/dailySong?timeZone=${timezone}${
-      data.r ? "&r=1" : ""
-    }`
+    `/playlist/${data.playlist}/dailySong?timeZone=${timezone}${data.r ? "&r=1" : ""}`,
   );
   return response.data;
 };
@@ -51,7 +49,7 @@ export const fetchCustomGame = async (data: {
  * @returns the track choices for a custom game
  */
 export const fetchCustomGameChoices = async (
-  playlist: string | null
+  playlist: string | null,
 ): Promise<GameChoices | null> => {
   if (!playlist) return null;
   const response = await api.get<GameChoices>(`/playlist/${playlist}/allSongs`);
@@ -74,10 +72,7 @@ export const postMainGameStats = async (score: number): Promise<void> => {
  * @param playlist the playlist id
  * @param score the score
  */
-export const postCustomGameStats = async (
-  playlist: string,
-  score: number
-): Promise<void> => {
+export const postCustomGameStats = async (playlist: string, score: number): Promise<void> => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   await api.post(`/playlist/${playlist}/stats`, { score, timeZone });
 };

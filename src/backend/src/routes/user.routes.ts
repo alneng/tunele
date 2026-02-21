@@ -1,10 +1,6 @@
 import express from "express";
 import { param } from "express-validator";
-import {
-  isValidJsonBody,
-  isValidUserId,
-  validateInputs,
-} from "@/utils/validation.utils";
+import { isValidJsonBody, isValidUserId, validateInputs } from "@/utils/validation.utils";
 import UserController from "@/controllers/user.controllers";
 import { requireAuth } from "@/middleware/auth.middleware";
 

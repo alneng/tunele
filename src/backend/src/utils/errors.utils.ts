@@ -36,10 +36,7 @@ export class RateLimitException extends HttpException {
 
 export class EmptyPlaylistException extends HttpException {
   constructor() {
-    super(
-      400,
-      "Failed to use playlist: Playlist is empty or has no usable songs",
-    );
+    super(400, "Failed to use playlist: Playlist is empty or has no usable songs");
   }
 }
 
@@ -93,9 +90,7 @@ export const errorHandler: ErrorRequestHandler = (
     if (error instanceof AccessDeniedException)
       additionalErrorInfo = { ...additionalErrorInfo, retry: error.retry };
 
-    res
-      .status(error.status)
-      .json({ ...additionalErrorInfo, message: error.message });
+    res.status(error.status).json({ ...additionalErrorInfo, message: error.message });
   } else {
     Logger.error("errorHandler encountered unexpected error", {
       error,

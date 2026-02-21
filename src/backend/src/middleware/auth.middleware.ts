@@ -9,11 +9,7 @@ import { verifySession } from "@/utils/auth.utils";
  *
  * @throws AccessDeniedException if no session or invalid session
  */
-export async function requireAuth(
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): Promise<void> {
+export async function requireAuth(req: Request, _res: Response, next: NextFunction): Promise<void> {
   try {
     const sessionId: string | undefined = req.cookies.session;
     const session = await verifySession(sessionId);
