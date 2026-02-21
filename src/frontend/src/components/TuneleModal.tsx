@@ -1,11 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 
-const TuneleModal: React.FC<Modal.Props> = ({
-  isOpen,
-  onRequestClose,
-  children,
-}) => {
+const TuneleModal: React.FC<Modal.Props> = ({ isOpen, onRequestClose, children }) => {
   return (
     <Modal
       isOpen={isOpen}

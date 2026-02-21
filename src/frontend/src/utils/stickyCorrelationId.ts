@@ -18,10 +18,7 @@ export function getStickyCorrelationId(): string {
         ? stored.id
         : crypto.randomUUID();
 
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ id, expiresAt: now + TTL_MS }),
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ id, expiresAt: now + TTL_MS }));
 
     return id;
   } catch {

@@ -5,16 +5,8 @@ import {
   getExistingGameTrack,
   chooseNewGameTrack,
 } from "@/utils/custom-game.utils";
-import {
-  tracksTransformer,
-  gameTrackTransformer,
-} from "@/transformers/track.transformers";
-import {
-  FirebaseCustomPlaylist,
-  FirebaseGameTrack,
-  GameTrack,
-  Track,
-} from "@/types";
+import { tracksTransformer, gameTrackTransformer } from "@/transformers/track.transformers";
+import { FirebaseCustomPlaylist, FirebaseGameTrack, GameTrack, Track } from "@/types";
 import Logger from "@/lib/logger";
 import { fetchPlaylist } from "@/utils/spotify.utils";
 import { RedisService } from "@/lib/redis.service";
@@ -42,17 +34,10 @@ export default class CustomGameService {
 
     // If not cached, fetch the playlist
     const spotifyPlaylist = await fetchPlaylist(playlistId);
-    let playlist = await db.getDocument<FirebaseCustomPlaylist>(
-      "customPlaylists",
-      playlistId,
-    );
+    let playlist = await db.getDocument<FirebaseCustomPlaylist>("customPlaylists", playlistId);
 
     // If the playlist does not exist or needs to be refreshed, refresh it
-    if (
-      !playlist ||
-      refreshFlag ||
-      spotifyPlaylist.snapshot_id !== playlist.spotifySnapshotId
-    ) {
+    if (!playlist || refreshFlag || spotifyPlaylist.snapshot_id !== playlist.spotifySnapshotId) {
       playlist = await refreshPlaylist(playlistId, playlist, refreshFlag);
     }
 
@@ -69,11 +54,7 @@ export default class CustomGameService {
     }
 
     // If no existing game track, choose a new one
-    const newGameTrack = await chooseNewGameTrack(
-      playlistId,
-      playlist,
-      localDate,
-    );
+    const newGameTrack = await chooseNewGameTrack(playlistId, playlist, localDate);
 
     // Cache the new game track in Redis
     await RedisService.setJSON<FirebaseGameTrack>(
@@ -93,10 +74,7 @@ export default class CustomGameService {
    * @returns List of song objects {song: String, artists: String[]}
    */
   static async getAllSongs(playlistId: string): Promise<Track[]> {
-    const allTracks = await db.getDocument<FirebaseCustomPlaylist>(
-      "customPlaylists",
-      playlistId,
-    );
+    const allTracks = await db.getDocument<FirebaseCustomPlaylist>("customPlaylists", playlistId);
 
     if (!allTracks) return [];
     return tracksTransformer(allTracks.tracklist);
@@ -126,11 +104,7 @@ export default class CustomGameService {
           track.stats[score] = track.stats[score] + 1;
 
           foundTrack = true;
-          await db.updateDocument(
-            "customPlaylists",
-            playlistId,
-            playlistObject,
-          );
+          await db.updateDocument("customPlaylists", playlistId, playlistObject);
           return { success: true };
         }
       }

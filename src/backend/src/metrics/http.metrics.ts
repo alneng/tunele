@@ -5,11 +5,11 @@ import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
  */
 const m = createMetrics("http");
 
-export const httpRequestsTotal = m.counter(
-  "requests_total",
-  "Total number of HTTP requests",
-  ["method", "route", "status_code"],
-);
+export const httpRequestsTotal = m.counter("requests_total", "Total number of HTTP requests", [
+  "method",
+  "route",
+  "status_code",
+]);
 
 export const httpRequestDuration = m.histogram(
   "request_duration_seconds",

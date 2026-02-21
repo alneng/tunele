@@ -9,9 +9,7 @@ export default class MetricsController {
     // Require authentication if metrics auth token is configured
     if (authToken) {
       const authHeader = req.headers.authorization;
-      const token = authHeader?.startsWith("Bearer ")
-        ? authHeader.slice(7)
-        : null;
+      const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
       if (token !== authToken) {
         res.status(401).end("Unauthorized");

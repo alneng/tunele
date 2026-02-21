@@ -5,11 +5,10 @@ import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
  */
 const m = createMetrics("redis");
 
-const operationsTotal = m.counter(
-  "operations_total",
-  "Total number of Redis operations",
-  ["operation", "status"],
-);
+const operationsTotal = m.counter("operations_total", "Total number of Redis operations", [
+  "operation",
+  "status",
+]);
 
 const operationDuration = m.histogram(
   "operation_duration_seconds",
@@ -25,13 +24,9 @@ const connectionStatus = m.gauge(
   "Redis connection status (1 = connected, 0 = disconnected)",
 );
 
-const cacheHitsTotal = m.counter("cache_hits_total", "Total cache hits", [
-  "operation",
-]);
+const cacheHitsTotal = m.counter("cache_hits_total", "Total cache hits", ["operation"]);
 
-const cacheMissesTotal = m.counter("cache_misses_total", "Total cache misses", [
-  "operation",
-]);
+const cacheMissesTotal = m.counter("cache_misses_total", "Total cache misses", ["operation"]);
 
 /**
  * Public interface for recording Redis metrics

@@ -72,13 +72,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
       return (
         <div className="font-sf-pro flex flex-col justify-center items-center min-h-screen bg-[#131213] text-center text-white p-4">
-          <div className="text-2xl font-semibold mb-2">
-            Something went wrong
-          </div>
+          <div className="text-2xl font-semibold mb-2">Something went wrong</div>
 
           <div className="text-base text-gray-300 mb-6 max-w-md">
-            We encountered an unexpected error. This has been automatically
-            reported to help us fix it.
+            We encountered an unexpected error. This has been automatically reported to help us fix
+            it.
           </div>
 
           <div className="flex gap-3 mb-6">
@@ -120,9 +118,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </pre>
               {this.state.errorInfo?.componentStack && (
                 <>
-                  <div className="font-semibold text-gray-300 mt-4 mb-2">
-                    Component Stack:
-                  </div>
+                  <div className="font-semibold text-gray-300 mt-4 mb-2">Component Stack:</div>
                   <pre className="whitespace-pre-wrap text-xs text-gray-400">
                     {this.state.errorInfo.componentStack}
                   </pre>

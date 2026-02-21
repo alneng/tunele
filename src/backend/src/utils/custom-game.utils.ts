@@ -71,9 +71,7 @@ export function getExistingGameTrack(
   playlist: FirebaseCustomPlaylist,
   localDate: string,
 ): FirebaseGameTrack | null {
-  const tracks = playlist.gameTracks.filter(
-    (track) => track.date === localDate,
-  );
+  const tracks = playlist.gameTracks.filter((track) => track.date === localDate);
   return tracks.length > 0 ? tracks[0] : null;
 }
 
@@ -97,9 +95,7 @@ export async function chooseNewGameTrack(
     }
 
     // Reset played status if all tracks have been played
-    if (
-      !allTracksList.some((song) => !song.playedBefore && !song.nullPreview)
-    ) {
+    if (!allTracksList.some((song) => !song.playedBefore && !song.nullPreview)) {
       allTracksList = resetTrackListPlayedBeforeStatus(allTracksList);
       playlist.resetHistory.unshift({
         resetAt: localDate,
@@ -122,14 +118,7 @@ export async function chooseNewGameTrack(
 
     // If track already has a preview, use it
     if (track.trackPreview) {
-      return createAndSaveGameTrack(
-        track,
-        index,
-        playlistId,
-        playlist,
-        allTracksList,
-        localDate,
-      );
+      return createAndSaveGameTrack(track, index, playlistId, playlist, allTracksList, localDate);
     }
     // Otherwise, try to get the preview
     const trackPreview = await getPreview(track.spotifyUri);
@@ -138,24 +127,13 @@ export async function chooseNewGameTrack(
     if (!trackPreview) {
       allTracksList[index].nullPreview = true;
       playlist.tracklist = allTracksList;
-      const updatedPlaylist = await db.updateDocument(
-        "customPlaylists",
-        playlistId,
-        playlist,
-      );
+      const updatedPlaylist = await db.updateDocument("customPlaylists", playlistId, playlist);
       return chooseNewGameTrack(playlistId, updatedPlaylist, localDate);
     }
     // If preview retrieval succeeds, save the preview to the track
     allTracksList[index].trackPreview = trackPreview;
 
-    return createAndSaveGameTrack(
-      track,
-      index,
-      playlistId,
-      playlist,
-      allTracksList,
-      localDate,
-    );
+    return createAndSaveGameTrack(track, index, playlistId, playlist, allTracksList, localDate);
   } catch (error) {
     Logger.error("Failed to choose new game track", {
       error,
@@ -213,11 +191,7 @@ async function createAndSaveGameTrack(
   playlist.tracklist = allTracksList;
 
   // Save the updated playlist object to the database
-  await db.updateDocument<FirebaseCustomPlaylist>(
-    "customPlaylists",
-    playlistId,
-    playlist,
-  );
+  await db.updateDocument<FirebaseCustomPlaylist>("customPlaylists", playlistId, playlist);
   return newGameTrack;
 }
 
@@ -261,9 +235,7 @@ function sortPlaylistResponse(
     });
 
     const recentResetDate =
-      resetHistory.length > 0
-        ? DateTime.fromFormat(resetHistory[0].resetAt, "yyyy-MM-dd")
-        : null;
+      resetHistory.length > 0 ? DateTime.fromFormat(resetHistory[0].resetAt, "yyyy-MM-dd") : null;
 
     const result: FirebaseTrack[] = [];
     for (const item of trackItems) {
@@ -274,9 +246,7 @@ function sortPlaylistResponse(
       const trackData = pastTracksMap.get(externalUrl);
       const gameTracks = gameTracksMap.get(externalUrl) || [];
       const playedBefore = recentResetDate
-        ? gameTracks.some(
-            (t) => DateTime.fromFormat(t.date, "yyyy-MM-dd") >= recentResetDate,
-          )
+        ? gameTracks.some((t) => DateTime.fromFormat(t.date, "yyyy-MM-dd") >= recentResetDate)
         : gameTracks.length > 0;
 
       result.push({
@@ -309,9 +279,7 @@ function sortPlaylistResponse(
  * @param trackList the track list to reset the status of
  * @returns the new track list of reset statuses
  */
-function resetTrackListPlayedBeforeStatus(
-  trackList: FirebaseTrack[],
-): FirebaseTrack[] {
+function resetTrackListPlayedBeforeStatus(trackList: FirebaseTrack[]): FirebaseTrack[] {
   return trackList.map((track: FirebaseTrack) => ({
     ...track,
     playedBefore: false,

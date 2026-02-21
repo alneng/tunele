@@ -8,9 +8,7 @@ import { currentDateTimeString } from "@/utils/utils";
  * If there is no snapshot, it does nothing.
  */
 export const resetAllMainGameTracks = async () => {
-  const playlistObject = await db.getLastDocument<MainGameSnapshot>(
-    "allTracks"
-  );
+  const playlistObject = await db.getLastDocument<MainGameSnapshot>("allTracks");
   if (!playlistObject) return;
 
   const oldSongs = playlistObject.data.tracklist;
@@ -29,9 +27,5 @@ export const resetAllMainGameTracks = async () => {
     resetHistory: [], // resetHistory is not used in the main game
   };
 
-  await db.createDocument<FirebaseMainPlaylist>(
-    "allTracks",
-    currentDateTime,
-    songsToAdd
-  );
+  await db.createDocument<FirebaseMainPlaylist>("allTracks", currentDateTime, songsToAdd);
 };

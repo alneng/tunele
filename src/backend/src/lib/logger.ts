@@ -100,18 +100,12 @@ export default class Logger {
 
       new winston.transports.File({
         filename: path.join(Logger.LOGS_DIR, "http.log"),
-        format: winston.format.combine(
-          Logger.onlyHttp(),
-          Logger.jsonWithTimestamp(),
-        ),
+        format: winston.format.combine(Logger.onlyHttp(), Logger.jsonWithTimestamp()),
       }),
 
       new winston.transports.File({
         filename: path.join(Logger.LOGS_DIR, "combined.log"),
-        format: winston.format.combine(
-          Logger.excludeHttp(),
-          Logger.jsonWithTimestamp(),
-        ),
+        format: winston.format.combine(Logger.excludeHttp(), Logger.jsonWithTimestamp()),
       }),
     ];
 
@@ -131,13 +125,9 @@ export default class Logger {
             cluster: config.clusterName,
           },
           json: true,
-          format: winston.format.combine(
-            Logger.correlationIdFormat(),
-            winston.format.json(),
-          ),
+          format: winston.format.combine(Logger.correlationIdFormat(), winston.format.json()),
           replaceTimestamp: true,
-          onConnectionError: (err: Error) =>
-            console.error("Loki connection error:", err),
+          onConnectionError: (err: Error) => console.error("Loki connection error:", err),
         }),
       );
     }
@@ -165,8 +155,7 @@ export default class Logger {
 
   private static conditionalHttp() {
     return winston.format((info) => {
-      if (info.level === "http")
-        return config.logger.enableHttpLogPrinting ? info : false;
+      if (info.level === "http") return config.logger.enableHttpLogPrinting ? info : false;
       return info;
     })();
   }
@@ -192,9 +181,7 @@ export default class Logger {
 
   // Metadata helpers
 
-  private static buildPayload(
-    meta?: LogMeta,
-  ): { meta: Record<string, unknown> } | undefined {
+  private static buildPayload(meta?: LogMeta): { meta: Record<string, unknown> } | undefined {
     if (!meta || Object.keys(meta).length === 0) return undefined;
 
     const sanitized: Record<string, unknown> = {};

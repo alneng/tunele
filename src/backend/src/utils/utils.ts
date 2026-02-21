@@ -7,9 +7,7 @@ import { DateTime } from "luxon";
  * @returns the current date and time string in the format "yyyy-MM-dd HH:mm:ss"
  */
 export function currentDateTimeString(
-  options: { timezone: string } = { timezone: "America/New_York" }
+  options: { timezone: string } = { timezone: "America/New_York" },
 ): string {
-  return DateTime.now()
-    .setZone(options.timezone)
-    .toFormat("yyyy-MM-dd HH:mm:ss");
+  return DateTime.now().setZone(options.timezone).toFormat("yyyy-MM-dd HH:mm:ss");
 }

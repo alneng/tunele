@@ -13,9 +13,7 @@ export default class UserService {
    * @param userId the user id (Google sub)
    * @returns the user's saved data
    */
-  static async getUserData(
-    userId: string,
-  ): Promise<{ status: number; message: SavedGameData }> {
+  static async getUserData(userId: string): Promise<{ status: number; message: SavedGameData }> {
     const data = await db.getDocument<FirebaseUser>("users", userId);
 
     if (!data) {

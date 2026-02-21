@@ -1,8 +1,6 @@
 import { FirebaseGameTrack, FirebaseTrack, GameTrack, Track } from "@/types";
 
-export const gameTrackTransformer = (
-  gameTrack: FirebaseGameTrack
-): GameTrack => {
+export const gameTrackTransformer = (gameTrack: FirebaseGameTrack): GameTrack => {
   return {
     song: gameTrack.song,
     artists: gameTrack.artists,

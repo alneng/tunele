@@ -2,10 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { authenticate } from "@/api/auth";
 import { useUserStore } from "@/store/user.store";
-import {
-  retrieveAndClearOIDCParams,
-  validateState,
-} from "@/utils/oidc.utils";
+import { retrieveAndClearOIDCParams, validateState } from "@/utils/oidc.utils";
 
 /**
  * Custom hook to handle OIDC callback.
@@ -52,12 +49,7 @@ export const useAuthCallback = () => {
 
       try {
         // Authenticate with OIDC
-        await authenticate(
-          code,
-          storedParams.state,
-          storedParams.nonce,
-          storedParams.codeVerifier,
-        );
+        await authenticate(code, storedParams.state, storedParams.nonce, storedParams.codeVerifier);
 
         // Check auth status after successful authentication
         await useUserStore.getState().checkAuth();

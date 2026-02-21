@@ -1,8 +1,4 @@
-import type {
-  SessionData,
-  FirestoreSessionData,
-  UserIdentity,
-} from "@/types/session.types";
+import type { SessionData, FirestoreSessionData, UserIdentity } from "@/types/session.types";
 
 /** Default session ID for tests that don't mock generateUUID */
 export const DEFAULT_SESSION_ID = "test-session";

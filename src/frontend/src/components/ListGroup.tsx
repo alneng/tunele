@@ -28,10 +28,7 @@ const ListGroup: React.FC<ListGroupProps> = ({ userGuesses }) => {
               guess && !guess.isCorrect && !guess.isSkipped && !guess.isArtist,
           })}
         >
-          <p>
-            {guess &&
-              (guess.isSkipped ? "Skipped" : guess.answer.formattedString)}
-          </p>
+          <p>{guess && (guess.isSkipped ? "Skipped" : guess.answer.formattedString)}</p>
         </div>
       ))}
     </div>

@@ -77,10 +77,7 @@ export async function consumeOIDCState(
  * @param storedNonce the nonce we stored before auth redirect
  * @throws HttpException if nonces don't match
  */
-export function validateNonce(
-  tokenNonce: string | undefined,
-  storedNonce: string,
-): void {
+export function validateNonce(tokenNonce: string | undefined, storedNonce: string): void {
   if (!tokenNonce || tokenNonce !== storedNonce) {
     Logger.error("Nonce validation failed", {
       tokenNonce,

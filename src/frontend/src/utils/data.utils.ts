@@ -10,7 +10,7 @@ import { GameResult, SavedGameData } from "@/types";
  */
 export const mergeGameData = (
   existingData: SavedGameData,
-  newData: SavedGameData
+  newData: SavedGameData,
 ): SavedGameData => {
   const result = { ...existingData };
 
@@ -24,10 +24,7 @@ export const mergeGameData = (
       if (!result.custom[key]) {
         result.custom[key] = newData.custom[key];
       } else {
-        result.custom[key] = mergeArrays(
-          result.custom[key],
-          newData.custom[key]
-        );
+        result.custom[key] = mergeArrays(result.custom[key], newData.custom[key]);
       }
     }
   }
@@ -39,9 +36,7 @@ const mergeArrays = (existingArray: GameResult[], newArray: GameResult[]) => {
   if (!newArray) return existingArray;
 
   const uniqueIds = new Set(existingArray.map((game: GameResult) => game.id));
-  const newData = newArray.filter(
-    (game: GameResult) => !uniqueIds.has(game.id)
-  );
+  const newData = newArray.filter((game: GameResult) => !uniqueIds.has(game.id));
 
   const concat_array = existingArray.concat(newData);
   return concat_array.sort((a: GameResult, b: GameResult) => a.id - b.id);

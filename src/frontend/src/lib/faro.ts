@@ -1,9 +1,4 @@
-import {
-  initializeFaro,
-  getWebInstrumentations,
-  type Faro,
-  LogLevel,
-} from "@grafana/faro-web-sdk";
+import { initializeFaro, getWebInstrumentations, type Faro, LogLevel } from "@grafana/faro-web-sdk";
 import { TracingInstrumentation } from "@grafana/faro-web-tracing";
 
 /**
@@ -61,10 +56,7 @@ export function initFaro(): Faro | null {
  * Push an error to Faro for tracking.
  * Safe to call even if Faro is not initialized.
  */
-export function pushError(
-  error: Error,
-  context?: Record<string, string>,
-): void {
+export function pushError(error: Error, context?: Record<string, string>): void {
   if (faro?.api) {
     faro.api.pushError(error, { context });
   }

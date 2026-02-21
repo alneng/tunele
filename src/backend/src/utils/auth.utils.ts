@@ -11,9 +11,7 @@ import { SessionData } from "@/types/session.types";
  * @throws AccessDeniedException if session is expired
  * @returns session data
  */
-export const verifySession = async (
-  sessionId: string | undefined,
-): Promise<SessionData> => {
+export const verifySession = async (sessionId: string | undefined): Promise<SessionData> => {
   if (!sessionId) {
     throw new AccessDeniedException(401, "No session provided", false);
   }
