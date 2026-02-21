@@ -54,19 +54,15 @@ A Heardle clone after the game shut down on May 5th, 2023
    yarn install
    ```
 
-4. **Start Redis**
+4. **Start the application**
 
    ```bash
-   yarn redis
+   yarn dev
    ```
 
-5. **Start the application**
+   This starts Redis (via Docker), the backend API with hot reload, and the frontend — all in one command.
 
-   ```bash
-   yarn start
-   ```
-
-6. **Access the app** at http://localhost:5173
+5. **Access the app** at http://localhost:5173
 
 ## Environment Variables
 
@@ -110,26 +106,27 @@ A Heardle clone after the game shut down on May 5th, 2023
 
 ## Development
 
-### Running with Docker
-
-Build and run the backend with Docker Compose:
-
-```bash
-cd src/backend
-docker compose -f "./docker/docker-compose.local.yml" build
-docker compose -f "./docker/docker-compose.local.yml" up
-```
-
-This starts both the API and Redis containers.
-
 ### Available Scripts
 
-| Command      | Description                                    |
-| ------------ | ---------------------------------------------- |
-| `yarn start` | Start frontend and backend in development mode |
-| `yarn redis` | Start Redis container (auto-removes on stop)   |
-| `yarn lint`  | Run ESLint across all packages                 |
-| `yarn test`  | Run test suites                                |
+| Command                      | Description                                                                             |
+| ---------------------------- | --------------------------------------------------------------------------------------- |
+| `yarn dev`                   | Start Redis, backend (with hot reload), and frontend in one command                     |
+| `yarn backend`               | Start Redis and backend only (with hot reload)                                          |
+| `yarn backend:preview <cmd>` | Shortcut for `docker compose` on `docker-compose.local.yml` (e.g. `up --build`, `down`) |
+| `yarn dev:stop`              | Stop the Redis Docker container started by `yarn dev`/`yarn backend`                    |
+| `yarn frontend`              | Start the frontend only                                                                 |
+| `yarn frontend:build`        | Build the frontend for production                                                       |
+| `yarn frontend:preview`      | Preview the production frontend build locally                                           |
+| `yarn lint`                  | Run ESLint across all packages                                                          |
+| `yarn test`                  | Run test suites                                                                         |
+
+### Smoke-testing the production image locally
+
+To test the fully containerised production build locally (API + Redis in Docker, no hot reload):
+
+```bash
+yarn backend:preview up --build
+```
 
 ## Deployment
 

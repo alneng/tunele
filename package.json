@@ -8,10 +8,10 @@
     "src/frontend"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\"",
+    "dev": "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\"",
+    "dev:stop": "yarn workspace backend dev:stop",
     "backend": "yarn workspace backend dev",
-    "backend:preview": "yarn workspace backend build && yarn workspace backend preview",
-    "redis": "yarn workspace backend redis",
+    "backend:preview": "yarn workspace backend preview",
     "frontend": "yarn workspace frontend dev",
     "frontend:build": "yarn workspace frontend build",
     "frontend:preview": "yarn workspace frontend preview",

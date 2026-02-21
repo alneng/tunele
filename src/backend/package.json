@@ -5,14 +5,13 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch -r tsconfig-paths/register -r dotenv/config src/index.ts",
-    "redis": "docker run --name redis --rm -p 6379:6379 redis:8-alpine",
+    "dev": "docker compose -f ./docker/docker-compose.dev.yml up -d --wait && tsx watch -r tsconfig-paths/register -r dotenv/config src/index.ts",
+    "dev:stop": "docker compose -f ./docker/docker-compose.dev.yml down",
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "lint": "eslint src --ext ts --report-unused-disable-directives --max-warnings 0",
     "build": "tsup src/index.ts",
-    "preview": "node dist/index.cjs",
-    "deploy": "docker compose down && docker compose build && docker compose up -d"
+    "preview": "docker compose -f ./docker/docker-compose.local.yml --env-file .env"
   },
   "dependencies": {
     "axios": "^1.13.5",
