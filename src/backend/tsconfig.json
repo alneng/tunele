@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@test/*": ["tests/*"]
+    },
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "node",
@@ -9,8 +14,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
 
-    // Project structure
-    "rootDir": "src",
+    // Project structure (rootDir allows both src/ and tests/ for path resolution)
+    "rootDir": ".",
     "outDir": "dist",
 
     // Linting
@@ -19,6 +24,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["./src/**/*.ts", "./@types/**/*.d.ts"],
-  "exclude": ["**/node_modules/*", "dist", "../frontend", "**/tests/*"]
+  "include": ["./src/**/*.ts", "./tests/**/*.ts", "./@types/**/*.d.ts"],
+  "exclude": ["**/node_modules/*", "dist", "../frontend"]
 }

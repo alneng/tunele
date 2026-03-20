@@ -7,9 +7,7 @@
 export function generateRandomString(length: number = 32): string {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
-    "",
-  );
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 /**
@@ -29,9 +27,7 @@ export function generateCodeVerifier(): string {
  * @param codeVerifier the code verifier
  * @returns code challenge (base64url-encoded SHA256 hash)
  */
-export async function generateCodeChallenge(
-  codeVerifier: string,
-): Promise<string> {
+export async function generateCodeChallenge(codeVerifier: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
   const hash = await crypto.subtle.digest("SHA-256", data);
@@ -56,11 +52,7 @@ function base64UrlEncode(buffer: Uint8Array): string {
  * @param nonce the nonce parameter
  * @param codeVerifier the PKCE code verifier
  */
-export function storeOIDCParams(
-  state: string,
-  nonce: string,
-  codeVerifier: string,
-): void {
+export function storeOIDCParams(state: string, nonce: string, codeVerifier: string): void {
   sessionStorage.setItem("oidc_state", state);
   sessionStorage.setItem("oidc_nonce", nonce);
   sessionStorage.setItem("oidc_code_verifier", codeVerifier);
@@ -99,9 +91,6 @@ export function retrieveAndClearOIDCParams(): {
  * @param storedState the state we stored before redirect
  * @returns true if valid
  */
-export function validateState(
-  returnedState: string,
-  storedState: string,
-): boolean {
+export function validateState(returnedState: string, storedState: string): boolean {
   return returnedState === storedState;
 }

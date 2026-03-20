@@ -12,8 +12,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc, userGuesses }) => {
   const [progress, setProgress] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const currentLevel = useMemo(() => userGuesses.length, [userGuesses]);
-  const [audioPlayerTimeout, setAudioPlayerTimeout] =
-    useState<NodeJS.Timeout>();
+  const [audioPlayerTimeout, setAudioPlayerTimeout] = useState<NodeJS.Timeout>();
 
   const songLimits: number[] = [1000, 2000, 4000, 7000, 11000, 16000];
 

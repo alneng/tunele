@@ -7,9 +7,7 @@ import { useEffect, useState } from "react";
  * @returns the time before the next Tunele
  */
 export const useCountdown = (targetDate: number) => {
-  const [timeLeft, setTimeLeft] = useState<number>(
-    targetDate - new Date().getTime()
-  );
+  const [timeLeft, setTimeLeft] = useState<number>(targetDate - new Date().getTime());
 
   useEffect(() => {
     let animationFrameId: number;

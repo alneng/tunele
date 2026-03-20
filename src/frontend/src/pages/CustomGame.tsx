@@ -14,8 +14,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import TuneleModal from "@/components/TuneleModal";
 
 const CustomGame = () => {
-  const { customGame, loadCustomGame, updateCustomGameGuesses, savedData } =
-    useGameStore();
+  const { customGame, loadCustomGame, updateCustomGameGuesses, savedData } = useGameStore();
   const {
     isLoading,
     error,
@@ -33,8 +32,7 @@ const CustomGame = () => {
   const reloadParam = params.get("r") === "1";
 
   // Local state for modals
-  const [isUserAccountModalOpen, setUserAccountModalState] =
-    useState<boolean>(false);
+  const [isUserAccountModalOpen, setUserAccountModalState] = useState<boolean>(false);
   const [isHelpModalOpen, setHelpModalState] = useState<boolean>(false);
   const [isStatsModalOpen, setStatsModalState] = useState<boolean>(false);
 
@@ -90,16 +88,10 @@ const CustomGame = () => {
       )}
 
       {/* modals */}
-      <TuneleModal
-        isOpen={isHelpModalOpen}
-        onRequestClose={() => setHelpModalState(false)}
-      >
+      <TuneleModal isOpen={isHelpModalOpen} onRequestClose={() => setHelpModalState(false)}>
         <HelpModal close={() => setHelpModalState(false)} />
       </TuneleModal>
-      <TuneleModal
-        isOpen={isStatsModalOpen}
-        onRequestClose={() => setStatsModalState(false)}
-      >
+      <TuneleModal isOpen={isStatsModalOpen} onRequestClose={() => setStatsModalState(false)}>
         <StatsModal gameData={playlistId ? savedData.custom[playlistId] : []} />
       </TuneleModal>
       <TuneleModal

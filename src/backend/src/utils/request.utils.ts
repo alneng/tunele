@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { RequestMetadata } from "../types/session.types";
+import { RequestMetadata } from "@/types/session.types";
 
 /**
  * Extract request metadata for audit trail.

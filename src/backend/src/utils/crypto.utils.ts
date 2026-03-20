@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import config from "../config";
+import config from "@/config";
 
 /**
  * Encryption algorithm and configuration
@@ -50,9 +50,7 @@ export function encrypt(text: string): string {
 
   const authTag = cipher.getAuthTag();
 
-  return [iv.toString("hex"), authTag.toString("hex"), encrypted].join(
-    ENCRYPTED_DELIMITER,
-  );
+  return [iv.toString("hex"), authTag.toString("hex"), encrypted].join(ENCRYPTED_DELIMITER);
 }
 
 /**

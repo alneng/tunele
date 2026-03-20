@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import UserService from "../services/user.services";
-import { verifySessionForUserId } from "../utils/auth.utils";
+import UserService from "@/services/user.services";
+import { verifySessionForUserId } from "@/utils/auth.utils";
 
 export default class UserController {
   /**
@@ -30,10 +30,7 @@ export default class UserController {
 
       await verifySessionForUserId(session, userId);
 
-      const { status, message } = await UserService.updateUserData(
-        userId,
-        bodyData,
-      );
+      const { status, message } = await UserService.updateUserData(userId, bodyData);
       return res.status(status).json(message);
     } catch (error) {
       next(error);

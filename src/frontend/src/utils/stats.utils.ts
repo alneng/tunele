@@ -12,7 +12,7 @@ export interface NumberToNumberMapping {
  */
 export function countScores(array: GameResult[] = []): NumberToNumberMapping {
   const scoreCounts: NumberToNumberMapping = Object.fromEntries(
-    Array.from({ length: 7 }, (_, i) => [i, 0])
+    Array.from({ length: 7 }, (_, i) => [i, 0]),
   );
   array.forEach((item) => {
     scoreCounts[item.score]++;
@@ -36,9 +36,7 @@ function getHighestScore(scores: NumberToNumberMapping): number {
  * @param localData the data to calculate the bar heights for
  * @returns the correct bar heights for the data's scores
  */
-export function calculateBarHeights(
-  localData: GameResult[]
-): NumberToNumberMapping {
+export function calculateBarHeights(localData: GameResult[]): NumberToNumberMapping {
   const scores = countScores(localData);
   const max: number = getHighestScore(scores);
   if (max === 0) return Array(7).fill(0);
@@ -58,10 +56,7 @@ export function calculateStatsBottom(localData: GameResult[]): {
   statsCorrectString: string;
   statsCorrectPercentageString: string;
 } {
-  const correct = localData.reduce(
-    (acc, game) => acc + (game.score > 0 ? 1 : 0),
-    0
-  );
+  const correct = localData.reduce((acc, game) => acc + (game.score > 0 ? 1 : 0), 0);
 
   return {
     statsCorrectString: `${correct}/${localData.length}`,

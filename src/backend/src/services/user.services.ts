@@ -1,10 +1,10 @@
 import _ from "lodash";
-import db from "../lib/firebase";
-import { mergeGameData } from "../utils/user.utils";
-import { SavedGameData } from "../types/game.types";
-import { FirebaseUser } from "../types/firebase.types";
-import { HttpException } from "../utils/errors.utils";
-import Logger from "../lib/logger";
+import db from "@/lib/firebase";
+import { mergeGameData } from "@/utils/user.utils";
+import { SavedGameData } from "@/types/game.types";
+import { FirebaseUser } from "@/types/firebase.types";
+import { HttpException } from "@/utils/errors.utils";
+import Logger from "@/lib/logger";
 
 export default class UserService {
   /**
@@ -13,9 +13,7 @@ export default class UserService {
    * @param userId the user id (Google sub)
    * @returns the user's saved data
    */
-  static async getUserData(
-    userId: string,
-  ): Promise<{ status: number; message: SavedGameData }> {
+  static async getUserData(userId: string): Promise<{ status: number; message: SavedGameData }> {
     const data = await db.getDocument<FirebaseUser>("users", userId);
 
     if (!data) {

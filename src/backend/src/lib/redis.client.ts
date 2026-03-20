@@ -1,6 +1,6 @@
 import { createClient } from "redis";
-import config from "../config";
-import Logger from "./logger";
+import config from "@/config";
+import Logger from "@/lib/logger";
 
 const client = createClient({
   url: config.redis.url,

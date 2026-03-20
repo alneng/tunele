@@ -1,8 +1,8 @@
-import { RedisService } from "../lib/redis.service";
-import Logger from "../lib/logger";
-import { HttpException } from "./errors.utils";
-import { CacheKeys } from "./redis.utils";
-import { OIDCFlowState, RequestMetadata } from "../types/session.types";
+import { RedisService } from "@/lib/redis.service";
+import Logger from "@/lib/logger";
+import { HttpException } from "@/utils/errors.utils";
+import { CacheKeys } from "@/utils/redis.utils";
+import { OIDCFlowState, RequestMetadata } from "@/types/session.types";
 
 /**
  * OIDC state TTL in seconds (10 minutes - enough for user to complete auth flow)
@@ -77,10 +77,7 @@ export async function consumeOIDCState(
  * @param storedNonce the nonce we stored before auth redirect
  * @throws HttpException if nonces don't match
  */
-export function validateNonce(
-  tokenNonce: string | undefined,
-  storedNonce: string,
-): void {
+export function validateNonce(tokenNonce: string | undefined, storedNonce: string): void {
   if (!tokenNonce || tokenNonce !== storedNonce) {
     Logger.error("Nonce validation failed", {
       tokenNonce,

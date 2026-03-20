@@ -18,9 +18,6 @@ export const fetchUserData = async (id: string): Promise<SavedGameData> => {
  * @param id the user ID
  * @param data the user data
  */
-export const syncUserData = async (
-  id: string,
-  data: SavedGameData
-): Promise<void> => {
+export const syncUserData = async (id: string, data: SavedGameData): Promise<void> => {
   await api.post(`/user/${id}/post-data`, data);
 };

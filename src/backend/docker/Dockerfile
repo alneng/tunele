@@ -44,4 +44,4 @@ ENV NODE_ENV=production
 EXPOSE ${PORT}
 
 # Run the Express application
-CMD ["yarn", "preview"]
+CMD ["node", "dist/index.cjs"]

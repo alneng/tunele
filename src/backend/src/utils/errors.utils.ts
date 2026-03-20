@@ -1,5 +1,6 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
-import Logger from "../lib/logger";
+import Logger from "@/lib/logger";
+import { getRequestMetadata } from "@/utils/request.utils";
 
 /**
  * Custom Error type that has a status code and a message.
@@ -36,10 +37,7 @@ export class RateLimitException extends HttpException {
 
 export class EmptyPlaylistException extends HttpException {
   constructor() {
-    super(
-      400,
-      "Failed to use playlist: Playlist is empty or has no usable songs",
-    );
+    super(400, "Failed to use playlist: Playlist is empty or has no usable songs");
   }
 }
 
@@ -88,19 +86,23 @@ export const errorHandler: ErrorRequestHandler = (
     return next(error);
   }
 
+  if (error instanceof SyntaxError && "body" in error) {
+    res.status(400).json({ message: "Invalid JSON in request body" });
+    return;
+  }
+
   if (error instanceof HttpException) {
     let additionalErrorInfo = {};
     if (error instanceof AccessDeniedException)
       additionalErrorInfo = { ...additionalErrorInfo, retry: error.retry };
 
-    res
-      .status(error.status)
-      .json({ ...additionalErrorInfo, message: error.message });
+    res.status(error.status).json({ ...additionalErrorInfo, message: error.message });
   } else {
     Logger.error("errorHandler encountered unexpected error", {
       error,
-      path: req.path,
       method: req.method,
+      path: req.path,
+      requestMetadata: getRequestMetadata(req),
     });
     res.status(500).json({ message: JSON.stringify(error) });
     throw error;

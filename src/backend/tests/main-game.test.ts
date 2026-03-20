@@ -1,16 +1,16 @@
-import MainGameService from "../src/services/main-game.services";
-import db from "../src/lib/firebase";
-import { HttpException } from "../src/utils/errors.utils";
+import MainGameService from "@/services/main-game.services";
+import db from "@/lib/firebase";
+import { HttpException } from "@/utils/errors.utils";
 import {
   gameTrackDocumentExtras,
   NeverGonna,
   TalkThatTalk,
   allTracks,
-} from "./test-data/songs.test-data";
-import { RedisService } from "../src/lib/redis.service";
+} from "@test/test-data/songs.test-data";
+import { RedisService } from "@/lib/redis.service";
 
-jest.mock("../src/lib/firebase");
-jest.mock("../src/lib/redis.service");
+jest.mock("@/lib/firebase");
+jest.mock("@/lib/redis.service");
 
 describe("Main Game Tests", () => {
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe("Main Game Tests", () => {
       expect(setJSONSpy).toHaveBeenCalledWith(
         expect.stringContaining("cache:main:game_track:2024-01-26"),
         NeverGonna,
-        expect.any(Number)
+        expect.any(Number),
       );
     });
 
@@ -61,7 +61,7 @@ describe("Main Game Tests", () => {
           song: TalkThatTalk.song,
           artists: TalkThatTalk.artists,
         }),
-        expect.any(Number)
+        expect.any(Number),
       );
     });
   });
@@ -78,7 +78,7 @@ describe("Main Game Tests", () => {
         [NeverGonna, TalkThatTalk].map(({ song, artists }) => ({
           song,
           artists,
-        }))
+        })),
       );
     });
   });
@@ -98,7 +98,7 @@ describe("Main Game Tests", () => {
       jest.spyOn(db, "getDocument").mockResolvedValue(null);
 
       await expect(MainGameService.postStats("2024-01-28", 1)).rejects.toThrow(
-        new HttpException(400, "Failed to post stats")
+        new HttpException(400, "Failed to post stats"),
       );
     });
   });

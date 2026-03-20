@@ -22,11 +22,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
         className="flex items-center gap-2 px-4 py-2 mt-4 text-sm font-medium text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
       >
         {showTrace ? "Hide" : "Show"} Error Trace
-        {showTrace ? (
-          <ChevronUp className="w-4 h-4" />
-        ) : (
-          <ChevronDown className="w-4 h-4" />
-        )}
+        {showTrace ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
       {showTrace && (

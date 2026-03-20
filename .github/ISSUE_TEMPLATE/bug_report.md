@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to fix an issue
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: ""
+assignees: ""
 ---
 
 ### Describe the bug

@@ -25,9 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [possibleAnswers, setPossibleAnswers] = useState<FormattedTrack[]>([]);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
 
-  const handleInputChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer({
       formattedString: event.target.value,
       song: "",
@@ -85,9 +83,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleAddGuess = () => {
     setIsSubmitDisabled(true);
-    const isCorrectArtist = artists.some((correctArtist) =>
-      answer.artists.includes(correctArtist)
-    );
+    const isCorrectArtist = artists.some((correctArtist) => answer.artists.includes(correctArtist));
 
     const guess = {
       answer,
@@ -169,9 +165,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </button>
         <button
           className={`w-28 p-4 rounded-full text-center text-black py-2 focus:outline-none ${
-            isSubmitDisabled
-              ? "bg-[#18b853]"
-              : "bg-[#1fd660] hover:bg-[#18b853]"
+            isSubmitDisabled ? "bg-[#18b853]" : "bg-[#1fd660] hover:bg-[#18b853]"
           }`}
           disabled={isSubmitDisabled}
           onClick={handleAddGuess}

@@ -1,18 +1,14 @@
-import {
-  storeOIDCState,
-  consumeOIDCState,
-  validateNonce,
-} from "../src/utils/oidc.utils";
-import { RedisService } from "../src/lib/redis.service";
-import { CacheKeys } from "../src/utils/redis.utils";
+import { storeOIDCState, consumeOIDCState, validateNonce } from "@/utils/oidc.utils";
+import { RedisService } from "@/lib/redis.service";
+import { CacheKeys } from "@/utils/redis.utils";
 import {
   createStoredOIDCData,
   OIDC_STATE_TTL_SECONDS,
   TEST_NONCE,
   TEST_STATE,
-} from "./fixtures/oidc.fixtures";
+} from "@test/fixtures/oidc.fixtures";
 
-jest.mock("../src/lib/redis.service");
+jest.mock("@/lib/redis.service");
 
 describe("OIDC Utils", () => {
   beforeEach(() => {
@@ -77,15 +73,11 @@ describe("OIDC Utils", () => {
     });
 
     it("should throw if nonces do not match", () => {
-      expect(() => validateNonce("wrong-nonce", TEST_NONCE)).toThrow(
-        "Invalid nonce in ID token",
-      );
+      expect(() => validateNonce("wrong-nonce", TEST_NONCE)).toThrow("Invalid nonce in ID token");
     });
 
     it("should throw if token nonce is undefined", () => {
-      expect(() => validateNonce(undefined, TEST_NONCE)).toThrow(
-        "Invalid nonce in ID token",
-      );
+      expect(() => validateNonce(undefined, TEST_NONCE)).toThrow("Invalid nonce in ID token");
     });
   });
 });

@@ -14,11 +14,7 @@ interface NavbarProps {
   setUAModel: (state: boolean) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({
-  setHelpModal,
-  setStatsModal,
-  setUAModel,
-}) => {
+const Navbar: React.FC<NavbarProps> = ({ setHelpModal, setStatsModal, setUAModel }) => {
   const navbarItems = {
     left: [
       {
@@ -29,8 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({
       {
         icon: GithubIcon,
         title: "GitHub",
-        onClick: () =>
-          window.open("https://github.com/alneng/tunele", "_blank"),
+        onClick: () => window.open("https://github.com/alneng/tunele", "_blank"),
       },
     ],
     right: [
@@ -74,11 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
         </button>
       </div>
       <a href="/">
-        <img
-          src="/tunele-transparent-bg.png"
-          alt="Tunele"
-          className="max-h-5"
-        />
+        <img src="/tunele-transparent-bg.png" alt="Tunele" className="max-h-5" />
       </a>
       <div className="mr-4">
         {navbarItems.right.map((item, index) => (

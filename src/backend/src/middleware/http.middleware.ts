@@ -3,10 +3,10 @@ import {
   httpRequestsTotal,
   httpRequestDuration,
   httpRequestsInFlight,
-} from "../metrics/http.metrics";
-import { startTimer } from "../metrics/registry";
+} from "@/metrics/http.metrics";
+import { startTimer } from "@/metrics/registry";
 import morgan from "morgan";
-import Logger from "../lib/logger";
+import Logger from "@/lib/logger";
 
 /**
  * Operational endpoints: tracked in metrics but excluded from logs.
@@ -52,10 +52,7 @@ function isOperationalRoute(fullPath: string): boolean {
  */
 function normalizeDynamicSegments(path: string): string {
   return path
-    .replace(
-      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
-      ":id",
-    )
+    .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, ":id")
     .replace(/\/[A-Za-z0-9]{22}(?=\/|$)/g, "/:playlistId")
     .replace(/\/\d{4}-\d{2}-\d{2}(?=\/|$)/g, "/:date")
     .replace(/\/\d+(?=\/|$)/g, "/:id");
@@ -83,11 +80,7 @@ function normalizeRoutePath(req: Request): string {
  * - Operational routes (/health, /metrics) → full metrics (but no logs, see morgan)
  * - Unrecognized routes (bot/scanner traffic) → skipped entirely
  */
-export function metricsMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void {
+export function metricsMiddleware(req: Request, res: Response, next: NextFunction): void {
   const fullPath = getFullPath(req);
 
   // Unrecognized traffic — no metrics at all

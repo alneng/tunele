@@ -1,4 +1,4 @@
-import { SpotifyPlaylistObject } from "../../src/types";
+import { SpotifyPlaylistObject } from "@/types";
 
 export const mockSpotifyPlaylist: SpotifyPlaylistObject = {
   collaborative: false,

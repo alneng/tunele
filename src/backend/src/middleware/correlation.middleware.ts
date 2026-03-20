@@ -28,14 +28,9 @@ export function getCorrelationId(): string | undefined {
  * - Stores it in AsyncLocalStorage for access throughout the request lifecycle
  * - Adds it to response headers for client visibility
  */
-export function correlationMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void {
+export function correlationMiddleware(req: Request, res: Response, next: NextFunction): void {
   // Use existing correlation ID from header if provided, otherwise generate new one
-  const correlationId =
-    (req.headers["x-correlation-id"] as string) || crypto.randomUUID();
+  const correlationId = (req.headers["x-correlation-id"] as string) || crypto.randomUUID();
 
   // Add correlation ID to response headers
   res.setHeader("X-Correlation-ID", correlationId);

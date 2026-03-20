@@ -33,18 +33,31 @@ The backend uses **OpenID Connect (OIDC)** for user authentication with Google. 
 ```bash
 # From repository root
 yarn install
-yarn redis    # Start Redis (requires Docker)
-yarn start    # Start frontend + backend
+yarn dev # Starts Redis (Docker), backend with hot reload, and frontend
 ```
 
-### Running with Docker
+`yarn dev` uses `docker compose up -d --wait` to boot Redis and wait until it is healthy before starting the API with `tsx watch`. Changes to source files are picked up automatically without any rebuild.
+
+To stop Redis when you're done:
 
 ```bash
-cd src/backend
+yarn dev:stop
+```
+
+### Smoke-testing the production image locally
+
+To test the fully containerised production build (API compiled + running in Docker, no hot reload):
+
+```bash
+# From the root directory — pass any docker compose subcommand as an argument
+yarn backend:preview up --build   # build and start
+yarn backend:preview up -d        # start detached
+yarn backend:preview down         # stop and remove containers
+# or directly from src/backend/
 docker compose -f "./docker/docker-compose.local.yml" --env-file ".env" up --build
 ```
 
-This starts the API and Redis containers together.
+This mirrors the prod/preview environments and is useful for verifying the Docker image before deploying.
 
 ## Deployment
 
@@ -159,7 +172,7 @@ GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
 REDIRECT_URI='https://yourdomain.com/auth/callback'
 SESSION_ENCRYPTION_KEY='<32-byte-hex-string>'
 SESSION_TTL_SECONDS='604800'
-REDIS_URL='redis://redis:6379'
+REDIS_URL='redis://redis:6379' # Docker service name — correct for prod/preview containers, use localhost:6379 for local development
 REDIS_PASSWORD='your_secure_redis_password'
 ```
 
@@ -190,11 +203,12 @@ Configure these in your repository settings:
 
 #### Compose Files
 
-| File                         | Purpose           | Services                           |
-| ---------------------------- | ----------------- | ---------------------------------- |
-| `docker-compose.local.yml`   | Local development | API + Redis (port 6379 exposed)    |
-| `docker-compose.prod.yml`    | Production        | API (port 7600) + Redis (internal) |
-| `docker-compose.preview.yml` | Preview/staging   | API (port 7601) + Redis (internal) |
+| File                         | Purpose                         | Services                           |
+| ---------------------------- | ------------------------------- | ---------------------------------- |
+| `docker-compose.dev.yml`     | Dev dependencies (hot reload)   | Redis only (port 6379 exposed)     |
+| `docker-compose.local.yml`   | Local smoke-test (mirrors prod) | API + Redis (port 6379 exposed)    |
+| `docker-compose.prod.yml`    | Production                      | API (port 7600) + Redis (internal) |
+| `docker-compose.preview.yml` | Preview/staging                 | API (port 7601) + Redis (internal) |
 
 #### Health Checks
 

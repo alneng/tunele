@@ -1,24 +1,20 @@
-import { createMetrics, BUCKET_PRESETS } from "../metrics/registry";
+import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
 
 /**
  * Create Spotify API metrics using the factory pattern
  */
 const m = createMetrics("spotify_api");
 
-const requestsTotal = m.counter(
-  "requests_total",
-  "Total number of Spotify API requests",
-  ["endpoint", "status", "status_code"],
-);
+const requestsTotal = m.counter("requests_total", "Total number of Spotify API requests", [
+  "endpoint",
+  "status",
+  "status_code",
+]);
 
-const duration = m.histogram(
-  "duration_seconds",
-  "Spotify API request duration in seconds",
-  {
-    labels: ["endpoint"],
-    buckets: BUCKET_PRESETS.slow,
-  },
-);
+const duration = m.histogram("duration_seconds", "Spotify API request duration in seconds", {
+  labels: ["endpoint"],
+  buckets: BUCKET_PRESETS.slow,
+});
 
 /**
  * Public interface for recording Spotify API metrics

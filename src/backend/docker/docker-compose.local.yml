@@ -5,6 +5,8 @@ services:
     image: tunele-api-local
     container_name: tunele-api-local
     env_file: "../.env"
+    environment:
+      - REDIS_URL=redis://redis:6379
     build:
       context: ../../../ # Pull the yarn.lock from the root directory
       dockerfile: ./src/backend/docker/Dockerfile

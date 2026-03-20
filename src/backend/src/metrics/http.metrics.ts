@@ -1,15 +1,15 @@
-import { createMetrics, BUCKET_PRESETS } from "./registry";
+import { createMetrics, BUCKET_PRESETS } from "@/metrics/registry";
 
 /**
  * Create HTTP metrics using the factory pattern
  */
 const m = createMetrics("http");
 
-export const httpRequestsTotal = m.counter(
-  "requests_total",
-  "Total number of HTTP requests",
-  ["method", "route", "status_code"],
-);
+export const httpRequestsTotal = m.counter("requests_total", "Total number of HTTP requests", [
+  "method",
+  "route",
+  "status_code",
+]);
 
 export const httpRequestDuration = m.histogram(
   "request_duration_seconds",

@@ -1,4 +1,4 @@
-import { SessionData } from "../../src/types/session.types";
+import { SessionData } from "@/types/session.types";
 
 declare global {
   namespace Express {

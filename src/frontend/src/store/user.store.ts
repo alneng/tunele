@@ -59,11 +59,7 @@ export const useUserStore = create<UserState>()(
       init: false,
 
       checkAuth: async () => {
-        set(
-          { isLoading: true, error: null, init: true },
-          undefined,
-          "checkAuth/init",
-        );
+        set({ isLoading: true, error: null, init: true }, undefined, "checkAuth/init");
 
         try {
           const userData = await verifySession();
@@ -140,11 +136,7 @@ export const useUserStore = create<UserState>()(
           window.location.href = url.href;
         } catch (error) {
           console.error("Failed to initiate OIDC flow:", error);
-          set(
-            { error: error as AxiosApiError },
-            undefined,
-            "login/initiate-error",
-          );
+          set({ error: error as AxiosApiError }, undefined, "login/initiate-error");
         }
       },
 
@@ -187,11 +179,7 @@ export const useUserStore = create<UserState>()(
           // Merge with local data in game store
           useGameStore.getState().mergeWithRemoteData(remoteData);
         } catch (error) {
-          set(
-            { error: error as AxiosApiError },
-            undefined,
-            "syncDataFromServer/error",
-          );
+          set({ error: error as AxiosApiError }, undefined, "syncDataFromServer/error");
           throw error;
         }
       },
@@ -206,11 +194,7 @@ export const useUserStore = create<UserState>()(
           // Sync to server
           await syncUserData(id, localData);
         } catch (error) {
-          set(
-            { error: error as AxiosApiError },
-            undefined,
-            "syncDataToServer/error",
-          );
+          set({ error: error as AxiosApiError }, undefined, "syncDataToServer/error");
           throw error;
         }
       },
