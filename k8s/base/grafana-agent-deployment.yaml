@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-agent
+  labels:
+    app: grafana-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-agent
+  template:
+    metadata:
+      labels:
+        app: grafana-agent
+    spec:
+      containers:
+        - name: grafana-agent
+          image: grafana/agent:latest
+          args:
+            - "-config.file=/etc/agent/agent.yaml"
+            - "-config.expand-env"
+          env:
+            - name: CLUSTER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: tunele-api-secrets
+                  key: CLUSTER_NAME
+            - name: API_HOST
+              value: tunele-api
+            - name: API_PORT
+              value: "7600"
+            - name: METRICS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: tunele-api-secrets
+                  key: METRICS_AUTH_TOKEN
+            # .env uses different key names than what the agent config expects
+            # Map: GRAFANA_PROMETHEUS_URL -> GRAFANA_CLOUD_PROMETHEUS_URL, etc.
+            - name: GRAFANA_CLOUD_PROMETHEUS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tunele-api-secrets
+                  key: GRAFANA_PROMETHEUS_URL
+            - name: GRAFANA_CLOUD_PROMETHEUS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: tunele-api-secrets
+                  key: GRAFANA_PROMETHEUS_USER
+            - name: GRAFANA_CLOUD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tunele-api-secrets
+                  key: GRAFANA_PROMETHEUS_TOKEN
+          volumeMounts:
+            - name: config
+              mountPath: /etc/agent/agent.yaml
+              subPath: agent.yaml
+              readOnly: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      volumes:
+        - name: config
+          configMap:
+            name: grafana-agent-config

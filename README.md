@@ -9,7 +9,7 @@ A Heardle clone after the game shut down on May 5th, 2023
 | Frontend  | React + Vite + Tailwind        | `src/frontend/`  |
 | Backend   | Node.js + Express + TypeScript | `src/backend/`   |
 | Database  | Firebase Firestore             | Cloud            |
-| Cache     | Redis                          | Docker container |
+| Cache     | Redis                          | k8s / Docker     |
 | Auth      | Google OAuth 2.0               | Cloud            |
 
 ## Quick Start
@@ -130,7 +130,7 @@ yarn backend:preview up --build
 
 ## Deployment
 
-See [`src/backend/README.md`](src/backend/README.md) for detailed deployment documentation.
+The backend runs on a **k3s cluster** using Kustomize overlays. See [`src/backend/README.md`](src/backend/README.md) for deployment documentation and [`src/backend/kubernetes.md`](src/backend/kubernetes.md) for the full operational guide.
 
 ### Quick Reference
 
@@ -140,10 +140,10 @@ See [`src/backend/README.md`](src/backend/README.md) for detailed deployment doc
 
 ### Environments
 
-| Environment | Branch    | Port | Compose File                 |
-| ----------- | --------- | ---- | ---------------------------- |
-| Production  | `master`  | 7600 | `docker-compose.prod.yml`    |
-| Preview     | `develop` | 7601 | `docker-compose.preview.yml` |
+| Environment | Trigger         | Image Tag                  | k8s Namespace    |
+| ----------- | --------------- | -------------------------- | ---------------- |
+| Production  | Push to `master`| `latest`, `{sha}`          | `tunele-prod`    |
+| Preview     | Manual dispatch | `preview`, `preview-{sha}` | `tunele-preview` |
 
 ## Project Structure
 
@@ -152,9 +152,12 @@ tunele/
 ├── .github/workflows/     # CI/CD pipelines
 │   ├── ci.yml             # Lint and test (runs on all PRs/pushes)
 │   └── backend-cicd.yml   # Build and deploy backend
+├── k8s/                   # Kubernetes manifests
+│   ├── base/              # Shared resources (deployments, services)
+│   └── overlays/          # Environment-specific patches (prod, preview)
 ├── src/
 │   ├── backend/           # Express API server
-│   │   ├── docker/        # Docker configuration
+│   │   ├── docker/        # Dockerfile and local compose files
 │   │   ├── src/           # Application source
 │   │   └── tests/         # Test suites
 │   └── frontend/          # React application

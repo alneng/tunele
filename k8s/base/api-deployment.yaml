@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tunele-api
+  labels:
+    app: tunele-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: tunele-api
+  template:
+    metadata:
+      labels:
+        app: tunele-api
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: tunele-api
+          image: ghcr.io/alneng/tunele-api:latest
+          ports:
+            - containerPort: 7600
+          envFrom:
+            - secretRef:
+                name: tunele-api-secrets
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 7600
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 7600
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+      terminationGracePeriodSeconds: 30
