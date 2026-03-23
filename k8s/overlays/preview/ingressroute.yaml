@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tunele-api
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api-d.tunele.app`)
+      kind: Rule
+      services:
+        - name: tunele-api
+          port: 7600
+  tls:
+    certResolver: letsencrypt

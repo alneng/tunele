@@ -32,6 +32,13 @@ interface AppConfig {
     ttlSeconds: number;
   };
 
+  rateLimit: {
+    windowMs: number;
+    max: number;
+    authWindowMs: number;
+    authMax: number;
+  };
+
   grafana: {
     lokiHost: string;
     lokiUser: string;
@@ -109,6 +116,7 @@ function loadTestConfig(): AppConfig {
     googleOAuth: { clientId: "", clientSecret: "", redirectUri: "" },
     redis: { url: "redis://localhost:6379" },
     session: { encryptionKey: TEST_ENCRYPTION_KEY, ttlSeconds: 604800 },
+    rateLimit: { windowMs: 60_000, max: 20, authWindowMs: 600_000, authMax: 20 },
     grafana: { lokiHost: "", lokiUser: "", lokiToken: "" },
     metrics: { authToken: "" },
     logger: { enableHttpLogPrinting: false, logLevel: "info" },
@@ -150,6 +158,13 @@ function loadConfig(): AppConfig {
     session: {
       encryptionKey: requireEnv("SESSION_ENCRYPTION_KEY"),
       ttlSeconds: parseInt(env("SESSION_TTL_SECONDS", "604800"), 10),
+    },
+
+    rateLimit: {
+      windowMs: parseInt(env("RATE_LIMIT_WINDOW_MS", "60000"), 10),
+      max: parseInt(env("RATE_LIMIT_MAX", "20"), 10),
+      authWindowMs: parseInt(env("RATE_LIMIT_AUTH_WINDOW_MS", "600000"), 10),
+      authMax: parseInt(env("RATE_LIMIT_AUTH_MAX", "20"), 10),
     },
 
     grafana: {

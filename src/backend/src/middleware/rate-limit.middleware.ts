@@ -15,8 +15,8 @@ const rateLimitHandler = (_req: Request, _res: Response, next: NextFunction) => 
 export const createRateLimiter = () => {
   if (config.env === "production") {
     return rateLimit({
-      windowMs: 60 * 1000,
-      max: 20,
+      windowMs: config.rateLimit.windowMs,
+      max: config.rateLimit.max,
       standardHeaders: true,
       legacyHeaders: false,
       skipFailedRequests: true,
@@ -40,8 +40,8 @@ export const createRateLimiter = () => {
 export const createAuthRateLimiter = () => {
   if (config.env === "production") {
     return rateLimit({
-      windowMs: 10 * 60 * 1000,
-      max: 20,
+      windowMs: config.rateLimit.authWindowMs,
+      max: config.rateLimit.authMax,
       standardHeaders: true,
       legacyHeaders: false,
       skipFailedRequests: true,
