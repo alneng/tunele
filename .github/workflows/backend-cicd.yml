@@ -131,185 +131,74 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Deploy to server after successful build
+  # Deploy to k3s cluster after successful build
   deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     environment: prod
     if: success()
 
     steps:
-      - name: Configure SSH
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
 
-      - name: Add host key
+      - name: Configure kubectl
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
 
-      - name: Set deployment variables
-        id: deploy-vars
+      - name: Determine overlay
+        id: overlay
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
-            echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
-            echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
-          # elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-          #   echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
-          #   echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
-          #   echo "image_tag=preview-${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "path=k8s/overlays/prod" >> $GITHUB_OUTPUT
+            echo "namespace=tunele-prod" >> $GITHUB_OUTPUT
+            echo "context=tunele-prod" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             if [[ "${{ inputs.environment }}" == "production" ]]; then
-              echo "container_name=${{ env.CONTAINER_NAME }}" >> $GITHUB_OUTPUT
-              echo "port_mapping=7600:7600" >> $GITHUB_OUTPUT
-              echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+              echo "path=k8s/overlays/prod" >> $GITHUB_OUTPUT
+              echo "namespace=tunele-prod" >> $GITHUB_OUTPUT
+              echo "context=tunele-prod" >> $GITHUB_OUTPUT
             else
-              echo "container_name=${{ env.CONTAINER_NAME }}-preview" >> $GITHUB_OUTPUT
-              echo "port_mapping=7601:7600" >> $GITHUB_OUTPUT
-              echo "image_tag=preview-${{ github.sha }}" >> $GITHUB_OUTPUT
+              echo "path=k8s/overlays/preview" >> $GITHUB_OUTPUT
+              echo "namespace=tunele-preview" >> $GITHUB_OUTPUT
+              echo "context=tunele-preview" >> $GITHUB_OUTPUT
             fi
           fi
 
-      - name: Deploy to server
+      - name: Deploy
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            set -e # Exit on any error
-            
-            # Change to project directory
-            PROJECT_DIR="/home/${{ secrets.SERVER_USER }}/${{ env.CONTAINER_NAME }}"
-            cd "$PROJECT_DIR"
+          set -e
+          cd ${{ steps.overlay.outputs.path }}
+          kustomize edit set image ghcr.io/alneng/tunele-api=ghcr.io/alneng/tunele-api:${{ needs.build.outputs.image_tag }}
+          kubectl apply -k . --context=${{ steps.overlay.outputs.context }}
 
-            # Set compose file and project name based on environment
-            if [[ "${{ steps.deploy-vars.outputs.image_tag }}" == "preview"* ]]; then
-              COMPOSE_FILE="docker-compose.preview.yml"
-              ENV_FILE=".env.preview"
-              HEALTH_URL="http://localhost:7601/api/health"
-            else
-              COMPOSE_FILE="docker-compose.prod.yml"
-              ENV_FILE=".env"
-              HEALTH_URL="http://localhost:7600/api/health"
+      - name: Wait for rollout
+        run: |
+          if ! kubectl rollout status deployment/tunele-api \
+            --namespace ${{ steps.overlay.outputs.namespace }} \
+            --context=${{ steps.overlay.outputs.context }} \
+            --timeout=120s; then
+            echo "Rollout failed, initiating rollback"
+            kubectl rollout undo deployment/tunele-api \
+              --namespace ${{ steps.overlay.outputs.namespace }} \
+              --context=${{ steps.overlay.outputs.context }}
+            echo "Rollback initiated, waiting for previous revision to stabilize"
+            if ! kubectl rollout status deployment/tunele-api \
+              --namespace ${{ steps.overlay.outputs.namespace }} \
+              --context=${{ steps.overlay.outputs.context }} \
+              --timeout=60s; then
+              echo "Rollback also failed — manual intervention required"
             fi
-
-            # Download latest configuration files from repository
-            echo "Downloading latest configuration files from repository..."
-            
-            # GitHub raw file URLs - using commit SHA for exact version
-            REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
-            
-            # Download docker-compose files
-            echo "Downloading docker-compose file..."
-            curl -f -o "$COMPOSE_FILE.new" "$REPO_URL/src/backend/docker/$COMPOSE_FILE" || {
-              echo "ERROR: Failed to download $COMPOSE_FILE"
-              exit 1
-            }
-            
-            # Download Grafana Agent config for observability
-            echo "Downloading Grafana Agent config..."
-            curl -f -o "grafana-agent.yml" "$REPO_URL/src/backend/grafana/grafana-agent.yml" || {
-              echo "WARNING: Failed to download grafana-agent.yml (observability may not work)"
-            }
-            
-            # Backup existing files and replace with new ones
-            echo "Updating configuration files..."
-            
-            # Backup docker-compose file only if it exists (handles first-run case)
-            if [[ -f "$COMPOSE_FILE" ]]; then
-              cp "$COMPOSE_FILE" "$COMPOSE_FILE.backup"
-            fi
-            mv "$COMPOSE_FILE.new" "$COMPOSE_FILE"
-            
-            # Update the image in the compose file
-            sed -i "s|image: ghcr.io/.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.deploy-vars.outputs.image_tag }}|" "$COMPOSE_FILE"
-
-            # Pull the latest images
-            echo "Pulling new images..."
-            docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" pull
-
-            # Function to check service health
-            check_health() {
-              local max_attempts=30
-              local attempt=1
-              
-              echo "Checking service health..."
-              while [ $attempt -le $max_attempts ]; do
-                if curl -f "$HEALTH_URL" >/dev/null 2>&1; then
-                  echo "Service is healthy!"
-                  return 0
-                fi
-                echo "Attempt $attempt/$max_attempts: Service not healthy yet, waiting..."
-                sleep 5
-                ((attempt++))
-              done
-              
-              echo "Service failed to become healthy after $max_attempts attempts"
-              return 1
-            }
-
-            # Function to rollback
-            rollback() {
-              echo "Rolling back to previous version..."
-              
-              # Restore original compose file if backup exists
-              if [[ -f "$COMPOSE_FILE.backup" ]]; then
-                echo "Restoring original $COMPOSE_FILE..."
-                cp "$COMPOSE_FILE.backup" "$COMPOSE_FILE"
-                
-                # Start containers with original file
-                docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --remove-orphans
-                
-                if check_health; then
-                  echo "Rollback successful!"
-                  # Clean up failed deployment files
-                  rm -f "$COMPOSE_FILE.backup"
-                else
-                  echo "ERROR: Rollback failed! Manual intervention required."
-                  exit 1
-                fi
-              else
-                echo "WARNING: No backup file found for rollback (first deployment?)"
-                echo "Attempting to continue with current configuration..."
-              fi
-            }
-
-            # Deploy
-            echo "Starting deployment..."
-            
-            # Start new containers without stopping old ones first
-            docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --no-recreate --remove-orphans
-            
-            # Wait a moment for containers to initialize
-            sleep 15
-            
-            # Check if new deployment is healthy
-            if check_health; then
-              echo "New deployment is healthy, recreating containers with new config..."
-              
-              # Now recreate containers with new config to ensure clean state
-              docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate --remove-orphans
-              
-              # Final health check after recreation
-              if check_health; then
-                echo "Deployment successful! Replacing original compose file..."
-                
-                # Clean up backup files
-                rm -f "$COMPOSE_FILE.backup"
-                
-                # Clean up old images
-                echo "Cleaning up old images..."
-                docker image prune -f --filter "until=24h"
-              else
-                echo "Post-recreation health check failed, rolling back..."
-                rollback
-                exit 1
-              fi
-            else
-              echo "New deployment failed health check, rolling back..."
-              rollback
-              exit 1
-            fi
-            
-          ENDSSH
+            exit 1
+          fi

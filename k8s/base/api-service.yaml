@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tunele-api
+  labels:
+    app: tunele-api
+spec:
+  type: ClusterIP
+  selector:
+    app: tunele-api
+  ports:
+    - port: 7600
+      targetPort: 7600
+      protocol: TCP
