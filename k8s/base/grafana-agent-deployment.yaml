@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: grafana-agent
-          image: grafana/agent:latest
+          image: grafana/agent:v0.44.8
           args:
             - "-config.file=/etc/agent/agent.yaml"
             - "-config.expand-env"

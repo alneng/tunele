@@ -178,6 +178,7 @@ jobs:
 
       - name: Deploy
         run: |
+          set -e
           cd ${{ steps.overlay.outputs.path }}
           kustomize edit set image ghcr.io/alneng/tunele-api=ghcr.io/alneng/tunele-api:${{ needs.build.outputs.image_tag }}
           kubectl apply -k . --context=${{ steps.overlay.outputs.context }}
@@ -192,9 +193,12 @@ jobs:
             kubectl rollout undo deployment/tunele-api \
               --namespace ${{ steps.overlay.outputs.namespace }} \
               --context=${{ steps.overlay.outputs.context }}
-            kubectl rollout status deployment/tunele-api \
+            echo "Rollback initiated, waiting for previous revision to stabilize"
+            if ! kubectl rollout status deployment/tunele-api \
               --namespace ${{ steps.overlay.outputs.namespace }} \
               --context=${{ steps.overlay.outputs.context }} \
-              --timeout=60s
+              --timeout=60s; then
+              echo "Rollback also failed — manual intervention required"
+            fi
             exit 1
           fi
