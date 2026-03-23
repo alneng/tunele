@@ -6,10 +6,12 @@ Operational guide for managing the tunele-api backend on k3s.
 
 The backend runs on a single-node k3s cluster with two namespaces:
 
-| Namespace        | Domain              | Context          |
-| ---------------- | ------------------- | ---------------- |
-| `tunele-prod`    | `api.tunele.app`    | `tunele-prod`    |
-| `tunele-preview` | `api-d.tunele.app`  | `tunele-preview` |
+
+| Namespace        | Domain             | Context          |
+| ---------------- | ------------------ | ---------------- |
+| `tunele-prod`    | `api.tunele.app`   | `tunele-prod`    |
+| `tunele-preview` | `api-d.tunele.app` | `tunele-preview` |
+
 
 Each namespace runs its own isolated set of pods: `tunele-api`, `redis`, and `grafana-agent`.
 
@@ -202,10 +204,12 @@ sudo kubectl rollout restart deployment/tunele-api -n tunele-prod
 
 ## Resource Limits
 
-| Container    | CPU Request | CPU Limit | Memory Request | Memory Limit |
-| ------------ | ----------- | --------- | -------------- | ------------ |
-| tunele-api   | 100m        | 500m      | 128Mi          | 256Mi        |
-| redis        | 50m         | 200m      | 64Mi           | 128Mi        |
-| grafana-agent| 50m         | 100m      | 64Mi           | 128Mi        |
+
+| Container     | CPU Request | Memory Request | Memory Limit |
+| ------------- | ----------- | -------------- | ------------ |
+| tunele-api    | 15m         | 48Mi           | 128Mi        |
+| redis         | 10m         | 8Mi            | 32Mi         |
+| grafana-agent | 5m          | 32Mi           | 64Mi         |
+
 
 To adjust limits, edit the respective deployment YAML in `k8s/base/`.

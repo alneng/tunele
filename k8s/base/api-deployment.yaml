@@ -45,9 +45,8 @@ spec:
             failureThreshold: 3
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "48Mi"
+              cpu: "15m"
             limits:
-              memory: "256Mi"
-              cpu: "500m"
+              memory: "128Mi"
       terminationGracePeriodSeconds: 30
