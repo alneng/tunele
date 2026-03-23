@@ -4,13 +4,13 @@ A Heardle clone after the game shut down on May 5th, 2023
 
 ## Architecture Overview
 
-| Component | Technology                     | Location         |
-| --------- | ------------------------------ | ---------------- |
-| Frontend  | React + Vite + Tailwind        | `src/frontend/`  |
-| Backend   | Node.js + Express + TypeScript | `src/backend/`   |
-| Database  | Firebase Firestore             | Cloud            |
-| Cache     | Redis                          | k8s / Docker     |
-| Auth      | Google OAuth 2.0               | Cloud            |
+| Component | Technology                     | Location        |
+| --------- | ------------------------------ | --------------- |
+| Frontend  | React + Vite + Tailwind        | `src/frontend/` |
+| Backend   | Node.js + Express + TypeScript | `src/backend/`  |
+| Database  | Firebase Firestore             | Cloud           |
+| Cache     | Redis                          | k8s / Docker    |
+| Auth      | Google OAuth 2.0               | Cloud           |
 
 ## Quick Start
 
@@ -140,10 +140,10 @@ The backend runs on a **k3s cluster** using Kustomize overlays. See [`src/backen
 
 ### Environments
 
-| Environment | Trigger         | Image Tag                  | k8s Namespace    |
-| ----------- | --------------- | -------------------------- | ---------------- |
-| Production  | Push to `master`| `latest`, `{sha}`          | `tunele-prod`    |
-| Preview     | Manual dispatch | `preview`, `preview-{sha}` | `tunele-preview` |
+| Environment | Trigger          | Image Tag                  | k8s Namespace    |
+| ----------- | ---------------- | -------------------------- | ---------------- |
+| Production  | Push to `master` | `latest`, `{sha}`          | `tunele-prod`    |
+| Preview     | Manual dispatch  | `preview`, `preview-{sha}` | `tunele-preview` |
 
 ## Project Structure
 
