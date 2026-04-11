@@ -75,10 +75,8 @@ export class RedisService {
 
     try {
       await client.quit();
-      redisMetrics.setConnectionStatus(false);
       Logger.info("Redis disconnected successfully");
     } catch (error) {
-      redisMetrics.setConnectionStatus(false);
       Logger.error("Failed to disconnect from Redis", { error });
     }
   }
