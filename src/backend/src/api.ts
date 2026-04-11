@@ -15,6 +15,7 @@ router.use("/auth", createAuthRateLimiter(), authRouter);
 router.use("/user", userRouter);
 
 router.get("/health", HealthController.getHealth);
+router.get("/health/live", HealthController.getLive);
 
 router.get("/metrics", MetricsController.getMetrics);
 

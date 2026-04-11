@@ -39,25 +39,25 @@ async function withMetrics<T>(
 }
 
 export class RedisService {
-  private static isConnected = false;
+  static {
+    client.on("ready", () => redisMetrics.setConnectionStatus(true));
+    client.on("end", () => redisMetrics.setConnectionStatus(false));
+    client.on("reconnecting", () => redisMetrics.setConnectionStatus(false));
+  }
 
   /**
    * Connect to Redis.
    */
   static async connect(): Promise<void> {
-    if (this.isRedisConnected()) {
+    if (client.isOpen) {
       Logger.warn("Redis is already connected");
       return;
     }
 
     try {
       await client.connect();
-      this.isConnected = true;
-      redisMetrics.setConnectionStatus(true);
       Logger.info("Redis connected successfully");
     } catch (error) {
-      this.isConnected = false;
-      redisMetrics.setConnectionStatus(false);
       Logger.error("Failed to connect to Redis", { error });
       if (config.env === "production") throw new InternalServerErrorException();
       throw new HttpException(500, "Failed to connect to Redis");
@@ -68,28 +68,24 @@ export class RedisService {
    * Disconnect from Redis.
    */
   static async disconnect(): Promise<void> {
-    if (!this.isRedisConnected()) {
+    if (!client.isOpen) {
       Logger.warn("Redis is already disconnected");
       return;
     }
 
     try {
       await client.quit();
-      this.isConnected = false;
-      redisMetrics.setConnectionStatus(false);
       Logger.info("Redis disconnected successfully");
     } catch (error) {
-      this.isConnected = false;
-      redisMetrics.setConnectionStatus(false);
       Logger.error("Failed to disconnect from Redis", { error });
     }
   }
 
   /**
-   * Check if Redis is connected
+   * Check if Redis is connected and ready to accept commands.
    */
   static isRedisConnected(): boolean {
-    return this.isConnected;
+    return client.isReady;
   }
 
   /**
