@@ -16,7 +16,7 @@
     "@grafana/faro-web-sdk": "^2.2.0",
     "@grafana/faro-web-tracing": "^2.2.0",
     "@mui/material": "^5.14.13",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "react": "^18.2.0",
@@ -45,7 +45,7 @@
     "tailwindcss": "^3.3.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.4.1"
+    "vite": "^6.4.2"
   },
   "engines": {
     "node": "20.x || 22.x"
