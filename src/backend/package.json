@@ -14,7 +14,7 @@
     "preview": "docker compose -f ./docker/docker-compose.local.yml --env-file .env"
   },
   "dependencies": {
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.20.0",
